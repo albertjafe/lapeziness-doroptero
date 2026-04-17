@@ -593,11 +593,16 @@
     background: rgba(0,0,0,0.7); z-index: 200;
     align-items: center; justify-content: center;
     padding: 20px;
+    -webkit-overflow-scrolling: touch;
   }
   .modal-overlay.visible { display: flex; }
   .modal {
     background: var(--bg2); border: 1px solid var(--border);
     border-radius: 12px; padding: 24px; width: 100%; max-width: 400px;
+    max-height: 90vh; overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    /* Prevent taps on modal from bubbling to overlay */
+    position: relative;
   }
   .modal-title {
     font-family: 'Cormorant Garamond', serif;
@@ -686,7 +691,7 @@
     transition: opacity 0.6s ease;
     opacity: 0;
   }
-  .header, .nav, .view, .modal-overlay, .toast, .theme-switcher {
+  .header, .nav, .view, .toast, .theme-switcher {
     position: relative; z-index: 1;
   }
 
@@ -2076,8 +2081,26 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('visible'), 2000);
 }
 
-function openModal(id) { document.getElementById(id).classList.add('visible'); }
-function closeModal(id) { document.getElementById(id).classList.remove('visible'); }
+function openModal(id) {
+  const overlay = document.getElementById(id);
+  if (!overlay) return;
+  overlay.classList.add('visible');
+  // Close on tap outside the modal box
+  overlay._outsideHandler = function(e) {
+    if (e.target === overlay) closeModal(id);
+  };
+  overlay.addEventListener('click', overlay._outsideHandler);
+}
+
+function closeModal(id) {
+  const overlay = document.getElementById(id);
+  if (!overlay) return;
+  overlay.classList.remove('visible');
+  if (overlay._outsideHandler) {
+    overlay.removeEventListener('click', overlay._outsideHandler);
+    overlay._outsideHandler = null;
+  }
+}
 
 function updateHeader() {
   const d = new Date();
