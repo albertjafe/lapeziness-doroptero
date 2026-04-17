@@ -654,6 +654,151 @@
   }
   .delete-obra-btn:hover { background: var(--red); color: var(--bg); }
 
+  /* OBRA HEADER QUICK ACTIONS */
+  .obra-quick-btn {
+    width: 26px; height: 26px; border-radius: 5px;
+    background: transparent; border: 1px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 13px; flex-shrink: 0;
+    transition: all 0.18s; color: var(--text3);
+    line-height: 1; padding: 0;
+  }
+  .obra-quick-btn:hover { border-color: var(--border); background: var(--bg3); }
+  .obra-quick-btn.delete:hover { border-color: var(--red); color: var(--red); background: rgba(201,110,110,0.08); }
+  .obra-quick-btn.edit:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* EDIT OBRA NOMBRE */
+  .obra-name-input {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px; color: var(--text);
+    background: transparent; border: none;
+    border-bottom: 1px solid var(--accent);
+    flex: 1; padding: 0 0 1px 0; outline: none;
+    min-width: 0;
+  }
+  [data-theme="cozy"] .obra-name-input { font-family: 'Caveat', cursive; font-size: 19px; }
+
+  /* NATURE BACKGROUNDS */
+  /* Depth layer sits behind the content */
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    pointer-events: none; z-index: 0;
+    transition: opacity 0.6s ease;
+    opacity: 0;
+  }
+  .header, .nav, .view, .modal-overlay, .toast, .theme-switcher {
+    position: relative; z-index: 1;
+  }
+
+  [data-fondo="bosque"] body {
+    background: #0a1508 !important;
+  }
+  [data-fondo="bosque"] body::before {
+    opacity: 1;
+    background:
+      radial-gradient(ellipse 80% 60% at 20% 80%, rgba(34,80,30,0.55) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 80% at 80% 100%, rgba(15,50,20,0.7) 0%, transparent 55%),
+      radial-gradient(ellipse 100% 40% at 50% 0%, rgba(5,20,8,0.9) 0%, transparent 50%),
+      linear-gradient(180deg, #060e05 0%, #0d2010 50%, #0a1a0c 100%);
+  }
+  [data-fondo="bosque"] .card, [data-fondo="bosque"] .obra-card,
+  [data-fondo="bosque"] .session-hero, [data-fondo="bosque"] .plan-item,
+  [data-fondo="bosque"] .evento-card, [data-fondo="bosque"] .sesion-hist-item,
+  [data-fondo="bosque"] .historial-item, [data-fondo="bosque"] .mov-card {
+    background: rgba(13,32,16,0.75) !important;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-color: rgba(70,140,80,0.18) !important;
+  }
+  [data-fondo="bosque"] .header { background: rgba(6,14,5,0.92) !important; backdrop-filter: blur(10px); }
+  [data-fondo="bosque"] .nav { background: rgba(10,22,9,0.88) !important; backdrop-filter: blur(10px); }
+  [data-fondo="bosque"] { --bg: #0a1508; --bg2: rgba(13,32,16,0.75); --bg3: rgba(20,45,22,0.7); --accent: #7ec89a; --accent2: #a0dbb8; --text: #ddeee4; --text2: #88aa96; --border: rgba(126,200,154,0.2); --border2: rgba(126,200,154,0.1); }
+
+  [data-fondo="montana"] body {
+    background: #0c0d1a !important;
+  }
+  [data-fondo="montana"] body::before {
+    opacity: 1;
+    background:
+      radial-gradient(ellipse 70% 50% at 50% 100%, rgba(40,35,80,0.7) 0%, transparent 60%),
+      radial-gradient(ellipse 100% 50% at 0% 50%, rgba(20,15,50,0.5) 0%, transparent 55%),
+      radial-gradient(ellipse 80% 60% at 100% 30%, rgba(60,40,90,0.4) 0%, transparent 50%),
+      linear-gradient(180deg, #080810 0%, #12102a 40%, #0c0e20 100%);
+  }
+  [data-fondo="montana"] .card, [data-fondo="montana"] .obra-card,
+  [data-fondo="montana"] .session-hero, [data-fondo="montana"] .plan-item,
+  [data-fondo="montana"] .evento-card, [data-fondo="montana"] .sesion-hist-item,
+  [data-fondo="montana"] .historial-item, [data-fondo="montana"] .mov-card {
+    background: rgba(18,16,40,0.72) !important;
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    border-color: rgba(100,80,180,0.2) !important;
+  }
+  [data-fondo="montana"] .header { background: rgba(8,8,16,0.92) !important; backdrop-filter: blur(10px); }
+  [data-fondo="montana"] .nav   { background: rgba(12,10,26,0.88) !important; backdrop-filter: blur(10px); }
+  [data-fondo="montana"] { --bg:#0c0d1a; --bg2:rgba(18,16,40,0.72); --bg3:rgba(25,22,55,0.65); --accent:#a090e0; --accent2:#c0b0f8; --text:#e8e4f8; --text2:#9890c0; --border:rgba(140,120,220,0.2); --border2:rgba(140,120,220,0.1); }
+
+  [data-fondo="oceano"] body {
+    background: #050d18 !important;
+  }
+  [data-fondo="oceano"] body::before {
+    opacity: 1;
+    background:
+      radial-gradient(ellipse 90% 60% at 50% 100%, rgba(10,50,90,0.7) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 70% at 10% 60%, rgba(5,30,70,0.5) 0%, transparent 50%),
+      radial-gradient(ellipse 70% 50% at 90% 30%, rgba(8,60,100,0.4) 0%, transparent 55%),
+      linear-gradient(180deg, #030810 0%, #07182e 50%, #050f20 100%);
+  }
+  [data-fondo="oceano"] .card, [data-fondo="oceano"] .obra-card,
+  [data-fondo="oceano"] .session-hero, [data-fondo="oceano"] .plan-item,
+  [data-fondo="oceano"] .evento-card, [data-fondo="oceano"] .sesion-hist-item,
+  [data-fondo="oceano"] .historial-item, [data-fondo="oceano"] .mov-card {
+    background: rgba(7,22,46,0.75) !important;
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    border-color: rgba(40,120,200,0.18) !important;
+  }
+  [data-fondo="oceano"] .header { background: rgba(3,8,16,0.92) !important; backdrop-filter: blur(10px); }
+  [data-fondo="oceano"] .nav   { background: rgba(5,12,24,0.88) !important; backdrop-filter: blur(10px); }
+  [data-fondo="oceano"] { --bg:#050d18; --bg2:rgba(7,22,46,0.75); --bg3:rgba(10,30,60,0.7); --accent:#4aacdf; --accent2:#70c8f0; --text:#d8eef8; --text2:#6898b8; --border:rgba(60,160,220,0.2); --border2:rgba(60,160,220,0.1); }
+
+  [data-fondo="aurora"] body {
+    background: #080610 !important;
+  }
+  [data-fondo="aurora"] body::before {
+    opacity: 1;
+    background:
+      radial-gradient(ellipse 120% 40% at 50% 0%, rgba(20,80,60,0.45) 0%, transparent 50%),
+      radial-gradient(ellipse 80% 50% at 20% 50%, rgba(60,20,90,0.4) 0%, transparent 55%),
+      radial-gradient(ellipse 70% 60% at 80% 70%, rgba(10,60,80,0.4) 0%, transparent 50%),
+      radial-gradient(ellipse 100% 30% at 50% 100%, rgba(40,10,70,0.5) 0%, transparent 50%),
+      linear-gradient(160deg, #060410 0%, #0a0820 50%, #080615 100%);
+  }
+  [data-fondo="aurora"] .card, [data-fondo="aurora"] .obra-card,
+  [data-fondo="aurora"] .session-hero, [data-fondo="aurora"] .plan-item,
+  [data-fondo="aurora"] .evento-card, [data-fondo="aurora"] .sesion-hist-item,
+  [data-fondo="aurora"] .historial-item, [data-fondo="aurora"] .mov-card {
+    background: rgba(12,10,28,0.72) !important;
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    border-color: rgba(80,180,140,0.15) !important;
+  }
+  [data-fondo="aurora"] .header { background: rgba(6,4,14,0.92) !important; backdrop-filter: blur(12px); }
+  [data-fondo="aurora"] .nav   { background: rgba(8,6,18,0.88) !important; backdrop-filter: blur(12px); }
+  [data-fondo="aurora"] { --bg:#080610; --bg2:rgba(12,10,28,0.72); --bg3:rgba(18,14,38,0.68); --accent:#70d8b0; --accent2:#98e8c8; --text:#e0f0e8; --text2:#80b898; --border:rgba(80,200,150,0.18); --border2:rgba(80,200,150,0.09); }
+
+  /* Settings fondo grid */
+  .fondo-grid { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:4px; }
+  .fondo-option {
+    flex:1; min-width:70px; padding:8px 4px 6px;
+    border: 1px solid var(--border2); border-radius:8px;
+    background: var(--bg2); cursor:pointer; text-align:center;
+    transition: all 0.2s;
+  }
+  .fondo-option.active { border-color:var(--accent); background:var(--bg3); }
+  .fondo-swatch {
+    width:100%; height:32px; border-radius:5px; margin-bottom:6px;
+    display:block;
+  }
+  .fondo-option-name { font-size:9px; color:var(--text3); letter-spacing:0.06em; text-transform:uppercase; }
+
   /* URGENCIA CALCULADA */
   .urgencia-computed {
     display: inline-flex; align-items: center; gap: 5px;
@@ -1263,6 +1408,102 @@
   .tempo-field::placeholder { color: var(--text3); }
   .tempo-sep { font-size: 9px; color: var(--text3); }
 
+  /* PASAJES VIEW GLOBAL */
+  .pasajes-view-controls {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px; gap: 8px; flex-wrap: wrap;
+  }
+  .pasajes-sort-row {
+    display: flex; gap: 4px; flex-wrap: wrap;
+  }
+  .sort-btn {
+    padding: 5px 10px; border: 1px solid var(--border2);
+    border-radius: 20px; background: transparent;
+    color: var(--text3); font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; letter-spacing: 0.05em; cursor: pointer;
+    transition: all 0.18s; white-space: nowrap;
+  }
+  .sort-btn.active { border-color: var(--accent); color: var(--accent); background: var(--bg3); }
+
+  .pasaje-row-global {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; background: var(--bg2);
+    border: 1px solid var(--border2); border-radius: 8px;
+    margin-bottom: 6px; transition: border-color 0.15s;
+  }
+  .pasaje-row-global:hover { border-color: var(--border); }
+
+  .pasaje-status-pill {
+    width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+  }
+  .pasaje-status-pill.activo       { background: var(--orange); }
+  .pasaje-status-pill.mantenimiento{ background: var(--accent); }
+  .pasaje-status-pill.resuelto     { background: var(--green); }
+
+  .pasaje-row-text { flex: 1; font-size: 11px; color: var(--text2); min-width: 0; }
+  .pasaje-row-obra { font-size: 9px; color: var(--text3); white-space: nowrap; }
+
+  .pasaje-bar-wrap {
+    width: 60px; flex-shrink: 0;
+  }
+  .pasaje-bar-track {
+    height: 5px; background: var(--bg3); border-radius: 3px; overflow: hidden;
+  }
+  .pasaje-bar-fill {
+    height: 100%; border-radius: 3px; transition: width 0.3s;
+  }
+  .pasaje-bar-label {
+    font-size: 8px; color: var(--text3); text-align: right;
+    margin-top: 2px; letter-spacing: 0.04em;
+  }
+
+  .pasajes-group-header {
+    font-size: 9px; color: var(--text3); letter-spacing: 0.18em;
+    text-transform: uppercase; padding: 10px 0 6px;
+    border-bottom: 1px solid var(--border2); margin-bottom: 8px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .pasajes-empty {
+    text-align: center; padding: 40px 0;
+    font-size: 11px; color: var(--text3); line-height: 1.8;
+  }
+
+  /* PASAJE STATS MODAL */
+  .pstats-header {
+    display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px;
+  }
+  .pstats-kpi {
+    flex: 1; min-width: 70px;
+    background: var(--bg3); border: 1px solid var(--border2);
+    border-radius: 8px; padding: 10px 12px; text-align: center;
+  }
+  .pstats-kpi-val {
+    font-size: 22px; color: var(--accent);
+    font-family: 'Cormorant Garamond', serif; font-weight: 300;
+    line-height: 1;
+  }
+  .pstats-kpi-label {
+    font-size: 8px; color: var(--text3); letter-spacing: 0.1em;
+    text-transform: uppercase; margin-top: 4px;
+  }
+  .pstats-log-row {
+    display: flex; align-items: center; gap: 8px;
+    padding: 6px 0; border-bottom: 1px solid var(--border2);
+    font-size: 10px;
+  }
+  .pstats-log-row:last-child { border-bottom: none; }
+  .pstats-score-dot {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: bold; color: #fff; flex-shrink: 0;
+  }
+  .pstats-log-date { color: var(--text3); min-width: 70px; }
+  .pstats-log-note { color: var(--text2); flex: 1; font-size: 9px; }
+  .pstats-log-scroll {
+    max-height: 200px; overflow-y: auto;
+    margin-top: 8px;
+  }
+
   /* BREAK TIMER */
   .break-timer-btn {
     margin-top: 10px; padding: 5px 14px;
@@ -1335,6 +1576,7 @@
 <div class="nav">
   <button class="nav-btn active" onclick="showView('session')">Sesión</button>
   <button class="nav-btn" onclick="showView('obras')">Obras</button>
+  <button class="nav-btn" onclick="showView('pasajes')">Pasajes</button>
   <button class="nav-btn" onclick="showView('pases')">Pases</button>
   <button class="nav-btn" onclick="showView('calendario')">Calendario</button>
   <button class="nav-btn" onclick="showView('historial')">Historial</button>
@@ -1480,7 +1722,19 @@
   </div>
 </div>
 
-<!-- PASES VIEW -->
+<!-- PASAJES VIEW -->
+<div class="view" id="view-pasajes">
+  <div class="pasajes-view-controls">
+    <div class="pasajes-sort-row" id="pasajesSortBtns">
+      <button class="sort-btn active" data-sort="obra"   onclick="setPasajesSort('obra',this)">Por obra</button>
+      <button class="sort-btn"        data-sort="estado" onclick="setPasajesSort('estado',this)">Por estado</button>
+      <button class="sort-btn"        data-sort="score"  onclick="setPasajesSort('score',this)">Más imperfectos</button>
+      <button class="sort-btn"        data-sort="reciente" onclick="setPasajesSort('reciente',this)">Más trabajados</button>
+    </div>
+  </div>
+  <div id="pasajesGlobalList"></div>
+</div>
+
 <div class="view" id="view-pases">
   <div id="pasesList"></div>
 </div>
@@ -1559,6 +1813,44 @@
       </button>
     </div>
 
+    <div class="settings-section">Fondo atmosférico</div>
+    <div class="fondo-grid" id="fondoGrid">
+      <div class="fondo-option active" data-fondo="" onclick="setFondo('',this)">
+        <div class="fondo-swatch" style="background:var(--bg2);border:1px solid var(--border2)"></div>
+        <div class="fondo-option-name">Ninguno</div>
+      </div>
+      <div class="fondo-option" data-fondo="bosque" onclick="setFondo('bosque',this)">
+        <div class="fondo-swatch" style="background:linear-gradient(160deg,#060e05 0%,#0d2010 60%,#162a1a 100%)"></div>
+        <div class="fondo-option-name">🌿 Bosque</div>
+      </div>
+      <div class="fondo-option" data-fondo="montana" onclick="setFondo('montana',this)">
+        <div class="fondo-swatch" style="background:linear-gradient(160deg,#080810 0%,#12102a 60%,#1a1640 100%)"></div>
+        <div class="fondo-option-name">⛰ Montaña</div>
+      </div>
+      <div class="fondo-option" data-fondo="oceano" onclick="setFondo('oceano',this)">
+        <div class="fondo-swatch" style="background:linear-gradient(160deg,#030810 0%,#07182e 60%,#0a2040 100%)"></div>
+        <div class="fondo-option-name">🌊 Océano</div>
+      </div>
+      <div class="fondo-option" data-fondo="aurora" onclick="setFondo('aurora',this)">
+        <div class="fondo-swatch" style="background:linear-gradient(160deg,#060410 0%,#0a0820 40%,#102818 80%,#1a0830 100%)"></div>
+        <div class="fondo-option-name">✨ Aurora</div>
+      </div>
+    </div>
+    <div style="font-size:9px;color:var(--text3);line-height:1.6;margin-bottom:8px">Los fondos atmosféricos usan glassmorphism en las tarjetas. Funciona mejor combinado con los temas oscuros (Noche, Grafito, Bosque).</div>
+
+    <div class="settings-section" style="margin-top:16px">Copia de seguridad</div>
+    <div style="font-size:9px;color:var(--text3);line-height:1.6;margin-bottom:10px">Exporta todos tus datos (obras, sesiones, pases, eventos) a un archivo JSON. Guárdalo en iCloud o donde quieras. Puedes importarlo si cambias de dispositivo o si algo sale mal.</div>
+    <div style="display:flex;gap:8px;margin-bottom:4px">
+      <button class="modal-btn secondary" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px" onclick="exportarDatos()">
+        <span style="font-size:14px">⬇</span> Exportar datos
+      </button>
+      <button class="modal-btn secondary" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px" onclick="document.getElementById('importarInput').click()">
+        <span style="font-size:14px">⬆</span> Importar datos
+      </button>
+    </div>
+    <input type="file" id="importarInput" accept=".json" style="display:none" onchange="importarDatos(this)">
+    <div id="importarFeedback" style="font-size:9px;color:var(--green);margin-top:6px;display:none"></div>
+
     <div class="modal-buttons" style="margin-top:20px">
       <button class="modal-btn primary" onclick="closeModal('modalSettings')">Cerrar</button>
     </div>
@@ -1612,6 +1904,40 @@
     <div id="graficoMovTabs" style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px"></div>
     <div id="graficoSvgWrap"></div>
     <div id="graficoLeyenda" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:10px"></div>
+  </div>
+</div>
+
+<!-- MODAL PASAJE STATS -->
+<div class="modal-overlay" id="modalPasajeStats">
+  <div class="modal" style="max-width:500px">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px">
+      <div class="modal-title" id="pstatsTitle" style="margin-bottom:0;font-size:18px"></div>
+      <button class="modal-btn secondary" onclick="closeModal('modalPasajeStats')" style="padding:4px 12px;font-size:10px">✕</button>
+    </div>
+    <div id="pstatsObra" style="font-size:10px;color:var(--text3);margin-bottom:16px"></div>
+    <div class="pstats-header" id="pstatsKpis"></div>
+    <div id="pstatsGraph" style="margin-bottom:14px"></div>
+    <div style="font-size:9px;color:var(--text3);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:4px">Historial de entradas</div>
+    <div class="pstats-log-scroll" id="pstatsLog"></div>
+    <div class="modal-buttons" style="margin-top:16px">
+      <button class="modal-btn primary" onclick="closeModal('modalPasajeStats')">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EDITAR NOMBRE OBRA -->
+<div class="modal-overlay" id="modalEditObraNombre">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-title">Editar obra</div>
+    <input type="hidden" id="editObraId">
+    <div style="font-size:9px;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px">Título</div>
+    <input class="modal-input" id="editObraNombreInput" type="text" placeholder="Título de la obra">
+    <div style="font-size:9px;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:6px">Compositor</div>
+    <input class="modal-input" id="editObraComposerInput" type="text" placeholder="Compositor">
+    <div class="modal-buttons">
+      <button class="modal-btn secondary" onclick="closeModal('modalEditObraNombre')">Cancelar</button>
+      <button class="modal-btn primary" onclick="saveEditObraNombre()">Guardar</button>
+    </div>
   </div>
 </div>
 
@@ -1732,13 +2058,15 @@ function showView(name) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('view-' + name).classList.add('active');
   const btns = document.querySelectorAll('.nav-btn');
-  const names = ['session','obras','pases','calendario','historial','registro'];
-  btns[names.indexOf(name)].classList.add('active');
-  if (name === 'obras') renderObras();
-  if (name === 'pases') renderPases();
+  const names = ['session','obras','pasajes','pases','calendario','historial','registro'];
+  const idx = names.indexOf(name);
+  if (idx >= 0) btns[idx].classList.add('active');
+  if (name === 'obras')    renderObras();
+  if (name === 'pasajes')  renderPasajesGlobal();
+  if (name === 'pases')    renderPases();
   if (name === 'calendario') renderCalendario();
-  if (name === 'historial') renderSesionesHistorial();
-  if (name === 'registro') renderHistorial();
+  if (name === 'historial')  renderSesionesHistorial();
+  if (name === 'registro')   renderHistorial();
 }
 
 function showToast(msg) {
@@ -2408,12 +2736,10 @@ function renderObraCard(o, idx) {
     const urg = computeUrgencia(o.id);
     if (urg.nivel === 'sin-evento') return '<div style="font-size:9px;color:var(--text3);margin-top:8px">Sin evento asignado en calendario</div>';
     const ev = urg.evento;
-    const perfLabel = { concurso: 'perfección máxima', audicion: 'perfección máxima', grabacion: 'muy alta exigencia', concierto: 'alta exigencia', clase: 'trabajo honesto', ensayo: 'trabajo colaborativo' };
     return `<div class="urgencia-computed ${urg.nivel}" style="margin-top:8px">
       <span style="font-weight:bold">${urg.label}</span>
       <span style="opacity:0.7">·</span>
       <span>${ev.nombre} · ${urg.dias}d</span>
-      <span style="opacity:0.6;font-size:8px">(${perfLabel[ev.tipo]||''})</span>
     </div>`;
   })();
 
@@ -2445,11 +2771,13 @@ function renderObraCard(o, idx) {
     <div class="obra-card" id="obra-${o.id}">
       <div class="obra-header" onclick="toggleObra('${o.id}')">
         <div class="obra-fase ${o.fase}"></div>
-        <div class="obra-name">${o.name}${origenTag}${difBadge}${tendencia} <span class="obra-composer">${o.composer}</span></div>
+        <div class="obra-name" id="obra-name-display-${o.id}">${o.name}${origenTag}${difBadge}${tendencia} <span class="obra-composer">${o.composer}</span></div>
         <div class="obra-scores">
           ${durDisplay ? `<span style="font-size:9px;color:var(--text3)">${durDisplay}m</span>` : ''}
           ${hasMovs ? `<span style="font-size:8px;color:var(--accent);background:var(--bg3);border-radius:3px;padding:1px 5px;margin-left:2px">${o.movimientos.length} mov</span>` : ''}
         </div>
+        <button class="obra-quick-btn edit" title="Editar nombre" onclick="event.stopPropagation();openEditObraNombre('${o.id}')">✎</button>
+        <button class="obra-quick-btn delete" title="Eliminar obra" onclick="event.stopPropagation();confirmDeleteObra('${o.id}')">✕</button>
         <div class="obra-chevron">▼</div>
       </div>
       <div class="obra-detail">
@@ -2524,9 +2852,6 @@ function renderObraCard(o, idx) {
         ${urgBlock}
 
         <textarea class="obra-notes" placeholder="notas libres..." onblur="updateNotes('${o.id}',this.value)">${o.notes||''}</textarea>
-        <div class="obra-actions">
-          <button class="delete-obra-btn" onclick="deleteObra('${o.id}')">Eliminar obra</button>
-        </div>
       </div>
     </div>`;
 }
@@ -2871,9 +3196,11 @@ function confirmPasajeScore() {
   saveData();
   closeModal('modalPasajeScore');
   showToast('Sesión registrada ✓');
-  // Re-render the pasaje item
+  // Re-render the pasaje item in obras view if visible
   const el = document.getElementById(`pitem-${psObraId}-${psPasajeId}`);
   if (el) el.outerHTML = renderPasajeItem(psObraId, p);
+  // Re-render global pasajes view if active
+  if (document.getElementById('view-pasajes').classList.contains('active')) renderPasajesGlobal();
 }
 
 function registerPase(obraId) {
@@ -3610,7 +3937,7 @@ function renderEventoCard(ev, isPast) {
       <div>
         <span class="evento-tipo-badge ${ev.tipo}">${EVENT_LABEL[ev.tipo]||ev.tipo}</span>
         <div class="evento-nombre" style="margin-top:6px">${ev.nombre}</div>
-        <div style="font-size:9px;color:var(--text3);margin-top:2px">${fechaStr} · ${perfLabel[ev.tipo]||''}</div>
+        <div style="font-size:9px;color:var(--text3);margin-top:2px">${fechaStr}</div>
       </div>
       <div class="evento-fecha">${diasLabel}</div>
     </div>
@@ -3829,6 +4156,350 @@ function deleteSession(dateStr) {
   showToast('Sesión eliminada');
 }
 
+// ─── PASAJES GLOBAL VIEW ────────────────────────────────────────────────────
+
+let pasajesSort = 'obra';
+
+function setPasajesSort(sort, btn) {
+  pasajesSort = sort;
+  document.querySelectorAll('#pasajesSortBtns .sort-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderPasajesGlobal();
+}
+
+function renderPasajesGlobal() {
+  const el = document.getElementById('pasajesGlobalList');
+  if (!el) return;
+
+  // Collect all pasajes with obra context
+  const all = [];
+  (db.obras || []).forEach(obra => {
+    (obra.pasajes || []).forEach(p => {
+      // Last worked: find most recent session entry for this obra
+      let lastWorked = null;
+      for (const s of (db.sesiones || [])) {
+        if ((s.items||[]).some(i => i.obraId === obra.id && i.tick !== 'saltado')) {
+          const d = new Date(s.date);
+          if (!lastWorked || d > lastWorked) lastWorked = d;
+        }
+      }
+      // Score: use latest tracking session score if available
+      const scores = (p.sesiones || []);
+      const lastScore = scores.length ? scores[0].score : null;
+      const avgScore  = scores.length
+        ? Math.round(scores.slice(0, 5).reduce((s, x) => s + x.score, 0) / Math.min(scores.length, 5))
+        : null;
+
+      all.push({ obra, p, lastWorked, lastScore, avgScore });
+    });
+  });
+
+  if (!all.length) {
+    el.innerHTML = `<div class="pasajes-empty">No hay pasajes añadidos aún.<br>Añádelos desde la pestaña Obras.</div>`;
+    return;
+  }
+
+  const STATUS_ORDER = { activo: 0, mantenimiento: 1, resuelto: 2 };
+  const STATUS_LABEL = { activo: 'Activo', mantenimiento: 'Mantenimiento', resuelto: 'Resuelto' };
+  const STATUS_COLOR = { activo: 'var(--orange)', mantenimiento: 'var(--accent)', resuelto: 'var(--green)' };
+  const STATUS_BAR   = { activo: 25, mantenimiento: 60, resuelto: 95 };
+
+  let html = '';
+
+  if (pasajesSort === 'obra') {
+    // Group by obra
+    const byObra = {};
+    all.forEach(item => {
+      const key = item.obra.id;
+      if (!byObra[key]) byObra[key] = { obra: item.obra, items: [] };
+      byObra[key].items.push(item);
+    });
+    Object.values(byObra).forEach(group => {
+      const n = group.items.length;
+      const nResueltos = group.items.filter(i => i.p.status === 'resuelto').length;
+      html += `<div class="pasajes-group-header">
+        <span>${group.obra.name}</span>
+        <span style="color:var(--text3)">${nResueltos}/${n} resueltos</span>
+      </div>`;
+      group.items.forEach(item => { html += renderPasajeRowGlobal(item, STATUS_LABEL, STATUS_COLOR, STATUS_BAR, false); });
+    });
+
+  } else if (pasajesSort === 'estado') {
+    // Group by status
+    ['activo','mantenimiento','resuelto'].forEach(status => {
+      const group = all.filter(i => (i.p.status || 'activo') === status);
+      if (!group.length) return;
+      html += `<div class="pasajes-group-header">
+        <span style="color:${STATUS_COLOR[status]}">${STATUS_LABEL[status]}</span>
+        <span style="color:var(--text3)">${group.length} pasajes</span>
+      </div>`;
+      group.forEach(item => { html += renderPasajeRowGlobal(item, STATUS_LABEL, STATUS_COLOR, STATUS_BAR, true); });
+    });
+
+  } else if (pasajesSort === 'score') {
+    // Sort by score ascending (worst first), unscored at top
+    const sorted = [...all].sort((a, b) => {
+      const sa = a.avgScore ?? -1, sb = b.avgScore ?? -1;
+      if (sa === sb) return STATUS_ORDER[a.p.status||'activo'] - STATUS_ORDER[b.p.status||'activo'];
+      return sa - sb;
+    });
+    const unscored = sorted.filter(i => i.avgScore === null);
+    const scored   = sorted.filter(i => i.avgScore !== null);
+    if (unscored.length) {
+      html += `<div class="pasajes-group-header"><span>Sin puntuación registrada</span><span style="color:var(--text3)">${unscored.length}</span></div>`;
+      unscored.forEach(item => { html += renderPasajeRowGlobal(item, STATUS_LABEL, STATUS_COLOR, STATUS_BAR, true); });
+    }
+    if (scored.length) {
+      html += `<div class="pasajes-group-header"><span>Más imperfectos primero</span><span style="color:var(--text3)">${scored.length}</span></div>`;
+      scored.forEach(item => { html += renderPasajeRowGlobal(item, STATUS_LABEL, STATUS_COLOR, STATUS_BAR, true); });
+    }
+
+  } else if (pasajesSort === 'reciente') {
+    // Sort by lastWorked descending (most recently worked first)
+    const sorted = [...all].sort((a, b) => {
+      const da = a.lastWorked ? a.lastWorked.getTime() : 0;
+      const db2 = b.lastWorked ? b.lastWorked.getTime() : 0;
+      return db2 - da;
+    });
+    html += `<div class="pasajes-group-header"><span>Más trabajados recientemente</span></div>`;
+    sorted.forEach(item => { html += renderPasajeRowGlobal(item, STATUS_LABEL, STATUS_COLOR, STATUS_BAR, true); });
+  }
+
+  el.innerHTML = html;
+}
+
+function openPasajeStats(obraId, pasajeId) {
+  const obra = findObra(obraId);
+  if (!obra) return;
+  const p = (obra.pasajes || []).find(x => x.id === pasajeId);
+  if (!p) return;
+
+  const sesiones = [...(p.sesiones || [])].sort((a, b) => new Date(a.date) - new Date(b.date));
+  const scores = sesiones.map(s => s.score);
+  const n = scores.length;
+
+  document.getElementById('pstatsTitle').textContent = p.text;
+  document.getElementById('pstatsObra').textContent = obra.name + (obra.composer && obra.composer !== '—' ? ' · ' + obra.composer : '');
+
+  // ── KPIs ──────────────────────────────────────────────────────────────────
+  const kpiEl = document.getElementById('pstatsKpis');
+  if (n === 0) {
+    kpiEl.innerHTML = `<div style="font-size:11px;color:var(--text3);padding:12px 0">Sin entradas registradas aún. Usa "+ registrar hoy" para empezar.</div>`;
+    document.getElementById('pstatsGraph').innerHTML = '';
+    document.getElementById('pstatsLog').innerHTML = '';
+    openModal('modalPasajeStats');
+    return;
+  }
+
+  const avg    = +(scores.reduce((a, b) => a + b, 0) / n).toFixed(1);
+  const last   = scores[n - 1];
+  const best   = Math.max(...scores);
+  const worst  = Math.min(...scores);
+
+  // Trend: compare last 3 vs previous 3
+  let trendLabel = '—', trendColor = 'var(--text3)';
+  if (n >= 4) {
+    const half = Math.max(2, Math.floor(n / 2));
+    const recent = scores.slice(-half).reduce((a,b) => a+b,0) / half;
+    const older  = scores.slice(0, Math.floor(n/2)).reduce((a,b) => a+b,0) / Math.floor(n/2);
+    const diff = +(recent - older).toFixed(1);
+    if (diff > 0.5)       { trendLabel = `+${diff} ↑`; trendColor = 'var(--green)'; }
+    else if (diff < -0.5) { trendLabel = `${diff} ↓`; trendColor = 'var(--red)'; }
+    else                  { trendLabel = 'estable →'; trendColor = 'var(--accent)'; }
+  }
+
+  // Days span
+  const firstDate = new Date(sesiones[0].date);
+  const lastDate  = new Date(sesiones[n-1].date);
+  const spanDays  = Math.max(0, Math.round((lastDate - firstDate) / 86400000));
+
+  const scoreColor = s => s >= 7 ? 'var(--green)' : s >= 4 ? 'var(--accent)' : 'var(--red)';
+  const scoreColorHex = s => s >= 7 ? '#2a8a5a' : s >= 4 ? '#c9a96e' : '#c84040';
+
+  kpiEl.innerHTML = [
+    { val: n,            label: 'Entradas' },
+    { val: last + '/10', label: 'Última',   color: scoreColor(last) },
+    { val: avg + '/10',  label: 'Media',    color: scoreColor(avg) },
+    { val: best + '/10', label: 'Máximo',   color: 'var(--green)' },
+    { val: trendLabel,   label: 'Tendencia',color: trendColor },
+    { val: spanDays + 'd', label: 'Período' },
+  ].map(k => `<div class="pstats-kpi">
+    <div class="pstats-kpi-val" style="${k.color ? 'color:'+k.color : ''}">${k.val}</div>
+    <div class="pstats-kpi-label">${k.label}</div>
+  </div>`).join('');
+
+  // ── SVG GRAPH ─────────────────────────────────────────────────────────────
+  const W = 460, H = 130;
+  const PAD = { top: 14, right: 14, bottom: 28, left: 26 };
+  const cW = W - PAD.left - PAD.right;
+  const cH = H - PAD.top - PAD.bottom;
+
+  const xOf = i => PAD.left + (n > 1 ? (i / (n - 1)) * cW : cW / 2);
+  const yOf = s => PAD.top + cH - ((s - 1) / 9) * cH;
+
+  // Smoothed line (moving avg window 2)
+  const smoothed = sesiones.map((_, i) => {
+    const win = scores.slice(Math.max(0, i-1), i+2);
+    return win.reduce((a,b) => a+b, 0) / win.length;
+  });
+
+  const lineD  = smoothed.map((s, i) => `${i===0?'M':'L'}${xOf(i)},${yOf(s)}`).join(' ');
+  const areaD  = `${lineD} L${xOf(n-1)},${yOf(1)} L${xOf(0)},${yOf(1)} Z`;
+
+  // Grid lines 1, 5, 10
+  const grid = [1,5,10].map(s => {
+    const y = yOf(s);
+    return `<line x1="${PAD.left}" y1="${y}" x2="${W-PAD.right}" y2="${y}" stroke="var(--border2)" stroke-dasharray="3,3"/>
+      <text x="${PAD.left-3}" y="${y+3}" text-anchor="end" font-size="8" fill="var(--text3)" font-family="JetBrains Mono,monospace">${s}</text>`;
+  }).join('');
+
+  // X axis labels (show up to 6)
+  const step = Math.max(1, Math.floor(n / 5));
+  const xLabels = sesiones.filter((_, i) => i % step === 0 || i === n-1).map((s, _, arr) => {
+    const i = sesiones.indexOf(s);
+    const d = new Date(s.date);
+    const lbl = `${d.getDate()}/${d.getMonth()+1}`;
+    return `<text x="${xOf(i)}" y="${H-4}" text-anchor="middle" font-size="8" fill="var(--text3)" font-family="JetBrains Mono,monospace">${lbl}</text>`;
+  }).join('');
+
+  // Dots
+  const dots = sesiones.map((s, i) => {
+    const sc = s.score;
+    const d  = new Date(s.date).toLocaleDateString('es-ES', { day:'numeric', month:'short' });
+    return `<circle cx="${xOf(i)}" cy="${yOf(sc)}" r="5"
+      fill="${scoreColorHex(sc)}" stroke="var(--bg2)" stroke-width="1.5" opacity="0.92">
+      <title>${d} · ${sc}/10${s.note ? ' · ' + s.note : ''}</title>
+    </circle>`;
+  }).join('');
+
+  document.getElementById('pstatsGraph').innerHTML = `
+    <svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">
+      <defs>
+        <linearGradient id="pstatsGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.18"/>
+          <stop offset="100%" stop-color="var(--accent)" stop-opacity="0.02"/>
+        </linearGradient>
+      </defs>
+      ${grid}
+      <path d="${areaD}" fill="url(#pstatsGrad)"/>
+      <path d="${lineD}" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-linejoin="round" opacity="0.6"/>
+      ${dots}
+      ${xLabels}
+    </svg>`;
+
+  // ── LOG TABLE ─────────────────────────────────────────────────────────────
+  const logEl = document.getElementById('pstatsLog');
+  const rows  = [...sesiones].reverse().map(s => {
+    const d   = new Date(s.date).toLocaleDateString('es-ES', { weekday:'short', day:'numeric', month:'short', year:'numeric' });
+    const col = scoreColorHex(s.score);
+    return `<div class="pstats-log-row">
+      <div class="pstats-score-dot" style="background:${col}">${s.score}</div>
+      <div class="pstats-log-date">${d}</div>
+      <div class="pstats-log-note">${s.note || ''}</div>
+    </div>`;
+  }).join('');
+  logEl.innerHTML = rows || `<div style="color:var(--text3);font-size:10px;padding:8px 0">Sin notas.</div>`;
+
+  openModal('modalPasajeStats');
+}
+
+function cyclePasajeStatusGlobal(obraId, pasajeId, btn) {
+  const obra = findObra(obraId);
+  if (!obra) return;
+  const p = (obra.pasajes || []).find(x => x.id === pasajeId);
+  if (!p) return;
+  const cycle = ['activo', 'mantenimiento', 'resuelto'];
+  p.status = cycle[(cycle.indexOf(p.status || 'activo') + 1) % cycle.length];
+  saveData();
+  // Update pill color inline without full re-render
+  btn.className = `pasaje-status-pill ${p.status}`;
+  btn.title = `Estado: ${{ activo:'Activo', mantenimiento:'Mantenimiento', resuelto:'Resuelto' }[p.status]} (toca para cambiar)`;
+  showToast({ activo:'Activo', mantenimiento:'Mantenimiento', resuelto:'Resuelto' }[p.status] + ' ✓');
+  // Also update bar label/fill
+  const row = btn.closest('.pasaje-row-global');
+  if (row) {
+    const STATUS_BAR = { activo: 25, mantenimiento: 60, resuelto: 95 };
+    const STATUS_COLOR = { activo: 'var(--orange)', mantenimiento: 'var(--accent)', resuelto: 'var(--green)' };
+    const STATUS_LABEL = { activo: 'Activo', mantenimiento: 'Mantenimiento', resuelto: 'Resuelto' };
+    const scores = (p.sesiones || []);
+    const avgScore = scores.length
+      ? Math.round(scores.slice(0,5).reduce((s,x) => s + x.score, 0) / Math.min(scores.length,5))
+      : null;
+    const fillPct   = avgScore !== null ? Math.round((avgScore/10)*100) : STATUS_BAR[p.status];
+    const fillColor = avgScore !== null
+      ? (avgScore >= 7 ? 'var(--green)' : avgScore >= 4 ? 'var(--accent)' : 'var(--red)')
+      : STATUS_COLOR[p.status];
+    const barLabel = avgScore !== null ? `${avgScore}/10 · ${STATUS_LABEL[p.status]}` : STATUS_LABEL[p.status];
+    const fill = row.querySelector('.pasaje-bar-fill');
+    if (fill) { fill.style.width = fillPct + '%'; fill.style.background = fillColor; }
+    const label = row.querySelector('.pasaje-bar-fill')?.closest('.pasaje-bar-track')?.nextElementSibling?.firstElementChild;
+    if (label) { label.textContent = barLabel; label.style.color = fillColor; }
+  }
+}
+
+function renderPasajeRowGlobal(item, STATUS_LABEL, STATUS_COLOR, STATUS_BAR, showObra) {
+  const { obra, p, lastWorked, lastScore, avgScore } = item;
+  const status   = p.status || 'activo';
+  const barPct   = STATUS_BAR[status] || 25;
+  const barColor = STATUS_COLOR[status];
+
+  // Score bar: if we have avgScore, use that 0-100 instead of status
+  const useScore  = avgScore !== null;
+  const fillPct   = useScore ? Math.round((avgScore / 10) * 100) : barPct;
+  const fillColor = useScore
+    ? (avgScore >= 7 ? 'var(--green)' : avgScore >= 4 ? 'var(--accent)' : 'var(--red)')
+    : barColor;
+  const barLabel  = useScore
+    ? `${avgScore}/10 · ${STATUS_LABEL[status]}`
+    : STATUS_LABEL[status];
+
+  const lastStr = lastWorked
+    ? lastWorked.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })
+    : '—';
+
+  const tempoInfo = (p.tempoAct && p.tempoObj)
+    ? `<span style="font-size:8px;color:var(--text3);margin-left:6px">${p.tempoAct}→${p.tempoObj}bpm</span>`
+    : '';
+
+  // Check if already logged today
+  const today = new Date().toDateString();
+  const loggedToday = (p.sesiones||[]).some(s => new Date(s.date).toDateString() === today);
+  const logBtnStyle = loggedToday
+    ? 'color:var(--green);border-color:var(--green)'
+    : 'color:var(--text3)';
+  const logBtnTitle = loggedToday ? '✓ registrado hoy' : '+ registrar hoy';
+  const hasHistory = (p.sesiones||[]).length > 0;
+
+  return `<div class="pasaje-row-global">
+    <button onclick="cyclePasajeStatusGlobal('${obra.id}','${p.id}',this)"
+      class="pasaje-status-pill ${status}"
+      title="Estado: ${STATUS_LABEL[status]} (toca para cambiar)"
+      style="cursor:pointer;border:none;padding:0;flex-shrink:0"></button>
+    <div style="flex:1;min-width:0">
+      <div class="pasaje-row-text" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.text}${tempoInfo}</div>
+      ${showObra ? `<div class="pasaje-row-obra" style="margin-top:2px">${obra.name}</div>` : ''}
+      <div class="pasaje-bar-track" style="margin-top:5px">
+        <div class="pasaje-bar-fill" style="width:${fillPct}%;background:${fillColor}"></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-top:2px">
+        <div style="font-size:8px;color:${fillColor}">${barLabel}</div>
+        <div style="font-size:8px;color:var(--text3)">trabajado: ${lastStr}</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:5px;flex-shrink:0;margin-left:8px">
+      <button onclick="openPasajeStats('${obra.id}','${p.id}')"
+        style="padding:5px 8px;background:transparent;border:1px solid var(--border2);border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:9px;cursor:pointer;transition:all 0.15s;color:${hasHistory ? 'var(--accent)' : 'var(--text3)'}"
+        onmouseenter="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
+        onmouseleave="this.style.borderColor='';this.style.color=''"
+        title="Ver estadísticas y evolución">↗ stats${hasHistory ? ' ('+((p.sesiones||[]).length)+')' : ''}</button>
+      <button onclick="openPasajeScore('${obra.id}','${p.id}')"
+        style="padding:5px 8px;background:transparent;border:1px solid var(--border2);border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:9px;cursor:pointer;transition:all 0.15s;${logBtnStyle}"
+        onmouseenter="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
+        onmouseleave="this.style.borderColor='';this.style.color=''">${logBtnTitle}</button>
+    </div>
+  </div>`;
+}
+
 // ─── PASE QUALITY ────────────────────────────────────────────────────────────
 
 let paseQualityObraId = null;
@@ -3935,6 +4606,125 @@ function confirmPase() {
   closeModal('modalPaseQuality');
   showToast('Pase registrado ✓');
   renderObras();
+}
+
+// ─── BACKUP ──────────────────────────────────────────────────────────────────
+
+function exportarDatos() {
+  const payload = {
+    version: 2,
+    exportDate: new Date().toISOString(),
+    data: db
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  const fecha = new Date().toISOString().split('T')[0];
+  a.href     = url;
+  a.download = `alberto-piano-backup-${fecha}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('Datos exportados ✓');
+}
+
+function importarDatos(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      // Acepta tanto el formato con envelope {version, data} como el raw db
+      const incoming = parsed.data || parsed;
+      if (!incoming.obras) throw new Error('Formato no reconocido');
+
+      const nObras    = (incoming.obras    || []).length;
+      const nSesiones = (incoming.sesiones || []).length;
+      const nEventos  = (incoming.eventos  || []).length;
+
+      const msg = `¿Importar backup?\n\n${nObras} obras · ${nSesiones} sesiones · ${nEventos} eventos\n\nEsto reemplazará todos los datos actuales.`;
+      if (!confirm(msg)) { input.value = ''; return; }
+
+      db = {
+        obras:    incoming.obras    || [],
+        sesiones: incoming.sesiones || [],
+        eventos:  incoming.eventos  || [],
+        registro: incoming.registro || []
+      };
+      saveData();
+      closeModal('modalSettings');
+      showView('obras');
+      showToast(`Importado: ${nObras} obras, ${nSesiones} sesiones ✓`);
+    } catch(err) {
+      const fb = document.getElementById('importarFeedback');
+      fb.textContent = 'Error al leer el archivo: ' + err.message;
+      fb.style.color = 'var(--red)';
+      fb.style.display = 'block';
+    }
+    input.value = '';
+  };
+  reader.readAsText(file);
+}
+
+// ─── EDIT OBRA NOMBRE ────────────────────────────────────────────────────────
+
+function openEditObraNombre(obraId) {
+  const obra = findObra(obraId);
+  if (!obra) return;
+  document.getElementById('editObraId').value = obraId;
+  document.getElementById('editObraNombreInput').value = obra.name;
+  document.getElementById('editObraComposerInput').value = obra.composer === '—' ? '' : (obra.composer || '');
+  openModal('modalEditObraNombre');
+  setTimeout(() => document.getElementById('editObraNombreInput').focus(), 100);
+}
+
+function saveEditObraNombre() {
+  const obraId = document.getElementById('editObraId').value;
+  const nombre = document.getElementById('editObraNombreInput').value.trim();
+  const composer = document.getElementById('editObraComposerInput').value.trim();
+  if (!nombre) { showToast('El título no puede estar vacío'); return; }
+  const obra = findObra(obraId);
+  if (!obra) return;
+  obra.name = nombre;
+  obra.composer = composer || '—';
+  // Update also in sesiones history
+  (db.sesiones || []).forEach(s => {
+    (s.items || []).forEach(it => {
+      if (it.obraId === obraId) it.obraName = nombre;
+    });
+  });
+  saveData();
+  closeModal('modalEditObraNombre');
+  rerenderObraCard(obraId);
+  showToast('Obra actualizada ✓');
+}
+
+function confirmDeleteObra(obraId) {
+  const obra = findObra(obraId);
+  if (!obra) return;
+  if (confirm(`¿Eliminar "${obra.name}"?\nEsta acción no se puede deshacer.`)) {
+    deleteObra(obraId);
+    showToast('Obra eliminada');
+  }
+}
+
+// ─── FONDO ATMOSFÉRICO ───────────────────────────────────────────────────────
+
+function setFondo(fondo, btn) {
+  document.documentElement.setAttribute('data-fondo', fondo);
+  localStorage.setItem('alberto_fondo', fondo);
+  document.querySelectorAll('.fondo-option').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+}
+
+function loadFondo() {
+  const fondo = localStorage.getItem('alberto_fondo') || '';
+  document.documentElement.setAttribute('data-fondo', fondo);
+  document.querySelectorAll('.fondo-option').forEach(b => {
+    b.classList.toggle('active', (b.dataset.fondo || '') === fondo);
+  });
 }
 
 // ─── SESIÓN MANUAL ─────────────────────────────────────────────────────────
@@ -4079,6 +4869,7 @@ function loadTheme() {
 
 updateHeader();
 loadTheme();
+loadFondo();
 </script>
 </body>
 </html>
