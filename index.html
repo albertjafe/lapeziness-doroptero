@@ -10,7 +10,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   /* FUENTE CONFIGURABLE */
-  :root { --ui-font: 'JetBrains Mono', monospace; }
+  :root {
+    --ui-font: 'JetBrains Mono', monospace;
+    --dot-opacity: 0.06;
+  }
   [data-font="serif"]  { --ui-font: 'Cormorant Garamond', serif; }
   [data-font="system"] { --ui-font: -apple-system, 'Helvetica Neue', sans-serif; }
 
@@ -118,6 +121,9 @@
     font-size: 13px;
     -webkit-text-size-adjust: none;
     text-size-adjust: none;
+    background-image: radial-gradient(circle, var(--text3) 1px, transparent 1px);
+    background-size: 28px 28px;
+    background-attachment: fixed;
   }
 
   /* iPad / large screen scaling */
@@ -1330,7 +1336,33 @@
     font-size: 11px; color: var(--text3); line-height: 1.8;
   }
 
-  /* PASAJE STATS MODAL */
+  .btn-ghost-hover { background: var(--bg2); }
+  .btn-ghost-hover:hover { background: var(--bg3); }
+  .del-session-btn-inner { color: var(--text3); }
+  .del-session-btn-inner:hover { color: var(--red); }
+
+  /* MULTI-OBRA CHART */
+  .obras-chart-btn {
+    width: 100%; padding: 10px 14px; margin-bottom: 14px;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--accent);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px; cursor: pointer; text-align: left;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .chart-leyenda-dot {
+    display: inline-block; width: 10px; height: 10px;
+    border-radius: 50%; margin-right: 6px; flex-shrink: 0;
+  }
+  .chart-leyenda-row {
+    display: flex; align-items: center; flex-wrap: wrap;
+    gap: 8px 16px; margin-top: 12px; padding-top: 10px;
+    border-top: 1px solid var(--border2);
+  }
+  .chart-leyenda-item {
+    display: flex; align-items: center;
+    font-size: 9px; color: var(--text2);
+  }
   .pstats-header {
     display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 16px;
   }
@@ -1598,6 +1630,10 @@
 </div>
 
 <div class="view" id="view-pases">
+  <button class="obras-chart-btn" onclick="openObrasChart()">
+    <span>Evolución global de obras</span>
+    <span style="font-size:12px;font-family:'JetBrains Mono',monospace;color:var(--text3)">↗ gráfico</span>
+  </button>
   <div id="pasesList"></div>
 </div>
 
@@ -1605,7 +1641,7 @@
 <div class="view" id="view-historial">
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border2)">
     <div style="font-size:9px;color:var(--text3);letter-spacing:0.2em;text-transform:uppercase">Historial de sesiones</div>
-    <button class="add-manual-session-btn" onclick="openSesionManual()" style="padding:6px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.06em;cursor:pointer;transition:all 0.2s" onmouseenter="this.style.background='var(--bg3)'" onmouseleave="this.style.background='var(--bg2)'">+ añadir estudio</button>
+    <button class="add-manual-session-btn" onclick="openSesionManual()" style="padding:6px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.06em;cursor:pointer;transition:all 0.2s" class="btn-ghost-hover">+ añadir estudio</button>
   </div>
   <div id="sesionesHistorial"></div>
 </div>
@@ -1696,6 +1732,8 @@
     <div style="font-size:9px;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">Calidad (1 = muy mal · 10 = perfecto)</div>
     <div class="pscore-modal-row" id="paseQScoreBtns"></div>
     <input class="modal-input" id="paseQNote" placeholder="nota rápida (opcional)" type="text" style="margin-top:4px">
+    <div style="font-size:9px;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;margin:10px 0 6px">Fecha del pase</div>
+    <input class="modal-input" id="paseQFecha" type="date" style="margin-bottom:0">
     <div class="modal-buttons">
       <button class="modal-btn secondary" onclick="closeModal('modalPaseQuality')">Cancelar</button>
       <button class="modal-btn primary" onclick="confirmPase()">Guardar</button>
@@ -1729,6 +1767,28 @@
     <div id="graficoMovTabs" style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:12px"></div>
     <div id="graficoSvgWrap"></div>
     <div id="graficoLeyenda" style="display:flex;gap:12px;flex-wrap:wrap;margin-top:10px"></div>
+  </div>
+</div>
+
+<!-- MODAL OBRAS CHART -->
+<div class="modal-overlay" id="modalObrasChart">
+  <div class="modal" style="max-width:560px">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:16px">
+      <div class="modal-title" style="margin-bottom:0">Evolución global</div>
+      <button class="modal-btn secondary" onclick="closeModal('modalObrasChart')" style="padding:4px 12px;font-size:10px">✕</button>
+    </div>
+    <div style="font-size:9px;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">Métrica</div>
+    <div style="display:flex;gap:6px;margin-bottom:14px" id="chartMetricBtns">
+      <button class="sort-btn active" onclick="setChartMetric('pases',this)">Pases (score)</button>
+      <button class="sort-btn" onclick="setChartMetric('apr',this)">Aprendido</button>
+      <button class="sort-btn" onclick="setChartMetric('sol',this)">Solidez</button>
+      <button class="sort-btn" onclick="setChartMetric('esc',this)">Escena</button>
+    </div>
+    <div id="obrasChartSvg"></div>
+    <div class="chart-leyenda-row" id="obrasChartLeyenda"></div>
+    <div class="modal-buttons" style="margin-top:16px">
+      <button class="modal-btn primary" onclick="closeModal('modalObrasChart')">Cerrar</button>
+    </div>
   </div>
 </div>
 
@@ -3985,7 +4045,7 @@ function renderSesionesHistorial() {
         <div class="sesion-hist-date" style="margin-bottom:0">${label}${s.energia && s.energia !== 'manual' ? ' · ' + s.energia : ''}${s.energia === 'manual' ? ' <span style="font-size:8px;background:var(--bg3);border:1px solid var(--border2);border-radius:4px;padding:1px 5px;color:var(--text3)">manual</span>' : ''}</div>
         <button onclick="deleteSession('${s.date}')"
           style="background:none;border:none;color:var(--text3);font-size:10px;cursor:pointer;padding:0 2px;font-family:'JetBrains Mono',monospace"
-          onmouseenter="this.style.color='var(--red)'" onmouseleave="this.style.color='var(--text3)'">✕</button>
+          class="del-session-btn-inner">✕</button>
       </div>
       ${itemsHtml}
     </div>`;
@@ -4314,10 +4374,6 @@ function renderPasajeRowGlobal(item, STATUS_LABEL, STATUS_COLOR, STATUS_BAR, sho
   const hasHistory = (p.sesiones||[]).length > 0;
 
   return `<div class="pasaje-row-global">
-    <button onclick="cyclePasajeStatusGlobal('${obra.id}','${p.id}',this)"
-      class="pasaje-status-pill ${status}"
-      title="Estado: ${STATUS_LABEL[status]} (toca para cambiar)"
-      style="cursor:pointer;border:none;padding:0;flex-shrink:0"></button>
     <div style="flex:1;min-width:0">
       <div class="pasaje-row-text" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.text}${tempoInfo}</div>
       ${showObra ? `<div class="pasaje-row-obra" style="margin-top:2px">${obra.name}</div>` : ''}
@@ -4331,14 +4387,10 @@ function renderPasajeRowGlobal(item, STATUS_LABEL, STATUS_COLOR, STATUS_BAR, sho
     </div>
     <div style="display:flex;flex-direction:column;gap:5px;flex-shrink:0;margin-left:8px">
       <button onclick="openPasajeStats('${obra.id}','${p.id}')"
-        style="padding:5px 8px;background:transparent;border:1px solid var(--border2);border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:9px;cursor:pointer;transition:all 0.15s;color:${hasHistory ? 'var(--accent)' : 'var(--text3)'}"
-        onmouseenter="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
-        onmouseleave="this.style.borderColor='';this.style.color=''"
-        title="Ver estadísticas y evolución">↗ stats${hasHistory ? ' ('+((p.sesiones||[]).length)+')' : ''}</button>
+        style="padding:5px 8px;background:transparent;border:1px solid var(--border2);border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:9px;cursor:pointer;color:${hasHistory ? 'var(--accent)' : 'var(--text3)'}"
+        title="Ver estadísticas">↗ stats${hasHistory ? ' (' + (p.sesiones||[]).length + ')' : ''}</button>
       <button onclick="openPasajeScore('${obra.id}','${p.id}')"
-        style="padding:5px 8px;background:transparent;border:1px solid var(--border2);border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:9px;cursor:pointer;transition:all 0.15s;${logBtnStyle}"
-        onmouseenter="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
-        onmouseleave="this.style.borderColor='';this.style.color=''">${logBtnTitle}</button>
+        style="padding:5px 8px;background:transparent;border:1px solid ${loggedToday ? 'var(--green)' : 'var(--border2)'};border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:9px;cursor:pointer;color:${loggedToday ? 'var(--green)' : 'var(--text3)'}">${logBtnTitle}</button>
     </div>
   </div>`;
 }
@@ -4383,6 +4435,7 @@ function registerPase(obraId, movId) {
     : (obra ? obra.name : '');
   document.getElementById('paseQualityName').textContent = displayName;
   document.getElementById('paseQNote').value = '';
+  document.getElementById('paseQFecha').value = new Date().toISOString().split('T')[0];
   buildPaseScoreBtns();
   document.querySelectorAll('.pase-tipo-btn').forEach(b => b.classList.remove('active'));
   document.querySelector('.pase-tipo-btn.solo').classList.add('active');
@@ -4408,9 +4461,11 @@ function selectPaseQ(n, btn) {
 function confirmPase() {
   if (!paseQualitySelected) { showToast('Elige una puntuación'); return; }
   const note = document.getElementById('paseQNote').value.trim();
+  const fechaStr = document.getElementById('paseQFecha').value;
+  const paseDate = fechaStr ? new Date(fechaStr + 'T12:00:00').toISOString() : new Date().toISOString();
   const tipo = paseTipoSelected || 'tecnico';
   const quality = scoreToQuality(paseQualitySelected);
-  const paseEntry = { date: new Date().toISOString(), score: paseQualitySelected, quality, tipo, note };
+  const paseEntry = { date: paseDate, score: paseQualitySelected, quality, tipo, note };
 
   if (paseQualityMovId) {
     const mov = findMovimiento(paseQualityObraId, paseQualityMovId);
@@ -4449,6 +4504,144 @@ function confirmPase() {
   closeModal('modalPaseQuality');
   showToast('Pase registrado ✓');
   renderObras();
+}
+
+// ─── OBRAS GLOBAL CHART ──────────────────────────────────────────────────────
+
+let chartMetric = 'pases';
+
+function setChartMetric(metric, btn) {
+  chartMetric = metric;
+  document.querySelectorAll('#chartMetricBtns .sort-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderObrasChart();
+}
+
+function openObrasChart() {
+  chartMetric = 'pases';
+  document.querySelectorAll('#chartMetricBtns .sort-btn').forEach((b, i) => b.classList.toggle('active', i === 0));
+  renderObrasChart();
+  openModal('modalObrasChart');
+}
+
+function renderObrasChart() {
+  const svgEl = document.getElementById('obrasChartSvg');
+  const leyEl = document.getElementById('obrasChartLeyenda');
+  if (!svgEl) return;
+
+  const obras = (db.obras || []).filter(o => {
+    if (chartMetric === 'pases') return (o.paseHistory || []).length >= 1;
+    return true;
+  });
+
+  if (!obras.length) {
+    svgEl.innerHTML = '<div style="text-align:center;padding:40px 0;font-size:11px;color:var(--text3)">No hay datos suficientes aún.</div>';
+    leyEl.innerHTML = '';
+    return;
+  }
+
+  // Palette — enough for up to 10 obras
+  const PALETTE = [
+    '#c9a96e','#7ec89a','#e07060','#6090d8','#d08040',
+    '#a06ad8','#40b8a0','#d06080','#80a040','#8080c0'
+  ];
+
+  const W = 500, H = 200;
+  const PAD = { top: 16, right: 16, bottom: 32, left: 28 };
+  const cW = W - PAD.left - PAD.right;
+  const cH = H - PAD.top - PAD.bottom;
+
+  const xOf = (t, minT, rangeT) => PAD.left + (rangeT > 0 ? ((t - minT) / rangeT) * cW : cW / 2);
+  const yOf = v => PAD.top + cH - ((v - 1) / 9) * cH; // scale 1-10
+
+  // Collect all series
+  let allTimes = [];
+
+  const series = obras.map((obra, idx) => {
+    let points = [];
+    if (chartMetric === 'pases') {
+      const hist = [...(obra.paseHistory || [])].sort((a, b) => new Date(a.date) - new Date(b.date));
+      points = hist.map(p => ({ t: new Date(p.date).getTime(), v: p.score ?? null })).filter(p => p.v !== null);
+    } else {
+      // For apr/sol/esc — we only have current value, not history.
+      // Show as a horizontal line at current value to still participate in the chart.
+      const val = obra[chartMetric] || 1;
+      const now = Date.now();
+      const start = now - 30 * 86400000;
+      points = [{ t: start, v: val }, { t: now, v: val }];
+    }
+    points.forEach(p => allTimes.push(p.t));
+    return { obra, points, color: PALETTE[idx % PALETTE.length] };
+  }).filter(s => s.points.length >= 1);
+
+  if (!series.length) {
+    svgEl.innerHTML = '<div style="text-align:center;padding:40px 0;font-size:11px;color:var(--text3)">Sin datos de pases registrados.</div>';
+    leyEl.innerHTML = '';
+    return;
+  }
+
+  const minT = Math.min(...allTimes);
+  const maxT = Math.max(...allTimes);
+  const rangeT = maxT - minT || 86400000;
+
+  // Grid lines
+  const grid = [1, 4, 7, 10].map(v => {
+    const y = yOf(v);
+    return `<line x1="${PAD.left}" y1="${y}" x2="${W - PAD.right}" y2="${y}" stroke="var(--border2)" stroke-dasharray="3,3"/>
+      <text x="${PAD.left - 3}" y="${y + 3.5}" text-anchor="end" font-size="8" fill="var(--text3)" font-family="JetBrains Mono,monospace">${v}</text>`;
+  }).join('');
+
+  // X axis labels (3 dates)
+  const timeRange = [minT, (minT + maxT) / 2, maxT];
+  const xLabels = timeRange.map(t => {
+    const x = xOf(t, minT, rangeT);
+    const d = new Date(t);
+    const lbl = d.getDate() + '/' + (d.getMonth() + 1);
+    return `<text x="${x}" y="${H - 4}" text-anchor="middle" font-size="8" fill="var(--text3)" font-family="JetBrains Mono,monospace">${lbl}</text>`;
+  }).join('');
+
+  // Lines + dots per obra
+  const paths = series.map(({ obra, points, color }) => {
+    if (points.length === 0) return '';
+    const sorted = [...points].sort((a, b) => a.t - b.t);
+
+    // Smooth line
+    const lineD = sorted.map((p, i) => {
+      const x = xOf(p.t, minT, rangeT);
+      const y = yOf(p.v);
+      return (i === 0 ? 'M' : 'L') + x.toFixed(1) + ',' + y.toFixed(1);
+    }).join(' ');
+
+    const dots = sorted.map(p => {
+      const x = xOf(p.t, minT, rangeT);
+      const y = yOf(p.v);
+      const d = new Date(p.t).toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+      return `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4" fill="${color}" stroke="var(--bg2)" stroke-width="1.5" opacity="0.9"><title>${obra.name} · ${d} · ${p.v}/10</title></circle>`;
+    }).join('');
+
+    // Label at last point
+    const last = sorted[sorted.length - 1];
+    const lx = xOf(last.t, minT, rangeT);
+    const ly = yOf(last.v);
+    const shortName = obra.name.length > 12 ? obra.name.slice(0, 11) + '…' : obra.name;
+    const labelX = Math.min(lx + 6, W - PAD.right - 2);
+
+    return `<path d="${lineD}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" opacity="0.85"/>
+      ${dots}
+      <text x="${labelX}" y="${ly + 3}" font-size="7.5" fill="${color}" font-family="JetBrains Mono,monospace" opacity="0.9">${shortName}</text>`;
+  }).join('');
+
+  svgEl.innerHTML = `<svg viewBox="0 0 ${W} ${H}" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">
+    ${grid}${paths}${xLabels}
+  </svg>`;
+
+  // Legend
+  leyEl.innerHTML = series.map(({ obra, color }) =>
+    `<div class="chart-leyenda-item">
+      <span class="chart-leyenda-dot" style="background:${color}"></span>
+      <span>${obra.name}</span>
+    </div>`
+  ).join('');
 }
 
 // ─── BACKUP ──────────────────────────────────────────────────────────────────
@@ -4658,12 +4851,33 @@ function setFont(font, btn) {
 function setFontSize(size, btn) {
   const zooms = { small: 0.82, normal: 1, large: 1.22, xlarge: 1.5 };
   const z = zooms[size] || 1;
-  document.documentElement.style.zoom = z;
-  // Fallback for browsers that don't support zoom on html: scale font-size
-  document.documentElement.style.fontSize = Math.round(z * 100) + '%';
+  applyZoom(z);
   localStorage.setItem('alberto_size', size);
   document.querySelectorAll('.size-option').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
+}
+
+// Detect iOS Safari (doesn't support CSS zoom)
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+              (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+
+function applyZoom(z) {
+  if (isIOS) {
+    const b = document.body;
+    b.style.transformOrigin = 'top left';
+    if (z === 1) {
+      b.style.transform = '';
+      b.style.width = '';
+      b.style.minHeight = '';
+    } else {
+      b.style.transform = 'scale(' + z + ')';
+      b.style.width = (100 / z).toFixed(3) + '%';
+      b.style.minHeight = (100 / z).toFixed(3) + 'vh';
+    }
+  } else {
+    document.documentElement.style.zoom = z;
+    document.documentElement.style.fontSize = Math.round(z * 100) + '%';
+  }
 }
 
 function setTheme(theme, btn) {
@@ -4682,8 +4896,7 @@ function loadTheme() {
 
   document.documentElement.setAttribute('data-theme', theme);
   document.documentElement.setAttribute('data-font', font);
-  document.documentElement.style.zoom = z;
-  document.documentElement.style.fontSize = Math.round(z * 100) + '%';
+  applyZoom(z);
 
   document.querySelectorAll('.theme-option').forEach(b => {
     b.classList.toggle('active', (b.dataset.theme || '') === theme);
