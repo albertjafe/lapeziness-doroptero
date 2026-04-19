@@ -67,6 +67,7 @@
   [data-theme="cozy"] .nav-btn.active { background: var(--bg3) !important; }
   [data-theme="cozy"] .nav { border-radius: 0; background: var(--bg2); }
   [data-theme="cozy"] .header { border-bottom: 2px solid var(--border); background: var(--bg2); }
+  [data-theme="cozy"] .topbar { background: var(--bg2); }
   [data-theme="cozy"] .header-title { font-family: 'Caveat', cursive !important; font-size: 26px !important; font-style: italic; }
   [data-theme="cozy"] .session-hero-title { font-family: 'Caveat', cursive !important; font-size: 38px !important; }
   [data-theme="cozy"] .modal-title { font-family: 'Caveat', cursive !important; font-size: 26px !important; }
@@ -167,8 +168,12 @@
   }
 
   /* HEADER */
-  .header {
+  /* Fixed topbar wraps both header and nav — no gap possible */
+  .topbar {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: var(--bg);
+  }
+  .header {
     background: var(--bg);
     border-bottom: 1px solid var(--border);
     padding: 16px 20px;
@@ -184,18 +189,17 @@
     text-transform: uppercase;
   }
 
-  /* NAV */
+  /* NAV — sits inside topbar, no independent fixed positioning */
   .nav {
-    position: fixed; top: 61px; left: 0; right: 0; z-index: 99;
     display: flex; gap: 2px;
     background: var(--bg2);
     padding: 6px;
     border-bottom: 1px solid var(--border2);
     overflow-x: auto;
   }
-  /* Offset content below fixed header+nav */
+  /* Content offset — set via JS after measuring topbar height */
   .app-content {
-    padding-top: 112px;
+    padding-top: 112px; /* fallback; overridden by JS */
   }
   .nav-btn {
     flex: 1; min-width: 80px;
@@ -1179,6 +1183,68 @@
   .pase-btn:hover { background: var(--bg3); }
 
   /* ESCALAS APR/CON/PER */
+  /* LIQUID FILL ANIMATION */
+  /* LIQUID FILL ANIMATION — shimmer overlay via pseudo-element */
+  .compas-bar-track, .pasaje-bar-track {
+    position: relative; overflow: hidden;
+  }
+  .compas-bar-fill, .pasaje-bar-fill {
+    position: relative;
+  }
+  .compas-bar-fill::after, .pasaje-bar-fill::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255,255,255,0.0) 20%,
+      rgba(255,255,255,0.30) 50%,
+      rgba(255,255,255,0.0) 80%,
+      transparent 100%
+    );
+    background-size: 60% 100%;
+    background-repeat: no-repeat;
+    animation: liquid-shimmer 2.2s ease-in-out infinite;
+  }
+  @keyframes liquid-shimmer {
+    0%   { background-position: -100% center; }
+    100% { background-position: 250% center; }
+  }
+  /* Bigger badge text when it has percentage */
+  .estado-badge.con-pct {
+    font-size: 11px !important;
+    padding: 4px 12px !important;
+    letter-spacing: 0.04em;
+  }
+  .compas-row {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 6px;
+  }
+  .compas-field {
+    width: 56px; background: var(--bg3);
+    border: 1px solid var(--border2); border-radius: 4px;
+    padding: 5px 7px; color: var(--accent);
+    font-family: 'JetBrains Mono', monospace; font-size: 12px;
+    text-align: center;
+  }
+  .compas-field:focus { outline: none; border-color: var(--border); }
+  .compas-sep { font-size: 11px; color: var(--text3); }
+  .compas-pct {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; font-weight: 300; min-width: 54px; text-align: right;
+  }
+  .compas-bar-wrap { flex: 1; min-width: 80px; }
+  .compas-bar-track {
+    height: 6px; background: var(--bg3); border-radius: 4px; overflow: hidden;
+  }
+  .compas-bar-fill {
+    height: 100%; border-radius: 4px; transition: width 0.3s, background 0.3s;
+  }
+  .compas-label-row {
+    display: flex; justify-content: space-between;
+    font-size: 8px; color: var(--text3); margin-top: 3px; letter-spacing: 0.06em;
+  }
+
   .obra-scales { margin-bottom: 14px; display: flex; flex-direction: column; gap: 10px; }
   .scale-row {}
   .scale-label-row {
@@ -1522,6 +1588,7 @@
 </head>
 <body>
 
+<div class="topbar">
 <div class="header">
   <div style="display:flex;align-items:center;gap:10px">
     <svg class="cozy-piano-deco" width="38" height="38" viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1561,6 +1628,7 @@
   <button class="nav-btn" onclick="showView('calendario')">Calendario</button>
   <button class="nav-btn" onclick="showView('historial')">Historial</button>
 </div>
+</div><!-- end topbar -->
 
 <div class="app-content">
 
@@ -2170,6 +2238,100 @@ function renderBreakCard(tipo, energia, idx) {
 let currentPlan = [];
 const sessionTicks = {};
 
+const DRAFT_KEY = 'alberto_session_draft';
+
+function saveDraft() {
+  // Persist the in-progress session so iOS tab suspension doesn't lose it
+  const notes = {};
+  const objs  = {};
+  currentPlan.forEach(o => {
+    const n = document.getElementById('tnote-' + o.id);
+    const ob = document.getElementById('obj-' + o.id);
+    if (n)  notes[o.id] = n.value;
+    if (ob) objs[o.id]  = ob.value;
+  });
+  const draft = {
+    date:    new Date().toDateString(),
+    energia: selectedEnergy,
+    time:    selectedTime,
+    plan:    currentPlan.map(o => o.id),
+    ticks:   { ...sessionTicks },
+    notes,
+    objs,
+  };
+  localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+}
+
+function loadDraft() {
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    if (!raw) return false;
+    const draft = JSON.parse(raw);
+    if (draft.date !== new Date().toDateString()) {
+      localStorage.removeItem(DRAFT_KEY);
+      return false;
+    }
+    // Restore energy + time selection
+    selectedEnergy = draft.energia || 'normal';
+    selectedTime   = draft.time    || 2;
+    document.querySelectorAll('.energy-btn').forEach(b => {
+      b.classList.toggle('active', b.dataset.energy === selectedEnergy);
+    });
+    document.querySelectorAll('.time-btn').forEach(b => {
+      b.classList.toggle('active', parseFloat(b.dataset.time) === selectedTime);
+    });
+    // Rebuild plan from stored IDs
+    const planObras = draft.plan.map(id => findObra(id)).filter(Boolean);
+    if (!planObras.length) return false;
+    currentPlan = planObras;
+    // Restore ticks
+    Object.assign(sessionTicks, draft.ticks || {});
+    // Re-render (reuse generateSession rendering but with saved plan)
+    _restoreDraftUI(draft);
+    return true;
+  } catch(e) { return false; }
+}
+
+function _restoreDraftUI(draft) {
+  // Trigger same render path as generateSession but skip algorithm
+  const sesionHoy = db.sesiones.find(s => new Date(s.date).toDateString() === new Date().toDateString());
+  const cargaHoy  = sesionHoy ? 50 : 0; // approximate
+  let html = '';
+  currentPlan.forEach((obra, i) => {
+    html += renderTrabajoItem(obra, i, 30, selectedEnergy, cargaHoy, analizarPases(obra.id));
+  });
+  html += `<button class="save-session-btn" onclick="saveSession()">Guardar sesión de hoy</button>`;
+  const planDiv = document.getElementById('sessionPlan');
+  planDiv.innerHTML = html;
+  planDiv.classList.add('visible');
+  // Restore tick visual state and field values after DOM exists
+  requestAnimationFrame(() => {
+    currentPlan.forEach(obra => {
+      const tick = draft.ticks?.[obra.id];
+      if (tick) {
+        const row = document.querySelector(`#sessionPlan .tick-row`);
+        // Find the right row by looking for the button referencing this obra
+        const allRows = document.querySelectorAll('#sessionPlan .tick-row');
+        allRows.forEach(r => {
+          const btn = r.querySelector(`.tick-btn[onclick*="'${obra.id}'"]`);
+          if (btn) {
+            r.querySelectorAll('.tick-btn').forEach(b => b.classList.remove('hecho','parcial','saltado'));
+            r.querySelector(`.tick-btn[onclick*="'${tick}'"]`)?.classList.add(tick);
+          }
+        });
+      }
+      const noteEl = document.getElementById('tnote-' + obra.id);
+      const objEl  = document.getElementById('obj-' + obra.id);
+      if (noteEl && draft.notes?.[obra.id]) noteEl.value = draft.notes[obra.id];
+      if (objEl  && draft.objs?.[obra.id])  objEl.value  = draft.objs[obra.id];
+    });
+  });
+}
+
+function clearDraft() {
+  localStorage.removeItem(DRAFT_KEY);
+}
+
 function getLastTickForObra(obraId) {
   // Busca en sesiones guardadas el último tick para esta obra (no hoy)
   const hoy = new Date().toDateString();
@@ -2194,6 +2356,7 @@ function setTick(obraId, tick, btn) {
   row.querySelectorAll('.tick-btn').forEach(b => b.classList.remove('hecho','parcial','saltado'));
   btn.classList.add(tick);
   sessionTicks[obraId] = tick;
+  saveDraft();
 }
 
 function saveSession() {
@@ -2209,6 +2372,7 @@ function saveSession() {
   db.sesiones.unshift({ date: new Date().toISOString(), energia: selectedEnergy, items });
   if (db.sesiones.length > 60) db.sesiones = db.sesiones.slice(0, 60);
   saveData();
+  clearDraft();
   showToast('Sesión guardada ✓');
 }
 
@@ -2219,11 +2383,115 @@ function saveSession() {
 // con = Consolidado (de arriba abajo sin parar mucho)  1-10
 // per = Perfeccionado (bajo presión, con libertad)  1-10
 
+// Derive apr (1-10) from compas percentage, or return stored value
+function aprFromCompas(entity) {
+  const total = entity.compasesTotal;
+  const actual = entity.compasActual;
+  if (total && total > 0 && actual !== undefined && actual !== null) {
+    return Math.max(1, Math.min(10, Math.round((actual / total) * 10)));
+  }
+  return entity.apr || 1;
+}
+
+function compasPercent(entity) {
+  const total = entity.compasesTotal;
+  const actual = entity.compasActual;
+  if (!total || total <= 0) return null;
+  return Math.min(100, Math.round(((actual || 0) / total) * 100));
+}
+
+function compasBarColor(pct) {
+  return 'var(--orange)';
+}
+
+function saveCompas(obraId, movId, field, val) {
+  const entity = movId ? findMovimiento(obraId, movId) : findObra(obraId);
+  if (!entity) return;
+  entity[field] = val ? parseInt(val) : null;
+  entity.apr = aprFromCompas(entity);
+  saveData();
+  rerenderObraCard(obraId);
+}
+
+// ── ESTADO LABELS ────────────────────────────────────────────────────────────
+
+function solLabel(sol) {
+  if (sol >= 9) return { label: 'Maduro',       color: '#5ab87a' };
+  if (sol >= 7) return { label: 'Sólido',        color: 'var(--accent)' };
+  if (sol >= 5) return { label: 'Construyendo',  color: '#c8a030' };
+  if (sol >= 3) return { label: 'Frágil',        color: 'var(--orange)' };
+  return               { label: 'Sin solidez',   color: 'var(--red)' };
+}
+
+function escLabel(esc) {
+  if (esc >= 9) return { label: 'Libre',          color: '#5ab87a' };
+  if (esc >= 7) return { label: 'Escénico',        color: 'var(--accent)' };
+  if (esc >= 5) return { label: 'En desarrollo',   color: '#c8a030' };
+  if (esc >= 3) return { label: 'Nervioso',        color: 'var(--orange)' };
+  return               { label: 'Sin exposición',  color: 'var(--red)' };
+}
+
+function aprLabel(pct) {
+  // pct: 0-100 or null (no compases set)
+  if (pct === null)  return { label: null,              color: 'var(--orange)', pct: null };
+  if (pct >= 100)    return { label: 'Aprendida ✓',     color: 'var(--green)',  pct };
+  if (pct >= 75)     return { label: 'Casi lista',       color: '#9ab030',       pct };
+  if (pct >= 50)     return { label: 'Medio camino',     color: 'var(--accent)', pct };
+  if (pct >= 25)     return { label: 'Avanzando',        color: 'var(--orange)', pct };
+  return                    { label: 'Digitando',         color: 'var(--red)',    pct };
+}
+
 function obraFase(obra) {
-  const apr = obra.apr || 1, sol = obra.sol || 1;
-  if (apr < 6) return 'digitando';
-  if (sol < 6) return 'consolidando';
+  const apr = aprFromCompas(obra), sol = obra.sol || 1;
+  if (apr < 10) return 'digitando';      // not fully learned
+  if (sol < 6)  return 'consolidando';
   return 'mantenimiento';
+}
+
+function obraFaseLabel(obra) {
+  const pct = compasPercent(obra);
+  const apr = aprFromCompas(obra);
+  const sol = obra.sol || 1;
+  const esc = obra.esc || 1;
+
+  // Escena overrides if very high
+  if (esc >= 7 && sol >= 7 && pct === 100)
+    return { label: (escLabel(esc).label) + ' · 100%', color: escLabel(esc).color };
+
+  // Solidez shown if fully learned
+  if (pct === 100 && sol >= 6)
+    return { label: solLabel(sol).label, color: solLabel(sol).color };
+
+  // Learning stage (compas-based)
+  const al = aprLabel(pct);
+  if (al.label) return { label: al.pct !== null ? al.label + ' · ' + al.pct + '%' : al.label, color: al.color };
+
+  // Fallback for obras without compases (use apr 1-10)
+  const sl = solLabel(sol);
+  const el = escLabel(esc);
+  if (esc >= 7) return { label: el.label, color: el.color };
+  if (sol >= 6) return { label: sl.label, color: sl.color };
+  if (apr >= 6) return { label: 'Aprendida', color: 'var(--orange)' };
+  return { label: 'En aprendizaje', color: 'var(--red)' };
+}
+function obraEffectiveStats(obra) {
+  const movs = (obra.movimientos || []).filter(m => m.apr !== undefined || m.compasesTotal);
+  if (!movs.length) return obra;
+  const resolved = movs.map(m => ({ ...m, _apr: aprFromCompas(m) }));
+  const totalW = resolved.reduce((s, m) => s + (m.compasesTotal || m.duracion || 1), 0);
+  const w = fn => resolved.reduce((s, m) => s + fn(m) * (m.compasesTotal || m.duracion || 1), 0) / totalW;
+  const totalCompases = resolved.reduce((s, m) => s + (m.compasesTotal || 0), 0);
+  const actualCompases = resolved.reduce((s, m) => s + Math.min(m.compasActual || 0, m.compasesTotal || 0), 0);
+  return {
+    ...obra,
+    apr: Math.round(w(m => m._apr)),
+    sol: Math.round(w(m => m.sol || 1)),
+    esc: Math.round(w(m => m.esc || 1)),
+    dificultad: Math.round(w(m => m.dificultad || 3)),
+    duracion: resolved.reduce((s, m) => s + (m.duracion || 0), 0) || obra.duracion,
+    compasesTotal: totalCompases || null,
+    compasActual:  actualCompases || null,
+  };
 }
 
 // Legacy compat
@@ -2236,14 +2504,6 @@ function obraTipoPase(obra) {
   if (esc >= 7) return 'escena';
   if (sol >= 6) return 'informal';
   return 'solo';
-}
-
-function obraFaseLabel(obra) {
-  const apr = obra.apr || 1, sol = obra.sol || 1, esc = obra.esc || 1;
-  if (esc >= 7) return { label: 'Escena',          color: 'var(--green)' };
-  if (sol >= 6) return { label: 'Sólido',           color: 'var(--accent)' };
-  if (apr >= 6) return { label: 'Aprendido',        color: 'var(--orange)' };
-  return { label: 'En aprendizaje', color: 'var(--red)' };
 }
 
 function generateSession() {
@@ -2511,6 +2771,7 @@ function generateSession() {
   planDiv.innerHTML = html;
   planDiv.classList.add('visible');
   planDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  saveDraft();
 }
 
 // ── RENDER HELPERS ────────────────────────────────────────────────────────────
@@ -2688,6 +2949,7 @@ function renderObras() {
 }
 
 function renderObraCard(o, idx) {
+  const eff = obraEffectiveStats(o);  // use weighted stats if movimientos present
   const pasajosHtml = (o.pasajes || []).map(p => renderPasajeItem(o.id, p)).join('');
 
   const lastPaseText = o.lastPase
@@ -2723,9 +2985,9 @@ function renderObraCard(o, idx) {
     </div>`;
   }).join('');
 
-  const dif = o.dificultad || 3;
+  const dif = eff.dificultad || 3;
   const difBadge = `<span class="dif-badge d${dif}" title="Dificultad ${dif}/10">${dif}</span>`;
-  const duracion = o.duracion || '';
+  const duracion = eff.duracion || '';
 
   const hasMovs = o.movimientos && o.movimientos.length > 0;
 
@@ -2750,15 +3012,11 @@ function renderObraCard(o, idx) {
       <button class="add-movimiento-btn" onclick="addMovimiento('${o.id}')">+ añadir movimiento</button>
     </div>`;
 
-  // Estimated total duration from movimientos
-  const movDuracionTotal = hasMovs
-    ? (o.movimientos||[]).reduce((s, m) => s + (m.duracion||0), 0)
-    : null;
-  const durDisplay = movDuracionTotal ? movDuracionTotal : (o.duracion || '');
+  const durDisplay = eff.duracion || '';
 
-  // Dificultad inline buttons
+  // Dificultad inline buttons (only shown when no movements — movements have their own)
   const difInline = [1,2,3,4,5,6,7,8,9,10].map(n => {
-    const active = (o.dificultad || 3) === n;
+    const active = (eff.dificultad || 3) === n;
     const col = DIF_COLORS_MAP[n];
     return `<button class="dif-num-btn d${n} ${active?'active':''}"
       style="${active ? 'background:'+col+';border-color:'+col+';color:#fff' : ''}"
@@ -2768,7 +3026,7 @@ function renderObraCard(o, idx) {
   return `
     <div class="obra-card" id="obra-${o.id}">
       <div class="obra-header" onclick="toggleObra('${o.id}')">
-        <div class="obra-fase ${o.fase}"></div>
+        <div class="obra-fase ${obraFase(eff)}"></div>
         <div class="obra-name" id="obra-name-display-${o.id}">${o.name}${origenTag}${difBadge}${tendencia} <span class="obra-composer">${o.composer}</span></div>
         <div class="obra-scores">
           ${durDisplay ? `<span style="font-size:9px;color:var(--text3)">${durDisplay}m</span>` : ''}
@@ -2783,13 +3041,16 @@ function renderObraCard(o, idx) {
         <!-- Estado derivado + evolución -->
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:8px 0 12px">
           ${(() => {
-            const fl = obraFaseLabel(o);
-            return `<span class="estado-badge" style="background:${fl.color}22;color:${fl.color};border:1px solid ${fl.color}44">${fl.label}</span>`;
+            const fl = obraFaseLabel(eff);
+            const hasPct = fl.label && fl.label.includes('%');
+            return `<span class="estado-badge${hasPct ? ' con-pct' : ''}" style="background:${fl.color}22;color:${fl.color};border:1px solid ${fl.color}44">${fl.label}</span>`;
           })()}
+          ${hasMovs ? `<span style="font-size:9px;color:var(--text3)">(media ponderada por duración)</span>` : ''}
           <button class="diagnose-btn" onclick="openGrafico('${o.id}',null)">Evolución ↗</button>
         </div>
 
-        <!-- Dificultad + Duración -->
+        <!-- Dificultad + Duración (solo sin movimientos) -->
+        ${!hasMovs ? `
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px">
           <div>
             <div style="font-size:8px;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:4px">Dificultad</div>
@@ -2807,26 +3068,57 @@ function renderObraCard(o, idx) {
           </div>
         </div>
 
-        <!-- Escalas APR / CON / PER -->
+        <!-- Escalas APR / CON / PER (solo sin movimientos) -->
         <div class="obra-scales">
-          ${['apr','sol','esc'].map((key, idx) => {
-            const labels = ['Aprendido','Solidez','Escena'];
-            const descs  = ['Memoria y continuidad','Técnica, pasajes y musicalidad','Bajo presión real'];
+          ${renderCompasWidget(o.id, null, o)}
+          ${['sol','esc'].map((key, idx2) => {
+            const labels = ['Solidez','Escena'];
+            const descs  = ['Técnica, pasajes y musicalidad','Bajo presión real'];
             const val = o[key] || 1;
-            const colors = ['var(--orange)','var(--accent)','var(--green)'];
+            // Fixed distinct colors: Solidez = amber, Escena = green
+            const baseColor = key === 'sol' ? '#c8a030' : 'var(--green)';
+            const stateLabel = key === 'sol' ? solLabel(val) : escLabel(val);
             return `<div class="scale-row">
               <div class="scale-label-row">
-                <span class="scale-name">${labels[idx]}</span>
-                <span class="scale-desc">${descs[idx]}</span>
-                <span class="scale-val" id="scaleval-${o.id}-${key}" style="color:${colors[idx]}">${val}</span>
+                <span class="scale-name">${labels[idx2]}</span>
+                <span class="scale-desc">${descs[idx2]}</span>
+                <span style="display:flex;align-items:baseline;gap:5px">
+                  <span style="font-size:15px;font-family:'JetBrains Mono',monospace;color:${baseColor}">${val}</span>
+                  <span style="font-size:8px;padding:1px 6px;border-radius:8px;background:${baseColor}22;color:${baseColor};border:1px solid ${baseColor}44;white-space:nowrap">${stateLabel.label}</span>
+                </span>
               </div>
               <input type="range" min="1" max="10" value="${val}" class="score-slider obra-scale-slider"
-                style="accent-color:${colors[idx]}"
-                oninput="updateObraScale('${o.id}','${key}',this.value,document.getElementById('scaleval-${o.id}-${key}'))"
+                style="accent-color:${baseColor}"
+                oninput="updateObraScale('${o.id}','${key}',this.value,null)"
                 onchange="saveObraScale('${o.id}','${key}',this.value)">
             </div>`;
           }).join('')}
-        </div>
+        </div>` : `
+        <!-- Summary when has movements -->
+        <div style="display:flex;gap:12px;margin-bottom:12px;flex-wrap:wrap">
+          ${(() => {
+            const pct = compasPercent(eff);
+            const aprDisplay = pct !== null ? pct + '%' : (eff.apr || 1);
+            const aprColor   = compasBarColor(pct);
+            return `<div style="text-align:center;background:var(--bg3);border-radius:6px;padding:6px 10px;min-width:60px">
+              <div style="font-size:18px;color:${aprColor};font-family:'Cormorant Garamond',serif">${aprDisplay}</div>
+              <div style="font-size:8px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-top:2px">Aprendido</div>
+            </div>`;
+          })()}
+          ${['sol','esc'].map((key, idx2) => {
+            const labels = ['Solidez','Escena'];
+            const colors = ['var(--accent)','var(--green)'];
+            const val = eff[key] || 1;
+            return `<div style="text-align:center;background:var(--bg3);border-radius:6px;padding:6px 10px;min-width:60px">
+              <div style="font-size:18px;color:${colors[idx2]};font-family:'Cormorant Garamond',serif">${val}</div>
+              <div style="font-size:8px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-top:2px">${labels[idx2]}</div>
+            </div>`;
+          }).join('')}
+          <div style="text-align:center;background:var(--bg3);border-radius:6px;padding:6px 10px;min-width:60px">
+            <div style="font-size:18px;color:var(--text2);font-family:'Cormorant Garamond',serif">${durDisplay || '—'}m</div>
+            <div style="font-size:8px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-top:2px">Total</div>
+          </div>
+        </div>`}
 
         <!-- Movimientos -->
         ${movimientosHtml}
@@ -2854,14 +3146,37 @@ function renderObraCard(o, idx) {
     </div>`;
 }
 
-function updateObraScale(obraId, key, value, labelEl) {
-  if (labelEl) labelEl.textContent = value;
-  // Update the header badge live
+function updateObraScale(obraId, key, value, _unused) {
+  const v = parseInt(value);
+  // Find the scale row for this key inside the obra card
   const card = document.getElementById('obra-' + obraId);
   if (card) {
+    // Update number and label badge within the slider row
+    const rows = card.querySelectorAll('.scale-row');
+    rows.forEach(row => {
+      const name = row.querySelector('.scale-name');
+      if (!name) return;
+      const isTarget = (key === 'sol' && name.textContent === 'Solidez') ||
+                       (key === 'esc' && name.textContent === 'Escena');
+      if (!isTarget) return;
+      const baseColor = key === 'sol' ? '#c8a030' : 'var(--green)';
+      const stLbl = key === 'sol' ? solLabel(v) : escLabel(v);
+      const numEl = row.querySelector('.scale-label-row span:last-child span:first-child');
+      const badgeEl = row.querySelector('.scale-label-row span:last-child span:last-child');
+      if (numEl) numEl.textContent = v;
+      if (badgeEl) {
+        badgeEl.textContent = stLbl.label;
+        badgeEl.style.background = baseColor + '22';
+        badgeEl.style.color = baseColor;
+        badgeEl.style.borderColor = baseColor + '44';
+      }
+      const slider = row.querySelector('.obra-scale-slider');
+      if (slider) slider.style.accentColor = baseColor;
+    });
+    // Update header badge
     const obra = findObra(obraId);
     if (obra) {
-      const updated = { ...obra, [key]: parseInt(value) };
+      const updated = { ...obra, [key]: v };
       const fl = obraFaseLabel(updated);
       const badge = card.querySelector('.estado-badge');
       if (badge) {
@@ -3267,26 +3582,100 @@ function findMovimiento(obraId, movId) {
   return obra ? (obra.movimientos || []).find(m => m.id === movId) || null : null;
 }
 
+function renderCompasWidget(obraId, movId, entity) {
+  const elBase = movId ? 'mov-compas-' + obraId + '-' + movId : 'obra-compas-' + obraId;
+  const total  = entity.compasesTotal || '';
+  const actual = entity.compasActual  || '';
+  const pct    = compasPercent(entity);
+  const pctStr = pct !== null ? pct + '%' : '—';
+  const barColor = compasBarColor(pct);
+  const barW     = pct !== null ? pct : 0;
+  const saveCall = movId
+    ? `saveCompas('${obraId}','${mov_quote(movId)}','{F}',this.value)`
+    : `saveCompas('${obraId}',null,'{F}',this.value)`;
+  const saveTotal  = saveCall.replace('{F}', 'compasesTotal').replace("mov_quote('", "'").replace("')", "'");
+  const saveActual = saveCall.replace('{F}', 'compasActual').replace("mov_quote('", "'").replace("')", "'");
+
+  return `<div>
+    <div style="font-size:8px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:5px">Progreso de aprendizaje</div>
+    <div class="compas-row">
+      <div style="display:flex;align-items:center;gap:4px">
+        <input class="compas-field" id="${elBase}-actual" type="number" min="0"
+          value="${actual}" placeholder="0"
+          onblur="saveCompas('${obraId}',${movId ? "'"+movId+"'" : 'null'},'compasActual',this.value)"
+          title="Compás hasta donde llegas">
+        <span class="compas-sep">de</span>
+        <input class="compas-field" id="${elBase}-total" type="number" min="1"
+          value="${total}" placeholder="total"
+          onblur="saveCompas('${obraId}',${movId ? "'"+movId+"'" : 'null'},'compasesTotal',this.value)"
+          title="Compases totales de la obra/movimiento">
+        <span class="compas-sep">cc.</span>
+      </div>
+      <div class="compas-bar-wrap">
+        <div class="compas-bar-track">
+          <div class="compas-bar-fill" style="width:${barW}%;background:${barColor}"></div>
+        </div>
+        <div class="compas-label-row">
+          <span>aprendido</span>
+          <span style="color:${barColor};font-size:10px;font-family:'Cormorant Garamond',serif">${pctStr}</span>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+// helper to avoid template literal issues
+function mov_quote(s) { return s; }
+
 // ─── MOVIMIENTOS ─────────────────────────────────────────────────────────────
 
 function renderMovimientoCard(obraId, mov) {
   const fl = obraFaseLabel(mov);
   const estBadge = `<span class="estado-badge" style="font-size:8px;padding:2px 7px;background:${fl.color}22;color:${fl.color};border:1px solid ${fl.color}44">${fl.label}</span>`;
   const lastPaseText = mov.lastPase
-    ? `Último pase: ${new Date(mov.lastPase).toLocaleDateString('es-ES')}`
-    : 'Sin pase registrado';
+    ? `Último: ${new Date(mov.lastPase).toLocaleDateString('es-ES')}`
+    : 'Sin pase';
 
   const tipoIcons = { solo: 'solo', informal: 'amigos', escena: '🎭', tecnico: 'tec', memoria: 'mem', concierto: '🎭' };
-  const paseHistHtml = (mov.paseHistory||[]).slice(0,4).map(p => {
+  const paseHistHtml = (mov.paseHistory||[]).slice(0,3).map(p => {
     const d = new Date(p.date).toLocaleDateString('es-ES',{day:'numeric',month:'short'});
     const sc = p.score ?? null;
     const col = sc !== null ? scoreColor(sc) : 'var(--text3)';
     const val = sc !== null ? sc : (p.quality === 'bien' ? '✓' : p.quality === 'regular' ? '≈' : p.quality === 'mal' ? '✗' : '—');
     const tipoLabel = p.tipo ? `<span style="color:var(--text3);font-size:8px;background:var(--bg2);border-radius:3px;padding:1px 4px;margin-left:2px">${tipoIcons[p.tipo]||p.tipo}</span>` : '';
-    return `<div style="display:flex;gap:8px;font-size:9px;color:var(--text3);padding:3px 0;align-items:center">
-      <span style="color:${col};font-weight:bold">${val}</span>
-      ${tipoLabel}<span>${d}</span>
-      ${p.note ? `<span>· ${p.note}</span>` : ''}
+    return `<div style="display:flex;gap:8px;font-size:9px;color:var(--text3);padding:2px 0;align-items:center">
+      <span style="color:${col};font-weight:bold">${val}</span>${tipoLabel}<span>${d}</span>${p.note ? `<span>· ${p.note}</span>` : ''}
+    </div>`;
+  }).join('');
+
+  // Dificultad buttons
+  const dif = mov.dificultad || 3;
+  const difBtns = [1,2,3,4,5,6,7,8,9,10].map(n => {
+    const active = dif === n;
+    const col = DIF_COLORS_MAP[n];
+    return `<button class="dif-num-btn d${n} ${active?'active':''}"
+      style="${active ? 'background:'+col+';border-color:'+col+';color:#fff' : ''}"
+      onclick="setMovDificultad('${obraId}','${mov.id}',${n},this)">${n}</button>`;
+  }).join('');
+
+  // Scales (sol + esc only — apr comes from compas widget)
+  const scaleHtml = ['sol','esc'].map((key, i) => {
+    const labels = ['Solidez','Escena'];
+    const val = mov[key] || 1;
+    const elId = `msv-${obraId}-${mov.id}-${key}`;
+    const baseColor = key === 'sol' ? '#c8a030' : 'var(--green)';
+    const stLbl = key === 'sol' ? solLabel(val) : escLabel(val);
+    return `<div class="scale-row" style="margin-bottom:4px">
+      <div class="scale-label-row">
+        <span class="scale-name">${labels[i]}</span>
+        <span style="display:flex;align-items:baseline;gap:4px;margin-left:auto">
+          <span id="${elId}" style="font-size:14px;font-family:'JetBrains Mono',monospace;color:${baseColor}">${val}</span>
+          <span id="${elId}-lbl" style="font-size:8px;padding:1px 5px;border-radius:7px;background:${baseColor}22;color:${baseColor};border:1px solid ${baseColor}44;white-space:nowrap">${stLbl.label}</span>
+        </span>
+      </div>
+      <input type="range" min="1" max="10" value="${val}" class="score-slider obra-scale-slider"
+        style="accent-color:${baseColor}"
+        oninput="updateMovScale('${obraId}','${mov.id}','${key}',this.value,document.getElementById('${elId}'),document.getElementById('${elId}-lbl'))"
+        onchange="saveMovScale('${obraId}','${mov.id}','${key}',this.value)">
     </div>`;
   }).join('');
 
@@ -3298,9 +3687,30 @@ function renderMovimientoCard(obraId, mov) {
       <button class="mov-delete-btn" onclick="deleteMovimiento('${obraId}','${mov.id}')">×</button>
     </div>
     ${estBadge}
+    <!-- Duración + Dificultad -->
+    <div style="display:flex;gap:10px;align-items:flex-start;margin:8px 0;flex-wrap:wrap">
+      <div>
+        <div style="font-size:8px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:3px">Duración</div>
+        <div style="display:flex;align-items:center;gap:4px">
+          <input class="duracion-field" type="number" min="1" max="60" value="${mov.duracion||''}" placeholder="min"
+            onblur="setMovDuracion('${obraId}','${mov.id}',this.value)" style="width:46px">
+          <span style="font-size:9px;color:var(--text3)">min</span>
+        </div>
+      </div>
+      <div style="flex:1;min-width:160px">
+        <div style="font-size:8px;color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:3px">Dificultad</div>
+        <div class="dif-num-row" id="mov-dif-${obraId}-${mov.id}" style="gap:2px">${difBtns}</div>
+      </div>
+    </div>
+    <!-- Estado: compas widget + scales -->
+    <div style="margin-bottom:8px">
+      ${renderCompasWidget(obraId, mov.id, mov)}
+      ${scaleHtml}
+    </div>
+    <!-- Pase actions -->
     <div class="mov-actions">
       <button class="mov-diag-btn" onclick="openGrafico('${obraId}','${mov.id}')">Evolución ↗</button>
-      <button class="mov-pase-btn" onclick="registerPase('${obraId}','${mov.id}')">Registrar pase</button>
+      <button class="mov-pase-btn" onclick="registerPase('${obraId}','${mov.id}')">+ pase</button>
       <span style="font-size:9px;color:var(--text3);margin-left:4px">${lastPaseText}</span>
     </div>
     ${paseHistHtml ? `<div class="mov-pase-hist">${paseHistHtml}</div>` : ''}
@@ -3325,9 +3735,14 @@ function addMovimiento(obraId) {
   const obra = findObra(obraId);
   if (!obra) return;
   if (!obra.movimientos) obra.movimientos = [];
-  const id = 'mv' + Date.now();
+  const id  = 'mv' + Date.now();
   const num = obra.movimientos.length + 1;
-  obra.movimientos.push({ id, name: `Movimiento ${num}`, estado: 'aprendiendo-inicial', lastPase: null, paseHistory: [] });
+  obra.movimientos.push({
+    id, name: `Movimiento ${num}`,
+    duracion: null, dificultad: obra.dificultad || 3,
+    apr: obra.apr || 1, sol: obra.sol || 1, esc: obra.esc || 1,
+    lastPase: null, paseHistory: []
+  });
   saveData();
   rerenderObraCard(obraId);
   showToast('Movimiento añadido ✓');
@@ -3345,6 +3760,52 @@ function deleteMovimiento(obraId, movId) {
 function updateMovimientoName(obraId, movId, val) {
   const mov = findMovimiento(obraId, movId);
   if (mov) { mov.name = val; saveData(); }
+}
+
+function setMovDuracion(obraId, movId, val) {
+  const mov = findMovimiento(obraId, movId);
+  if (!mov) return;
+  mov.duracion = val ? parseInt(val) : null;
+  saveData();
+  // Update obra duracion display
+  rerenderObraCard(obraId);
+}
+
+function setMovDificultad(obraId, movId, n, btn) {
+  const mov = findMovimiento(obraId, movId);
+  if (!mov) return;
+  mov.dificultad = n;
+  saveData();
+  const row = document.getElementById('mov-dif-' + obraId + '-' + movId);
+  if (row) row.querySelectorAll('.dif-num-btn').forEach((b, i) => {
+    const active = i + 1 === n;
+    b.classList.toggle('active', active);
+    b.style.background = active ? DIF_COLORS_MAP[i+1] : '';
+    b.style.borderColor = active ? DIF_COLORS_MAP[i+1] : '';
+    b.style.color = active ? '#fff' : '';
+  });
+}
+
+function updateMovScale(obraId, movId, key, value, numEl, badgeEl) {
+  const v = parseInt(value);
+  const baseColor = key === 'sol' ? '#c8a030' : 'var(--green)';
+  const stLbl = key === 'sol' ? solLabel(v) : escLabel(v);
+  if (numEl) { numEl.textContent = v; numEl.style.color = baseColor; }
+  if (badgeEl) {
+    badgeEl.textContent = stLbl.label;
+    badgeEl.style.background = baseColor + '22';
+    badgeEl.style.color = baseColor;
+    badgeEl.style.borderColor = baseColor + '44';
+  }
+}
+
+function saveMovScale(obraId, movId, key, value) {
+  const mov = findMovimiento(obraId, movId);
+  if (!mov) return;
+  mov[key] = parseInt(value);
+  saveData();
+  // Recompute weighted obra label
+  rerenderObraCard(obraId);
 }
 
 // ─── ADD OBRA ────────────────────────────────────────────────────────────────
@@ -4069,43 +4530,7 @@ function startBreakTimer(id, totalSecs) {
 
 // ─── REGISTRO ────────────────────────────────────────────────────────────────
 
-function saveRegistro() {
-  const bien = document.getElementById('regBien').value.trim();
-  const manana = document.getElementById('regMañana').value.trim();
-  const energia = document.getElementById('regEnergia').value.trim();
-  const horas = parseFloat(document.getElementById('regHoras').value) || 0;
 
-  if (!bien && !manana) { showToast('Escribe algo antes de guardar'); return; }
-
-  db.registro.unshift({
-    date: new Date().toISOString(),
-    bien, manana, energia, horas
-  });
-  if (db.registro.length > 30) db.registro = db.registro.slice(0, 30);
-  saveData();
-  document.getElementById('regBien').value = '';
-  document.getElementById('regMañana').value = '';
-  document.getElementById('regEnergia').value = '';
-  document.getElementById('regHoras').value = '2';
-  showToast('Registro guardado ✓');
-  renderHistorial();
-}
-
-function renderHistorial() {
-  const h = document.getElementById('historial');
-  if (!db.registro.length) { h.innerHTML = ''; return; }
-  h.innerHTML = `<div class="historial-title">Últimas sesiones</div>` +
-    db.registro.slice(0, 7).map(r => {
-      const d = new Date(r.date);
-      const label = d.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' });
-      return `<div class="historial-item">
-        <div class="historial-date">${label} · ${r.horas}h</div>
-        ${r.bien ? `<div class="historial-text">✓ ${r.bien}</div>` : ''}
-        ${r.manana ? `<div class="historial-text" style="color:var(--accent)">→ ${r.manana}</div>` : ''}
-        ${r.energia ? `<div class="historial-horas">${r.energia}</div>` : ''}
-      </div>`;
-    }).join('');
-}
 
 
 // ─── HISTORIAL SESIONES ──────────────────────────────────────────────────────
@@ -4600,6 +5025,13 @@ function confirmPase() {
   showToast('Pase registrado ✓');
   renderObras();
 }
+
+// Save draft on any note/objetivo input in the session plan
+document.addEventListener('input', function(e) {
+  if (e.target.matches('#sessionPlan .tick-note, #sessionPlan .objetivo-input')) {
+    saveDraft();
+  }
+});
 
 // ─── OBRAS GLOBAL CHART ──────────────────────────────────────────────────────
 
@@ -5137,23 +5569,21 @@ openModal = function(id) { SFX.open(); _origOpenModal(id); };
 const _origConfirmPase = confirmPase;
 confirmPase = function() { SFX.pase(); _origConfirmPase(); };
 
-const _origSaveRegistro = saveRegistro;
-saveRegistro = function() { SFX.save(); _origSaveRegistro(); };
+
 
 // ─── INIT ────────────────────────────────────────────────────────────────────
 
 updateHeader();
 loadTheme();
 spawnNotes();
-// Adjust nav top to actual header height
+// Restore any in-progress session from today
+loadDraft();
+// Adjust app-content top padding to actual topbar height
 (function() {
-  const h = document.querySelector('.header');
-  const n = document.querySelector('.nav');
+  const topbar = document.querySelector('.topbar');
   const c = document.querySelector('.app-content');
-  if (h && n && c) {
-    const hh = h.getBoundingClientRect().height;
-    n.style.top = hh + 'px';
-    c.style.paddingTop = (hh + n.getBoundingClientRect().height + 4) + 'px';
+  if (topbar && c) {
+    c.style.paddingTop = topbar.getBoundingClientRect().height + 'px';
   }
 })();
 </script>
