@@ -121,9 +121,6 @@
     font-size: 13px;
     -webkit-text-size-adjust: none;
     text-size-adjust: none;
-    background-image: radial-gradient(circle, var(--text3) 1px, transparent 1px);
-    background-size: 28px 28px;
-    background-attachment: fixed;
   }
 
   /* iPad / large screen scaling */
@@ -171,7 +168,7 @@
 
   /* HEADER */
   .header {
-    position: sticky; top: 0; z-index: 100;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     background: var(--bg);
     border-bottom: 1px solid var(--border);
     padding: 16px 20px;
@@ -189,11 +186,16 @@
 
   /* NAV */
   .nav {
+    position: fixed; top: 61px; left: 0; right: 0; z-index: 99;
     display: flex; gap: 2px;
     background: var(--bg2);
     padding: 6px;
     border-bottom: 1px solid var(--border2);
     overflow-x: auto;
+  }
+  /* Offset content below fixed header+nav */
+  .app-content {
+    padding-top: 112px;
   }
   .nav-btn {
     flex: 1; min-width: 80px;
@@ -1341,7 +1343,91 @@
   .del-session-btn-inner { color: var(--text3); }
   .del-session-btn-inner:hover { color: var(--red); }
 
-  /* MULTI-OBRA CHART */
+  /* BOTANICAL SIDE DECO */
+  .botanical-deco {
+    position: fixed; bottom: 0; z-index: 0;
+    pointer-events: none; opacity: 0.07;
+    transition: opacity 0.3s;
+  }
+  .botanical-deco.left  { left: 0; }
+  .botanical-deco.right { right: 0; transform: scaleX(-1); }
+  [data-theme="cozy"] .botanical-deco { opacity: 0.12; }
+
+  /* ── ANIMATIONS ─────────────────────────────────────────── */
+
+  /* Ripple on buttons */
+  .ripple-host { position: relative; overflow: hidden; }
+  .ripple {
+    position: absolute; border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    transform: scale(0);
+    animation: ripple-anim 0.5s linear;
+    pointer-events: none;
+  }
+  @keyframes ripple-anim {
+    to { transform: scale(4); opacity: 0; }
+  }
+
+  /* Card entrance */
+  @keyframes slide-in {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .plan-item, .obra-card, .evento-card, .pasaje-row-global {
+    animation: slide-in 0.22s ease both;
+  }
+  .plan-item:nth-child(1)  { animation-delay: 0.02s; }
+  .plan-item:nth-child(2)  { animation-delay: 0.06s; }
+  .plan-item:nth-child(3)  { animation-delay: 0.10s; }
+  .plan-item:nth-child(4)  { animation-delay: 0.14s; }
+  .plan-item:nth-child(5)  { animation-delay: 0.18s; }
+  .obra-card:nth-child(n)  { animation-delay: calc(var(--i,0) * 0.04s); }
+
+  /* Floating music notes decoration on session hero */
+  .notes-deco {
+    position: absolute; inset: 0; pointer-events: none;
+    overflow: hidden; border-radius: inherit;
+  }
+  .note-float {
+    position: absolute; bottom: -20px;
+    font-size: 16px; opacity: 0;
+    animation: float-note 4s ease-in infinite;
+    user-select: none;
+  }
+  @keyframes float-note {
+    0%   { opacity: 0;   transform: translateY(0) rotate(0deg); }
+    15%  { opacity: 0.35; }
+    85%  { opacity: 0.15; }
+    100% { opacity: 0;   transform: translateY(-180px) rotate(20deg); }
+  }
+
+  /* Save / confirm pulse */
+  @keyframes pulse-save {
+    0%   { box-shadow: 0 0 0 0 rgba(201,169,110,0.6); }
+    70%  { box-shadow: 0 0 0 12px rgba(201,169,110,0); }
+    100% { box-shadow: 0 0 0 0 rgba(201,169,110,0); }
+  }
+  .pulse-once { animation: pulse-save 0.6s ease; }
+
+  /* Tick button pop */
+  @keyframes tick-pop {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.18); }
+    100% { transform: scale(1); }
+  }
+  .tick-pop { animation: tick-pop 0.25s ease; }
+
+  /* Accent shimmer on header title */
+  @keyframes shimmer {
+    0%,100% { opacity: 1; }
+    50%     { opacity: 0.7; }
+  }
+  .header-title { animation: shimmer 4s ease-in-out infinite; }
+
+  /* BUGGED TRANSFORM FIX — fixed header needs backdrop on iOS */
+  .header, .nav {
+    -webkit-backdrop-filter: blur(0px);
+  }
   .obras-chart-btn {
     width: 100%; padding: 10px 14px; margin-bottom: 14px;
     background: var(--bg2); border: 1px solid var(--border);
@@ -1474,13 +1560,46 @@
   <button class="nav-btn" onclick="showView('pases')">Pases</button>
   <button class="nav-btn" onclick="showView('calendario')">Calendario</button>
   <button class="nav-btn" onclick="showView('historial')">Historial</button>
-  <button class="nav-btn" onclick="showView('registro')">Registro</button>
 </div>
 
+<div class="app-content">
 
-<!-- SESSION VIEW -->
+<!-- Botanical side decorations -->
+<svg class="botanical-deco left" width="90" height="420" viewBox="0 0 90 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Stem -->
+  <path d="M30 420 Q28 340 35 280 Q40 220 32 160 Q26 100 38 40" stroke="var(--accent)" stroke-width="2" fill="none"/>
+  <!-- Leaves left -->
+  <path d="M35 280 Q5 255 2 225 Q8 240 35 260" fill="var(--accent)"/>
+  <path d="M32 200 Q2 175 0 145 Q8 162 32 182" fill="var(--accent)"/>
+  <path d="M36 130 Q10 108 8 78 Q16 95 36 112" fill="var(--accent)"/>
+  <!-- Leaves right -->
+  <path d="M33 240 Q62 215 66 185 Q58 202 33 222" fill="var(--accent)"/>
+  <path d="M34 165 Q60 140 62 110 Q55 128 34 148" fill="var(--accent)"/>
+  <path d="M37 95 Q65 72 66 42 Q58 60 37 78" fill="var(--accent)"/>
+  <!-- Small leaf tip -->
+  <path d="M38 40 Q46 20 44 5 Q38 18 38 40" fill="var(--accent)"/>
+  <!-- Grass / roots -->
+  <path d="M20 420 Q16 395 12 375" stroke="var(--accent)" stroke-width="1.2" fill="none"/>
+  <path d="M30 420 Q32 398 28 378" stroke="var(--accent)" stroke-width="1" fill="none"/>
+  <path d="M40 420 Q44 400 48 382" stroke="var(--accent)" stroke-width="1" fill="none"/>
+</svg>
+
+<svg class="botanical-deco right" width="90" height="420" viewBox="0 0 90 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <path d="M30 420 Q28 340 35 280 Q40 220 32 160 Q26 100 38 40" stroke="var(--accent)" stroke-width="2" fill="none"/>
+  <path d="M35 280 Q5 255 2 225 Q8 240 35 260" fill="var(--accent)"/>
+  <path d="M32 200 Q2 175 0 145 Q8 162 32 182" fill="var(--accent)"/>
+  <path d="M36 130 Q10 108 8 78 Q16 95 36 112" fill="var(--accent)"/>
+  <path d="M33 240 Q62 215 66 185 Q58 202 33 222" fill="var(--accent)"/>
+  <path d="M34 165 Q60 140 62 110 Q55 128 34 148" fill="var(--accent)"/>
+  <path d="M37 95 Q65 72 66 42 Q58 60 37 78" fill="var(--accent)"/>
+  <path d="M38 40 Q46 20 44 5 Q38 18 38 40" fill="var(--accent)"/>
+  <path d="M20 420 Q16 395 12 375" stroke="var(--accent)" stroke-width="1.2" fill="none"/>
+  <path d="M30 420 Q32 398 28 378" stroke="var(--accent)" stroke-width="1" fill="none"/>
+  <path d="M40 420 Q44 400 48 382" stroke="var(--accent)" stroke-width="1" fill="none"/>
+</svg>
 <div class="view active" id="view-session">
   <div class="session-hero">
+    <div class="notes-deco" id="notesDeco"></div>
     <div class="session-hero-title">¿Cómo estás hoy?</div>
     <div class="session-hero-sub">Genera tu sesión</div>
 
@@ -1516,31 +1635,6 @@
   </div>
   <div id="obrasList"></div>
   <button class="add-obra-btn" onclick="openAddObra()">+ añadir obra</button>
-</div>
-
-<!-- REGISTRO VIEW -->
-<div class="view" id="view-registro">
-  <div class="section-title">Registro de hoy</div>
-  <div class="registro-form">
-    <label class="form-label">¿Qué salió bien?</label>
-    <textarea class="form-textarea" id="regBien" placeholder="pasajes que mejoraron, obras que fluyeron..."></textarea>
-
-    <label class="form-label">¿Qué necesita más trabajo mañana?</label>
-    <textarea class="form-textarea" id="regMañana" placeholder="pasajes concretos, obras específicas..."></textarea>
-
-    <label class="form-label">¿Cómo estuvo la energía?</label>
-    <textarea class="form-textarea" id="regEnergia" placeholder="breve. alta, normal, baja, por qué..."></textarea>
-
-    <label class="form-label">Horas netas estudiadas</label>
-    <div class="horas-input">
-      <input class="horas-field" type="number" id="regHoras" min="0" max="10" step="0.5" value="2">
-      <span style="font-size:11px;color:var(--text3)">horas</span>
-    </div>
-
-    <button class="save-btn" onclick="saveRegistro()">Guardar registro</button>
-  </div>
-
-  <div class="historial" id="historial"></div>
 </div>
 
 <!-- CALENDARIO VIEW -->
@@ -1862,6 +1956,8 @@
   </div>
 </div>
 
+</div> <!-- end app-content -->
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -1943,7 +2039,7 @@ function showView(name) {
   document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('view-' + name).classList.add('active');
   const btns = document.querySelectorAll('.nav-btn');
-  const names = ['session','obras','pasajes','pases','calendario','historial','registro'];
+  const names = ['session','obras','pasajes','pases','calendario','historial'];
   const idx = names.indexOf(name);
   if (idx >= 0) btns[idx].classList.add('active');
   if (name === 'obras')    renderObras();
@@ -1951,7 +2047,6 @@ function showView(name) {
   if (name === 'pases')    renderPases();
   if (name === 'calendario') renderCalendario();
   if (name === 'historial')  renderSesionesHistorial();
-  if (name === 'registro')   renderHistorial();
 }
 
 function showToast(msg) {
@@ -4909,10 +5004,158 @@ function loadTheme() {
   });
 }
 
+// ─── AUDIO ENGINE ────────────────────────────────────────────────────────────
+
+let _ac = null;
+function getAC() {
+  if (!_ac) _ac = new (window.AudioContext || window.webkitAudioContext)();
+  if (_ac.state === 'suspended') _ac.resume();
+  return _ac;
+}
+
+function playTone(freq, type = 'triangle', dur = 0.25, vol = 0.10, delay = 0) {
+  try {
+    const ac = getAC();
+    const osc = ac.createOscillator();
+    const gain = ac.createGain();
+    // Add a tiny bit of body: second osc one octave down, very quiet
+    osc.connect(gain); gain.connect(ac.destination);
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, ac.currentTime + delay);
+    // Sharp attack (2ms), then exponential decay — gives woody/piano feel
+    gain.gain.setValueAtTime(0, ac.currentTime + delay);
+    gain.gain.linearRampToValueAtTime(vol, ac.currentTime + delay + 0.002);
+    gain.gain.exponentialRampToValueAtTime(0.001, ac.currentTime + delay + dur);
+    osc.start(ac.currentTime + delay);
+    osc.stop(ac.currentTime + delay + dur + 0.01);
+  } catch(e) {}
+}
+
+// Named sound palette — warm, woody, pianistic
+const SFX = {
+  // Soft piano key tap
+  generate() {
+    // Major chord, soft attack, quick decay — like pressing piano keys gently
+    [[261.6, 0, 'triangle', 0.6, 0.11],
+     [329.6, 0.05, 'triangle', 0.55, 0.09],
+     [392.0, 0.10, 'triangle', 0.55, 0.08]
+    ].forEach(([f, d, t, dur, v]) => playTone(f, t, dur, v, d));
+  },
+  // Single soft key click — like a gentle piano keypress
+  tick() {
+    playTone(523.3, 'triangle', 0.35, 0.10, 0);
+    // tiny body resonance
+    playTone(262.0, 'triangle', 0.18, 0.04, 0);
+  },
+  // Warm two-note save
+  save() {
+    playTone(392.0, 'triangle', 0.45, 0.10, 0);
+    playTone(523.3, 'triangle', 0.50, 0.10, 0.10);
+  },
+  // Muted low thud — like a damped string
+  skip() {
+    playTone(196.0, 'triangle', 0.20, 0.08, 0);
+    playTone(185.0, 'triangle', 0.15, 0.04, 0.04); // slight pitch drop
+  },
+  // Very quiet soft tap
+  open() { playTone(440, 'triangle', 0.18, 0.06, 0); },
+  // Pase — ascending minor third, warm
+  pase() {
+    playTone(440.0, 'triangle', 0.30, 0.09, 0);
+    playTone(523.3, 'triangle', 0.35, 0.09, 0.12);
+  }
+};
+
+// ─── RIPPLE ──────────────────────────────────────────────────────────────────
+
+function addRipple(el, e) {
+  const rect = el.getBoundingClientRect();
+  const r = document.createElement('span');
+  r.className = 'ripple';
+  const size = Math.max(rect.width, rect.height);
+  r.style.cssText = `width:${size}px;height:${size}px;left:${(e.clientX||rect.left+rect.width/2) - rect.left - size/2}px;top:${(e.clientY||rect.top+rect.height/2) - rect.top - size/2}px`;
+  el.classList.add('ripple-host');
+  el.appendChild(r);
+  r.addEventListener('animationend', () => r.remove());
+}
+
+// Attach ripple to key buttons
+document.addEventListener('click', function(e) {
+  const btn = e.target.closest('.generate-btn,.save-session-btn,.modal-btn.primary,.energy-btn,.tick-btn,.nav-btn,.time-btn,.register-pase-btn,.pase-btn,.obra-quick-btn');
+  if (btn) addRipple(btn, e);
+});
+
+// ─── FLOATING NOTES ──────────────────────────────────────────────────────────
+
+function spawnNotes() {
+  const deco = document.getElementById('notesDeco');
+  if (!deco) return;
+  const notes = ['♩','♪','♫','♬'];
+  function spawn() {
+    if (!document.getElementById('notesDeco')) return;
+    const el = document.createElement('span');
+    el.className = 'note-float';
+    el.textContent = notes[Math.floor(Math.random() * notes.length)];
+    el.style.left = (8 + Math.random() * 84) + '%';
+    el.style.color = 'var(--accent)';
+    el.style.animationDuration = (3.5 + Math.random() * 3) + 's';
+    el.style.animationDelay = (Math.random() * 2) + 's';
+    el.style.fontSize = (12 + Math.random() * 10) + 'px';
+    deco.appendChild(el);
+    el.addEventListener('animationend', () => el.remove());
+    setTimeout(spawn, 1500 + Math.random() * 2000);
+  }
+  spawn();
+}
+
+// ─── WIRE UP SOUNDS ──────────────────────────────────────────────────────────
+
+// Patch key functions to emit sounds
+const _origGenerateSession = generateSession;
+generateSession = function() { SFX.generate(); _origGenerateSession(); };
+
+const _origSaveSession = saveSession;
+saveSession = function() {
+  SFX.save();
+  _origSaveSession();
+  const btn = document.querySelector('.save-session-btn');
+  if (btn) { btn.classList.remove('pulse-once'); void btn.offsetWidth; btn.classList.add('pulse-once'); }
+};
+
+const _origSetTick = setTick;
+setTick = function(obraId, tick, btn) {
+  if (tick === 'hecho') SFX.tick();
+  else if (tick === 'saltado') SFX.skip();
+  else SFX.open();
+  btn.classList.remove('tick-pop'); void btn.offsetWidth; btn.classList.add('tick-pop');
+  _origSetTick(obraId, tick, btn);
+};
+
+const _origOpenModal = openModal;
+openModal = function(id) { SFX.open(); _origOpenModal(id); };
+
+const _origConfirmPase = confirmPase;
+confirmPase = function() { SFX.pase(); _origConfirmPase(); };
+
+const _origSaveRegistro = saveRegistro;
+saveRegistro = function() { SFX.save(); _origSaveRegistro(); };
+
 // ─── INIT ────────────────────────────────────────────────────────────────────
 
 updateHeader();
 loadTheme();
+spawnNotes();
+// Adjust nav top to actual header height
+(function() {
+  const h = document.querySelector('.header');
+  const n = document.querySelector('.nav');
+  const c = document.querySelector('.app-content');
+  if (h && n && c) {
+    const hh = h.getBoundingClientRect().height;
+    n.style.top = hh + 'px';
+    c.style.paddingTop = (hh + n.getBoundingClientRect().height + 4) + 'px';
+  }
+})();
 </script>
 </body>
 </html>
