@@ -944,9 +944,56 @@
   .hecho-modal-obra { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--accent); margin-bottom: 16px; line-height: 1.3; }
   .sol-pct-display { font-family: 'Cormorant Garamond', serif; font-size: 44px; font-weight: 300; text-align: center; line-height: 1; margin: 6px 0 2px; transition: color 0.2s; }
   .sol-pct-label { font-size: 8px; color: var(--text3); letter-spacing: 0.15em; text-transform: uppercase; text-align: center; margin-bottom: 10px; }
-  .sol-slider { width: 100%; accent-color: var(--accent); margin: 4px 0 6px; cursor: pointer; }
+  .sol-slider {
+    width: 100%; margin: 4px 0 6px; cursor: pointer;
+    -webkit-appearance: none; appearance: none;
+    height: 6px; border-radius: 3px;
+    background: var(--bg2); outline: none; border: none;
+  }
+  .sol-slider::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: currentColor; cursor: pointer;
+    border: 2px solid var(--bg);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.25);
+    margin-top: -7px;
+  }
+  .sol-slider::-moz-range-thumb {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: currentColor; cursor: pointer;
+    border: 2px solid var(--bg);
+  }
+  .sol-slider::-webkit-slider-runnable-track {
+    border-radius: 3px; height: 6px;
+  }
+  .sol-slider::-moz-range-track {
+    border-radius: 3px; height: 6px; background: var(--bg2);
+  }
+  .sol-slider::-moz-range-progress {
+    border-radius: 3px; height: 6px; background: currentColor;
+  }
   .sol-ref-row { display: flex; justify-content: space-between; font-size: 8px; color: var(--text3); margin-bottom: 14px; }
   .hecho-field-label { font-size: 8px; color: var(--text3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* COMPAS STEPPER */
+  .compas-stepper { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+  .stepper-btn { width: 34px; height: 34px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg3); color: var(--accent); font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; flex-shrink: 0; }
+  .stepper-btn:hover { background: var(--accent); color: var(--bg); }
+  .stepper-val { font-family: 'JetBrains Mono', monospace; font-size: 22px; color: var(--accent); min-width: 48px; text-align: center; }
+  .stepper-meta { font-size: 8px; color: var(--text3); line-height: 1.5; }
+
+  /* MEMORY LAPSE */
+  .memlapse-section { background: var(--bg3); border: 1px solid var(--border2); border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; }
+  .memlapse-title { font-size: 9px; color: var(--text2); letter-spacing: 0.05em; margin-bottom: 10px; }
+  .memlapse-yn { display: flex; gap: 8px; margin-bottom: 0; }
+  .memlapse-btn { flex: 1; padding: 7px; border-radius: 5px; border: 1px solid var(--border2); background: transparent; color: var(--text3); font-family: 'JetBrains Mono', monospace; font-size: 10px; cursor: pointer; transition: all 0.2s; }
+  .memlapse-btn.active.yes { background: var(--red); color: var(--bg); border-color: var(--red); }
+  .memlapse-btn.active.no  { background: var(--green); color: var(--bg); border-color: var(--green); }
+  .memlapse-detail { margin-top: 12px; }
+  .pasaje-select-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+  .pasaje-chip { padding: 4px 10px; border-radius: 12px; border: 1px solid var(--border2); background: transparent; color: var(--text3); font-family: 'JetBrains Mono', monospace; font-size: 9px; cursor: pointer; transition: all 0.15s; }
+  .pasaje-chip.active { background: var(--red); color: var(--bg); border-color: var(--red); }
+  .pasaje-chip.nuevo { border-style: dashed; color: var(--accent); }
 
   /* MINUTOS WIDGET */
   .minutos-widget { background: var(--bg3); border: 1px solid var(--border2); border-radius: 8px; padding: 10px 13px; margin: 10px 0 4px; }
@@ -1014,7 +1061,60 @@
   .efic-obra-bar-wrap { flex: 1; height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
   .efic-obra-bar { height: 100%; border-radius: 2px; }
 
-  /* FOREST IMPORT */
+  /* EVENT READINESS */
+  .evento-readiness {
+    padding: 8px 16px 4px;
+  }
+  .readiness-bar-wrap {
+    height: 6px; background: var(--bg3); border-radius: 3px;
+    overflow: hidden; margin: 5px 0 3px;
+  }
+  .readiness-bar-fill {
+    height: 100%; border-radius: 3px; transition: width 0.4s;
+  }
+  .readiness-label-row {
+    display: flex; justify-content: space-between;
+    font-size: 8px; color: var(--text3);
+  }
+  .readiness-pct {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; font-weight: bold;
+  }
+  /* EVENT DONE BUTTON */
+  .evento-done-btn {
+    padding: 5px 14px; border-radius: 4px;
+    border: 1px solid var(--green); background: transparent;
+    color: var(--green); font-family: 'JetBrains Mono', monospace;
+    font-size: 9px; cursor: pointer; transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+  .evento-done-btn:hover { background: var(--green); color: var(--bg); }
+  .evento-done-btn.completado { background: var(--green); color: var(--bg); cursor: default; }
+  /* RESULTADO MODAL sliders */
+  .resultado-obra-block {
+    background: var(--bg3); border-radius: 8px; padding: 12px 14px;
+    margin-bottom: 10px; border: 1px solid var(--border2);
+  }
+  .resultado-obra-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px; color: var(--text); margin-bottom: 10px;
+  }
+  .resultado-slider-label {
+    font-size: 8px; color: var(--text3); letter-spacing: 0.1em;
+    text-transform: uppercase; margin-bottom: 3px;
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .resultado-pct-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px; font-weight: bold;
+  }
+  /* COMPLETED EVENT badge */
+  .evento-score-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px;
+    font-weight: bold; padding: 4px 10px; border-radius: 6px;
+    margin-top: 6px;
+  }
   .forest-tag-row { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border2); flex-wrap: wrap; }
   .forest-tag-row:last-child { border-bottom: none; }
   .forest-tag-name { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text2); flex: 1; min-width: 120px; }
@@ -1977,7 +2077,7 @@
 
 <!-- MODAL HECHO DATOS -->
 <div class="modal-overlay" id="modalHechoDatos">
-  <div class="modal" style="max-width:380px">
+  <div class="modal" style="max-width:400px">
     <div class="modal-title" style="margin-bottom:4px">✓ Hecho</div>
     <div class="hecho-modal-obra" id="hechoObraName"></div>
 
@@ -1986,8 +2086,45 @@
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
       <input type="number" id="hechoMinutos" min="1" max="480" step="5"
         class="modal-input" style="margin-bottom:0;width:90px;text-align:center;font-size:18px;color:var(--accent)">
-      <span style="font-size:9px;color:var(--text3)">min · planificados: <span id="hechoMinPlan" style="color:var(--text2)">—</span></span>
+      <span style="font-size:9px;color:var(--text3)">planif: <span id="hechoMinPlan" style="color:var(--text2)">—</span></span>
       <span id="hechoMinDiff" style="font-size:9px;margin-left:auto"></span>
+    </div>
+
+    <!-- Compases avanzados (solo si obra en aprendizaje) -->
+    <div id="hechoCompasSection" style="display:none">
+      <div class="hecho-field-label">Compases aprendidos hoy</div>
+      <div class="compas-stepper">
+        <button class="stepper-btn" onclick="stepCompas(-1)">−</button>
+        <div>
+          <div class="stepper-val" id="compasStepVal">0</div>
+          <div style="font-size:7px;color:var(--text3);text-align:center">cc. avanzados</div>
+        </div>
+        <button class="stepper-btn" onclick="stepCompas(1)">+</button>
+        <div class="stepper-meta" id="compasStepMeta"></div>
+      </div>
+    </div>
+
+    <!-- Fallo de memoria (solo si obra aprendida) -->
+    <div id="hechoMemSection" style="display:none">
+      <div class="memlapse-section">
+        <div class="memlapse-title">¿Fallo de memoria durante la sesión?</div>
+        <div class="memlapse-yn">
+          <button class="memlapse-btn yes" onclick="selectMemLapse(true,this)">Sí, hubo fallo</button>
+          <button class="memlapse-btn no active" onclick="selectMemLapse(false,this)">No, todo bien</button>
+        </div>
+        <div class="memlapse-detail" id="memLapseDetail" style="display:none">
+          <div class="hecho-field-label" style="margin-top:8px">¿En qué pasaje?</div>
+          <div class="pasaje-select-row" id="memPasajeRow"></div>
+          <!-- New pasaje form (shown when "+ nuevo" clicked) -->
+          <div id="memNuevoPasajeForm" style="display:none">
+            <input type="text" class="modal-input" id="memPasajeNombre" placeholder="nombre del pasaje (ej: coda final)">
+            <div style="display:flex;gap:6px">
+              <input type="number" class="modal-input" id="memPasajeCcInicio" placeholder="cc. inicio" min="1" style="margin-bottom:0">
+              <input type="number" class="modal-input" id="memPasajeCcFin" placeholder="cc. fin" min="1" style="margin-bottom:0">
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Solidez (solo si obra suficientemente aprendida) -->
@@ -2011,6 +2148,24 @@
     <div class="modal-buttons" style="margin-top:16px">
       <button class="modal-btn secondary" onclick="closeHechoDatos(false)">Cancelar</button>
       <button class="modal-btn primary" onclick="closeHechoDatos(true)">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL EVENTO RESULTADO -->
+<div class="modal-overlay" id="modalEventoResultado">
+  <div class="modal" style="max-width:500px">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:4px">
+      <div class="modal-title" id="eventoResTitle" style="margin-bottom:0"></div>
+      <button class="modal-btn secondary" onclick="closeModal('modalEventoResultado')" style="padding:4px 12px;font-size:10px;flex:none">✕</button>
+    </div>
+    <div style="font-size:9px;color:var(--text3);margin-bottom:16px;line-height:1.6">
+      Puntúa cómo fue cada obra. El programa calculará el resultado global del evento.
+    </div>
+    <div id="eventoResObras" style="max-height:55vh;overflow-y:auto"></div>
+    <div class="modal-buttons" style="margin-top:14px">
+      <button class="modal-btn secondary" onclick="closeModal('modalEventoResultado')">Cancelar</button>
+      <button class="modal-btn primary" onclick="confirmEventoResultado()">Guardar resultado</button>
     </div>
   </div>
 </div>
@@ -2665,6 +2820,16 @@ function saveMinutosExtra(obraId, val) {
   if (el) el.textContent = fmtMinutos(getMinutosObra(obraId));
 }
 
+function saveMinutosExtraFlexible(obraId, val, unit) {
+  const obra = findObra(obraId);
+  if (!obra) return;
+  const num = parseFloat(val) || 0;
+  obra.minutosExtra = unit === 'h' ? Math.round(num * 60) : Math.round(num);
+  saveData();
+  const el = document.getElementById('minacum-display-' + obraId);
+  if (el) el.textContent = fmtMinutos(getMinutosObra(obraId));
+}
+
 function renderMinutosWidget(obraId) {
   const obra = findObra(obraId);
   if (!obra) return '';
@@ -2679,6 +2844,13 @@ function renderMinutosWidget(obraId) {
   });
   const extra = obra.minutosExtra || 0;
   const total = sesMin + extra;
+
+  // Input: show hours as default unit if > 60 min stored
+  const extraEnHoras = extra > 0 && extra % 60 === 0;
+  const extraDisplay = extraEnHoras ? extra / 60 : extra;
+  const extraUnit = extraEnHoras ? 'h' : 'min';
+  const extraPlaceholder = extraEnHoras ? 'ej: 2.5 (horas)' : 'ej: 90 (min)';
+
   return '<div class="minutos-widget">' +
     '<div class="minutos-widget-header"><span>⏱ Tiempo invertido</span>' +
     '<span id="minacum-display-' + obraId + '" style="color:var(--accent);font-family:\'Cormorant Garamond\',serif;font-size:15px">' + fmtMinutos(total) + '</span></div>' +
@@ -2686,9 +2858,14 @@ function renderMinutosWidget(obraId) {
     '<div class="minutos-row"><span class="minutos-label">Registrado en sesiones</span><span class="minutos-val">' + fmtMinutos(sesMin) + '</span></div>' +
     '<div class="minutos-row"><span class="minutos-label">Horas previas / extra</span>' +
     '<div style="display:flex;align-items:center;gap:5px">' +
-    '<input type="number" min="0" max="99999" step="15" value="' + (extra || '') + '" placeholder="0"' +
-    ' onblur="saveMinutosExtra(\'' + obraId + '\',this.value)" class="minutos-extra-input" title="Minutos estudiados antes de la app">' +
-    '<span class="minutos-label">min</span></div></div></div></div>';
+    '<input type="number" min="0" max="99999" step="0.5" value="' + (extra > 0 ? extraDisplay : '') + '" placeholder="0"' +
+    ' onblur="saveMinutosExtraFlexible(\'' + obraId + '\',this.value,this.dataset.unit)" data-unit="' + extraUnit + '"' +
+    ' class="minutos-extra-input" title="Minutos o horas antes de la app">' +
+    '<select onchange="this.previousElementSibling.dataset.unit=this.value;saveMinutosExtraFlexible(\'' + obraId + '\',this.previousElementSibling.value,this.value)" style="background:var(--bg3);border:1px solid var(--border2);border-radius:4px;color:var(--text3);font-size:9px;padding:3px 4px">' +
+    '<option value="min" ' + (extraUnit === 'min' ? 'selected' : '') + '>min</option>' +
+    '<option value="h" ' + (extraUnit === 'h' ? 'selected' : '') + '>horas</option>' +
+    '</select>' +
+    '</div></div></div></div>';
 }
 
 // ── SOL / ESC HISTORY ─────────────────────────────────────────────────────────
@@ -3330,6 +3507,12 @@ function selectSolRating(obraId, val, btn) {} // replaced by modal
 let _hechoObraId = null;
 let _hechoMinPlan = 0;
 let _hechoShowSol = false;
+let _hechoShowCompas = false;
+let _hechoShowMem = false;
+let _hechoCompasAntes = 0;
+let _hechoCompasStep = 0;
+let _memLapseYes = false;
+let _memPasajeSelected = null; // pasajeId or '__nuevo__'
 
 function solPctColor(pct) {
   if (pct >= 85) return 'var(--green)';
@@ -3348,40 +3531,89 @@ function solPctLabel(pct) {
   return 'Sin solidez aún';
 }
 
+// Colors matching obra scale sliders: amber=sol, green=esc
+const SOL_COLOR = '#c8a030';
+const ESC_COLOR = 'var(--green)';
+
+function fillSlider(slider, color) {
+  if (!slider) return;
+  const min = parseFloat(slider.min) || 0;
+  const max = parseFloat(slider.max) || 100;
+  const val = parseFloat(slider.value) || 0;
+  const pct = ((val - min) / (max - min)) * 100;
+  slider.style.background = 'linear-gradient(to right, ' + color + ' 0%, ' + color + ' ' + pct + '%, var(--bg2) ' + pct + '%, var(--bg2) 100%)';
+  slider.style.color = color;
+}
+
 function updateSolSlider(val) {
   const pct = parseInt(val);
   const display = document.getElementById('solPctDisplay');
   const label = document.getElementById('solPctLabel');
   const slider = document.getElementById('solSlider');
-  if (display) { display.textContent = pct + '%'; display.style.color = solPctColor(pct); }
+  if (display) { display.textContent = pct + '%'; display.style.color = SOL_COLOR; }
   if (label) label.textContent = solPctLabel(pct);
-  if (slider) slider.style.accentColor = solPctColor(pct);
+  fillSlider(slider, SOL_COLOR);
+}
+
+function stepCompas(delta) {
+  _hechoCompasStep = Math.max(0, _hechoCompasStep + delta);
+  const el = document.getElementById('compasStepVal');
+  if (el) el.textContent = _hechoCompasStep;
+  updateCompasMeta();
+}
+
+function updateCompasMeta() {
+  const meta = document.getElementById('compasStepMeta');
+  if (!meta) return;
+  const obra = findObra(_hechoObraId);
+  if (!obra || !obra.compasesTotal) { meta.textContent = ''; return; }
+  const nuevo = Math.min(obra.compasesTotal, _hechoCompasAntes + _hechoCompasStep);
+  const pct = Math.round((nuevo / obra.compasesTotal) * 100);
+  meta.innerHTML = '<span style="color:var(--text2)">cc. ' + _hechoCompasAntes + ' → <strong>' + nuevo + '</strong></span><br>' +
+    '<span style="color:var(--accent)">' + pct + '% del total</span>';
+}
+
+function selectMemLapse(yes, btn) {
+  _memLapseYes = yes;
+  document.querySelectorAll('.memlapse-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const detail = document.getElementById('memLapseDetail');
+  if (detail) detail.style.display = yes ? 'block' : 'none';
+}
+
+function selectMemPasaje(pasajeId, btn) {
+  _memPasajeSelected = pasajeId;
+  document.querySelectorAll('.pasaje-chip').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const nuevoForm = document.getElementById('memNuevoPasajeForm');
+  if (nuevoForm) nuevoForm.style.display = pasajeId === '__nuevo__' ? 'block' : 'none';
 }
 
 function openHechoDatos(obraId, minPlan) {
   _hechoObraId = obraId;
   _hechoMinPlan = minPlan || 0;
+  _hechoCompasStep = 0;
+  _memLapseYes = false;
+  _memPasajeSelected = null;
+
   const obra = findObra(obraId);
-  // Determine if sol section should show
   const fase = obra ? obraFase(obra) : 'digitando';
   const pct = obra ? compasPercent(obra) : null;
-  _hechoShowSol = (pct !== null && pct >= 75) || fase === 'consolidando' || fase === 'mantenimiento';
-  // Populate modal
-  document.getElementById('hechoObraName').textContent = obra ? obra.name + (obra.composer ? ' · ' + obra.composer : '') : '';
+
+  // Determine which sections to show
+  _hechoShowCompas = fase === 'digitando' || (pct !== null && pct < 100);
+  _hechoShowSol = (pct !== null && pct >= 50) || fase === 'consolidando' || fase === 'mantenimiento';
+  _hechoShowMem = fase === 'consolidando' || fase === 'mantenimiento';
+
+  // Obra name
+  document.getElementById('hechoObraName').textContent = obra
+    ? obra.name + (obra.composer ? ' · ' + obra.composer : '') : '';
+
+  // Minutes
   document.getElementById('hechoMinutos').value = minPlan || '';
   document.getElementById('hechoMinPlan').textContent = minPlan ? minPlan + ' min' : '—';
   document.getElementById('hechoMinDiff').textContent = '';
-  document.getElementById('hechoNota').value = document.getElementById('tnote-' + obraId)?.value || '';
-  // Sol section
-  const solSection = document.getElementById('hechoSolSection');
-  if (solSection) solSection.style.display = _hechoShowSol ? 'block' : 'none';
-  if (_hechoShowSol) {
-    // Pre-fill with last known sol value if any
-    const lastSol = obra?.solHistory?.[0]?.val || 0;
-    const slider = document.getElementById('solSlider');
-    if (slider) { slider.value = lastSol; updateSolSlider(lastSol); }
-  }
-  // Live diff on minutes input
+
   const minInp = document.getElementById('hechoMinutos');
   if (minInp) {
     minInp.oninput = function() {
@@ -3392,24 +3624,136 @@ function openHechoDatos(obraId, minPlan) {
       el.style.color = diff > 0 ? 'var(--green)' : diff < 0 ? 'var(--orange)' : 'var(--text3)';
     };
   }
+
+  // Compas section
+  const compasSection = document.getElementById('hechoCompasSection');
+  if (compasSection) {
+    compasSection.style.display = _hechoShowCompas ? 'block' : 'none';
+    if (_hechoShowCompas && obra) {
+      _hechoCompasAntes = obra.compasActual || 0;
+      const el = document.getElementById('compasStepVal');
+      if (el) el.textContent = '0';
+      updateCompasMeta();
+    }
+  }
+
+  // Memory lapse section
+  const memSection = document.getElementById('hechoMemSection');
+  if (memSection) {
+    memSection.style.display = _hechoShowMem ? 'block' : 'none';
+    if (_hechoShowMem) {
+      // Reset to "No"
+      document.querySelectorAll('.memlapse-btn').forEach(b => b.classList.remove('active'));
+      const noBtn = document.querySelector('.memlapse-btn.no');
+      if (noBtn) noBtn.classList.add('active');
+      const detail = document.getElementById('memLapseDetail');
+      if (detail) detail.style.display = 'none';
+      // Populate pasaje chips
+      const pasajes = (obra?.pasajes || []).filter(p => p.status !== 'resuelto');
+      const row = document.getElementById('memPasajeRow');
+      if (row) {
+        row.innerHTML = pasajes.map(p =>
+          '<button class="pasaje-chip" onclick="selectMemPasaje(\'' + p.id + '\',this)">' + p.text.slice(0, 28) + '</button>'
+        ).join('') + '<button class="pasaje-chip nuevo" onclick="selectMemPasaje(\'__nuevo__\',this)">+ nuevo pasaje</button>';
+      }
+      const nuevoForm = document.getElementById('memNuevoPasajeForm');
+      if (nuevoForm) {
+        nuevoForm.style.display = 'none';
+        const n = document.getElementById('memPasajeNombre');
+        const c1 = document.getElementById('memPasajeCcInicio');
+        const c2 = document.getElementById('memPasajeCcFin');
+        if (n) n.value = '';
+        if (c1) c1.value = '';
+        if (c2) c2.value = '';
+      }
+    }
+  }
+
+  // Sol section
+  const solSection = document.getElementById('hechoSolSection');
+  if (solSection) {
+    solSection.style.display = _hechoShowSol ? 'block' : 'none';
+    if (_hechoShowSol) {
+      const lastSol = obra?.solHistory?.[0]?.val != null ? normalizeSolVal(obra.solHistory[0].val) : 0;
+      const slider = document.getElementById('solSlider');
+      if (slider) { slider.value = lastSol; updateSolSlider(lastSol); }
+    }
+  }
+
+  document.getElementById('hechoNota').value = document.getElementById('tnote-' + obraId)?.value || '';
   openModal('modalHechoDatos');
 }
 
 function closeHechoDatos(save) {
   closeModal('modalHechoDatos');
   if (!save || !_hechoObraId) return;
+
   const obraId = _hechoObraId;
+  const obra = findObra(obraId);
   const minutos = parseInt(document.getElementById('hechoMinutos').value) || _hechoMinPlan || null;
   const nota = document.getElementById('hechoNota').value.trim();
   const solPct = _hechoShowSol ? parseInt(document.getElementById('solSlider').value) : null;
-  // Store minutes in the tick-min input (for saveSession)
+
+  // Store minutes
   const minInp = document.getElementById('tmin-' + obraId);
   if (minInp && minutos) { minInp.value = minutos; minInp._touched = true; }
-  // Store note
   const noteInp = document.getElementById('tnote-' + obraId);
   if (noteInp && nota) noteInp.value = nota;
-  // Store sol rating (0-100)
   if (solPct !== null) sessionSolRatings[obraId] = solPct;
+
+  // Advance compases
+  if (_hechoShowCompas && obra && _hechoCompasStep > 0) {
+    const nuevo = Math.min(obra.compasesTotal || 9999, (obra.compasActual || 0) + _hechoCompasStep);
+    obra.compasActual = nuevo;
+    obra.apr = aprFromCompas(obra);
+    // Log to compasHistory
+    if (!obra.compasHistory) obra.compasHistory = [];
+    const minAcum = getMinutosObra(obraId) + (minutos || 0);
+    const today = new Date().toDateString();
+    if (obra.compasHistory[0] && new Date(obra.compasHistory[0].date).toDateString() === today) {
+      obra.compasHistory[0] = { date: new Date().toISOString(), compas: nuevo, minAcum };
+    } else {
+      obra.compasHistory.unshift({ date: new Date().toISOString(), compas: nuevo, minAcum });
+      if (obra.compasHistory.length > 60) obra.compasHistory = obra.compasHistory.slice(0, 60);
+    }
+    saveData();
+    // Update compas field in obra card if visible
+    const compasEl = document.getElementById('obra-compas-' + obraId + '-actual');
+    if (compasEl) compasEl.value = nuevo;
+  }
+
+  // Memory lapse
+  if (_hechoShowMem && _memLapseYes && obra) {
+    let pasajeId = _memPasajeSelected;
+    if (pasajeId === '__nuevo__') {
+      // Create new pasaje
+      const nombre = document.getElementById('memPasajeNombre')?.value.trim();
+      const ccIni = document.getElementById('memPasajeCcInicio')?.value;
+      const ccFin = document.getElementById('memPasajeCcFin')?.value;
+      if (nombre || ccIni) {
+        const label = nombre || ('cc. ' + ccIni + (ccFin ? '–' + ccFin : ''));
+        const text = label + (ccIni ? ' (cc.' + ccIni + (ccFin ? '–' + ccFin : '') + ')' : '');
+        if (!obra.pasajes) obra.pasajes = [];
+        const newP = { id: 'ml' + Date.now(), text, status: 'activo', tempoAct: null, tempoObj: null };
+        obra.pasajes.unshift(newP);
+        pasajeId = newP.id;
+        saveData();
+      }
+    }
+    if (pasajeId && pasajeId !== '__nuevo__') {
+      // Mark as memory lapse with Anki-style urgency
+      const pasaje = (obra.pasajes || []).find(p => p.id === pasajeId);
+      if (pasaje) {
+        if (!pasaje.memLapses) pasaje.memLapses = [];
+        pasaje.memLapses.unshift({ date: new Date().toISOString(), nota });
+        pasaje.status = 'activo'; // reactivate if mantenimiento
+        pasaje.lastMemLapse = new Date().toISOString();
+        saveData();
+        showToast('Fallo de memoria registrado en "' + pasaje.text.slice(0, 30) + '"');
+      }
+    }
+  }
+
   // Apply tick visually
   const planItems = document.querySelectorAll('#sessionPlan .tick-row');
   planItems.forEach(row => {
@@ -3420,19 +3764,21 @@ function closeHechoDatos(save) {
     }
   });
   sessionTicks[obraId] = 'hecho';
-  // Show minutes row with value
+
+  // Show minutes row
   const minRow = document.getElementById('tickmin-' + obraId);
   if (minRow) {
     minRow.style.display = 'flex';
-    if (minInp && minutos) {
+    if (minutos && _hechoMinPlan) {
       const diffEl = document.getElementById('tickmin-diff-' + obraId);
-      if (diffEl && _hechoMinPlan) {
+      if (diffEl) {
         const diff = minutos - _hechoMinPlan;
         diffEl.textContent = diff > 0 ? '+' + diff + 'min' : diff < 0 ? diff + 'min' : '= exacto';
         diffEl.style.color = diff > 0 ? 'var(--green)' : diff < 0 ? 'var(--orange)' : 'var(--text3)';
       }
     }
   }
+
   saveDraft();
   SFX.tick();
 }
@@ -3638,12 +3984,22 @@ function generateSession() {
     score += (o.esc || 1) < 7 ? 20 : 10;
     if (o.origen === 'recuperacion') score += 20;
 
-    // Pasajes — con ratio de tempo si disponible
+    // Pasajes — con ratio de tempo + fallo de memoria reciente (Anki-style boost)
     (o.pasajes || []).filter(p => p.status === 'activo').forEach(p => {
       let pScore = 8;
       if (p.tempoAct && p.tempoObj && p.tempoObj > p.tempoAct) {
         const ratio = p.tempoAct / p.tempoObj;
         pScore = 8 + Math.round((1 - ratio) * 10);
+      }
+      // Memory lapse urgency: more recent = more urgent, multiplied by event proximity
+      if (p.lastMemLapse) {
+        const diasLapse = (now - new Date(p.lastMemLapse)) / 86400000;
+        const urgEv = computeUrgencia(o.id);
+        const evMultiplier = urgEv.nivel === 'critico' ? 3 : urgEv.nivel === 'urgente' ? 2 : 1.2;
+        if (diasLapse < 1)  pScore += 35 * evMultiplier;
+        else if (diasLapse < 3)  pScore += 22 * evMultiplier;
+        else if (diasLapse < 7)  pScore += 14 * evMultiplier;
+        else if (diasLapse < 14) pScore += 8  * evMultiplier;
       }
       score += pScore;
     });
@@ -4338,11 +4694,20 @@ function renderPasajeItem(obraId, p) {
   const STATUS_COLOR = { activo: 'var(--orange)', mantenimiento: 'var(--accent)', resuelto: 'var(--green)' };
   const st = p.status || 'activo';
 
+  // Memory lapse badge
+  let memBadge = '';
+  if (p.lastMemLapse) {
+    const dias = Math.round((Date.now() - new Date(p.lastMemLapse)) / 86400000);
+    const col = dias < 3 ? 'var(--red)' : dias < 7 ? 'var(--orange)' : 'var(--accent)';
+    memBadge = '<span style="font-size:8px;color:' + col + ';background:' + col + '18;border:1px solid ' + col + '44;border-radius:4px;padding:1px 6px;margin-left:4px" title="Fallo de memoria hace ' + dias + 'd">⚠ mem ' + (dias === 0 ? 'hoy' : dias + 'd') + '</span>';
+  }
+
   return `<div class="pasaje-item" style="flex-wrap:wrap" id="pitem-${obraId}-${p.id}">
     <button class="pasaje-status-icon" onclick="cyclePasajeStatus('${obraId}','${p.id}')"
       title="Estado: ${st} (click para cambiar)"
       style="color:${STATUS_COLOR[st]}">${STATUS_ICON[st]}</button>
     <input class="pasaje-text" value="${p.text.replace(/"/g,'&quot;')}" onblur="updatePasajeText('${obraId}','${p.id}',this.value)">
+    ${memBadge}
     <button class="pasaje-tracking-toggle ${isTracking ? 'on' : ''}"
       onclick="togglePasajeTracking('${obraId}','${p.id}',this)"
       title="${isTracking ? 'Desactivar seguimiento' : 'Activar seguimiento detallado'}">
@@ -5360,7 +5725,7 @@ const FASE_COLORS = { digitando: 'var(--orange)', consolidando: 'var(--accent)',
 function computeUrgencia(obraId) {
   const now = Date.now();
   const proximos = (db.eventos || [])
-    .filter(ev => ev.obras.includes(obraId) && new Date(ev.fecha) > now)
+    .filter(ev => !ev.completado && ev.obras.includes(obraId) && new Date(ev.fecha) >= new Date(new Date().toDateString()))
     .map(ev => ({ ...ev, dias: Math.ceil((new Date(ev.fecha) - now) / 86400000) }))
     .sort((a, b) => a.dias - b.dias);
 
@@ -5368,19 +5733,153 @@ function computeUrgencia(obraId) {
 
   const ev = proximos[0];
   const sev = EVENT_SEVERITY[ev.tipo] || 0.7;
-  // Normalize: higher severity = feels more urgent earlier
   const adjDias = ev.dias / sev;
 
   let nivel, label, color;
-  if (adjDias <= 8)        { nivel = 'critico';  label = 'Crítico';  color = 'var(--red)'; }
+  if (adjDias <= 0)        { nivel = 'critico';  label = '¡Hoy!';    color = 'var(--red)'; }
+  else if (adjDias <= 8)   { nivel = 'critico';  label = 'Crítico';  color = 'var(--red)'; }
   else if (adjDias <= 22)  { nivel = 'urgente';  label = 'Urgente';  color = 'var(--orange)'; }
   else if (adjDias <= 65)  { nivel = 'medio';    label = 'Medio';    color = 'var(--accent)'; }
   else if (adjDias <= 130) { nivel = 'holgado';  label = 'Holgado';  color = 'var(--green)'; }
   else                      { nivel = 'lejano';   label = 'Lejano';   color = 'var(--text3)'; }
 
-  // Numeric score for session ordering (higher = more urgent)
-  const score = (1000 / Math.max(ev.dias, 1)) * sev;
+  const score = (1000 / Math.max(ev.dias, 0.5)) * sev;
   return { nivel, label, color, score, evento: ev, dias: ev.dias };
+}
+
+// ── EVENTO READINESS & RESULTADO ─────────────────────────────────────────────
+
+function readinessColor(pct) {
+  if (pct >= 80) return 'var(--green)';
+  if (pct >= 60) return '#8aaa30';
+  if (pct >= 40) return 'var(--accent)';
+  if (pct >= 20) return 'var(--orange)';
+  return 'var(--red)';
+}
+
+function readinessLabel(pct) {
+  if (pct >= 85) return 'Listo';
+  if (pct >= 70) return 'Bien encaminado';
+  if (pct >= 50) return 'En construcción';
+  if (pct >= 30) return 'En riesgo';
+  return 'Sin preparar';
+}
+
+function computeEventoReadiness(evento) {
+  const obras = (evento.obras || []).map(id => findObra(id)).filter(Boolean);
+  if (!obras.length) return null;
+
+  let totalWeight = 0, totalScore = 0;
+  const detalles = [];
+
+  obras.forEach(obra => {
+    const weight = obra.duracion || 5;
+    // Aprendizaje (0-100): compasPercent o apr fallback
+    const pct = compasPercent(obra);
+    const aprScore = pct !== null ? pct : Math.min(100, (obra.apr || 1) * 10);
+    // Solidez (0-100)
+    const solEst = estimateSolActual(obra);
+    const solScore = solEst.val; // already 0-100
+    // Escena/libertad (0-100): from escHistory or obra.esc (1-10)
+    const escHistVal = obra.escHistory?.length ? normalizeSolVal(obra.escHistory[0].val) : null;
+    const escScore = escHistVal !== null ? escHistVal : Math.min(100, (obra.esc || 1) * 10);
+    // Pase recency bonus/penalty
+    let paseBonus = 0;
+    if (obra.lastPase) {
+      const diasSinPase = (Date.now() - new Date(obra.lastPase)) / 86400000;
+      if (diasSinPase <= 7)  paseBonus = 10;
+      else if (diasSinPase <= 14) paseBonus = 5;
+      else if (diasSinPase > 60)  paseBonus = -10;
+    }
+    const obraScore = Math.min(100, Math.max(0,
+      aprScore * 0.25 + solScore * 0.40 + escScore * 0.30 + paseBonus * 0.05
+    ));
+    totalScore += obraScore * weight;
+    totalWeight += weight;
+    detalles.push({ obraId: obra.id, nombre: obra.name, weight, aprScore, solScore, escScore, obraScore });
+  });
+
+  const global = totalWeight > 0 ? Math.round(totalScore / totalWeight) : null;
+  return { global, detalles };
+}
+
+let _eventoResId = null;
+
+function openEventoResultado(eventoId) {
+  const ev = (db.eventos || []).find(e => e.id === eventoId);
+  if (!ev) return;
+  _eventoResId = eventoId;
+  const obras = (ev.obras || []).map(id => findObra(id)).filter(Boolean);
+
+  document.getElementById('eventoResTitle').textContent = ev.nombre;
+
+  const obrasHtml = obras.map(obra => {
+    const solPrev = estimateSolActual(obra).val;
+    const escPrev = obra.escHistory?.length ? normalizeSolVal(obra.escHistory[0].val) : Math.min(100, (obra.esc || 1) * 10);
+    return '<div class="resultado-obra-block">' +
+      '<div class="resultado-obra-name">' + obra.name + (obra.composer ? ' <span style="font-size:11px;color:var(--text3)">' + obra.composer + '</span>' : '') + '</div>' +
+
+      '<div class="resultado-slider-label"><span>Solidez</span>' +
+      '<span class="resultado-pct-val" id="res-sol-val-' + obra.id + '" style="color:' + SOL_COLOR + '">' + solPrev + '%</span></div>' +
+      '<input type="range" min="0" max="100" step="1" value="' + solPrev + '" class="sol-slider" id="res-sol-' + obra.id + '" style="color:' + SOL_COLOR + '"' +
+      ' oninput="updateResSlider(\'sol\',\'' + obra.id + '\',this.value)">' +
+
+      '<div class="resultado-slider-label" style="margin-top:8px"><span>Libertad en escena</span>' +
+      '<span class="resultado-pct-val" id="res-esc-val-' + obra.id + '" style="color:' + ESC_COLOR + '">' + escPrev + '%</span></div>' +
+      '<input type="range" min="0" max="100" step="1" value="' + escPrev + '" class="sol-slider" id="res-esc-' + obra.id + '" style="color:' + ESC_COLOR + '"' +
+      ' oninput="updateResSlider(\'esc\',\'' + obra.id + '\',this.value)">' +
+
+      '<input type="text" class="modal-input" id="res-nota-' + obra.id + '" placeholder="nota sobre esta obra (opcional)" style="margin-top:8px;margin-bottom:0">' +
+      '</div>';
+  }).join('');
+
+  document.getElementById('eventoResObras').innerHTML = obrasHtml || '<div style="color:var(--text3);font-size:11px">Este evento no tiene obras asignadas.</div>';
+  openModal('modalEventoResultado');
+  requestAnimationFrame(() => {
+    obras.forEach(obra => {
+      fillSlider(document.getElementById('res-sol-' + obra.id), SOL_COLOR);
+      fillSlider(document.getElementById('res-esc-' + obra.id), ESC_COLOR);
+    });
+  });
+}
+
+function updateResSlider(tipo, obraId, val) {
+  const col = tipo === 'esc' ? ESC_COLOR : SOL_COLOR;
+  const el = document.getElementById('res-' + tipo + '-val-' + obraId);
+  if (el) { el.textContent = parseInt(val) + '%'; el.style.color = col; }
+  fillSlider(document.getElementById('res-' + tipo + '-' + obraId), col);
+}
+
+function confirmEventoResultado() {
+  const ev = (db.eventos || []).find(e => e.id === _eventoResId);
+  if (!ev) return;
+  const obras = (ev.obras || []).map(id => findObra(id)).filter(Boolean);
+
+  let totalScore = 0, totalWeight = 0;
+  const obrasResultados = obras.map(obra => {
+    const sol = parseInt(document.getElementById('res-sol-' + obra.id)?.value || 0);
+    const esc = parseInt(document.getElementById('res-esc-' + obra.id)?.value || 0);
+    const nota = document.getElementById('res-nota-' + obra.id)?.value.trim() || '';
+    const weight = obra.duracion || 5;
+    const obraScore = Math.round(sol * 0.5 + esc * 0.5);
+    totalScore += obraScore * weight;
+    totalWeight += weight;
+    // Update obra's sol/esc history
+    recordSolHistory(obra.id, sol, 'pase-escena');
+    recordEscHistory(obra.id, esc, 'pase-escena');
+    return { obraId: obra.id, obraName: obra.name, sol, esc, nota, obraScore };
+  });
+
+  const scoreTotal = totalWeight > 0 ? Math.round(totalScore / totalWeight) : 0;
+
+  ev.completado = true;
+  ev.completedDate = new Date().toISOString();
+  ev.resultado = { obrasResultados, scoreTotal };
+
+  saveData();
+  closeModal('modalEventoResultado');
+  renderCalendario();
+  showToast(ev.nombre + ' · ' + scoreTotal + '% de éxito ✓');
 }
 
 function renderCalendario() {
@@ -5392,65 +5891,107 @@ function renderCalendario() {
     dias: Math.ceil((new Date(ev.fecha) - now) / 86400000)
   })).sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
 
-  const futuros = todos.filter(ev => ev.dias > -1);
-  const pasados = todos.filter(ev => ev.dias < 0).reverse();
+  const pendientes = todos.filter(ev => !ev.completado && ev.dias > -2);
+  const completados = todos.filter(ev => ev.completado).sort((a,b) => new Date(b.completedDate||b.fecha) - new Date(a.completedDate||a.fecha));
+  const pasados = todos.filter(ev => !ev.completado && ev.dias < -1).reverse();
 
-  if (!futuros.length) {
+  if (!pendientes.length) {
     list.innerHTML = '<div class="cal-empty">No hay eventos próximos.<br>Añade un concurso, concierto, grabación o clase.</div>';
   } else {
-    list.innerHTML = futuros.map(ev => renderEventoCard(ev)).join('');
+    list.innerHTML = pendientes.map(ev => renderEventoCard(ev, false)).join('');
   }
 
-  if (pasados.length) {
-    pastList.innerHTML = `<div class="cal-past-label">Eventos pasados</div>` +
-      pasados.slice(0, 5).map(ev => renderEventoCard(ev, true)).join('');
-  } else {
-    pastList.innerHTML = '';
+  let pastHtml = '';
+  if (completados.length) {
+    pastHtml += '<div class="cal-past-label">Realizados</div>' +
+      completados.map(ev => renderEventoCard(ev, false, true)).join('');
   }
+  if (pasados.length) {
+    pastHtml += '<div class="cal-past-label">Sin registrar resultado</div>' +
+      pasados.slice(0, 5).map(ev => renderEventoCard(ev, true)).join('');
+  }
+  pastList.innerHTML = pastHtml;
   updateHeader();
 }
 
-function renderEventoCard(ev, isPast) {
+function renderEventoCard(ev, isPast, isCompletado) {
   const obras = (ev.obras || []).map(id => db.obras.find(o => o.id === id)).filter(Boolean);
-  const sev = EVENT_SEVERITY[ev.tipo] || 0.7;
-  const diasLabel = isPast
-    ? `<div class="evento-dias" style="color:var(--text3)">−${Math.abs(ev.dias)}</div><div class="evento-dias-label">días atrás</div>`
-    : ev.dias <= 7
-      ? `<div class="evento-dias critico">${ev.dias}</div><div class="evento-dias-label">días</div>`
-      : ev.dias <= 21
-        ? `<div class="evento-dias urgente">${ev.dias}</div><div class="evento-dias-label">días</div>`
-        : `<div class="evento-dias">${ev.dias}</div><div class="evento-dias-label">días</div>`;
+
+  // Days label - day 0 = critical
+  let diasLabel;
+  if (isCompletado) {
+    const scoreTotal = ev.resultado?.scoreTotal;
+    const col = scoreTotal >= 80 ? 'var(--green)' : scoreTotal >= 55 ? 'var(--accent)' : 'var(--orange)';
+    diasLabel = scoreTotal != null
+      ? '<div class="evento-score-badge" style="background:' + col + '22;color:' + col + ';border:1px solid ' + col + '44">' + scoreTotal + '% éxito</div>'
+      : '<div style="font-size:9px;color:var(--green)">✓ Realizado</div>';
+  } else if (isPast) {
+    diasLabel = '<div class="evento-dias" style="color:var(--text3)">−' + Math.abs(ev.dias) + '</div><div class="evento-dias-label">días atrás</div>';
+  } else if (ev.dias === 0) {
+    diasLabel = '<div class="evento-dias critico" style="font-size:16px">¡HOY!</div>';
+  } else if (ev.dias <= 7) {
+    diasLabel = '<div class="evento-dias critico">' + ev.dias + '</div><div class="evento-dias-label">días</div>';
+  } else if (ev.dias <= 21) {
+    diasLabel = '<div class="evento-dias urgente">' + ev.dias + '</div><div class="evento-dias-label">días</div>';
+  } else {
+    diasLabel = '<div class="evento-dias">' + ev.dias + '</div><div class="evento-dias-label">días</div>';
+  }
 
   const fechaStr = new Date(ev.fecha).toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
 
   const obrasHtml = obras.map(o => {
     const faseClass = o.origen === 'recuperacion' ? 'recuperacion' : obraFase(o);
-    return `<span class="evento-obra-chip">
-      <span class="evento-obra-dot ${faseClass}"></span>
-      ${o.name}
-    </span>`;
+    return '<span class="evento-obra-chip"><span class="evento-obra-dot ' + faseClass + '"></span>' + o.name + '</span>';
   }).join('');
 
-  const perfLabel = { concurso: 'perfección máxima', audicion: 'perfección máxima', grabacion: 'muy alta exigencia', concierto: 'alta exigencia', clase: 'trabajo honesto', ensayo: 'trabajo colaborativo' };
+  // Readiness block (only for non-completed upcoming events with obras)
+  let readinessHtml = '';
+  if (!isCompletado && !isPast && obras.length) {
+    const r = computeEventoReadiness(ev);
+    if (r && r.global !== null) {
+      const col = readinessColor(r.global);
+      readinessHtml = '<div class="evento-readiness">' +
+        '<div class="readiness-label-row"><span style="font-size:8px;letter-spacing:0.1em;text-transform:uppercase">Preparación</span>' +
+        '<span class="readiness-pct" style="color:' + col + '">' + r.global + '%</span></div>' +
+        '<div class="readiness-bar-wrap"><div class="readiness-bar-fill" style="width:' + r.global + '%;background:' + col + '"></div></div>' +
+        '<div class="readiness-label-row"><span style="color:' + col + '">' + readinessLabel(r.global) + '</span>' +
+        '<span style="font-size:7px">' + r.detalles.map(d => d.nombre.split(' ')[0] + ' ' + Math.round(d.obraScore) + '%').join(' · ') + '</span></div>' +
+        '</div>';
+    }
+  }
 
-  return `<div class="evento-card" ${isPast ? 'style="opacity:0.5"' : ''}>
-    <div class="evento-header">
-      <div>
-        <span class="evento-tipo-badge ${ev.tipo}">${EVENT_LABEL[ev.tipo]||ev.tipo}</span>
-        <div class="evento-nombre" style="margin-top:6px">${ev.nombre}</div>
-        <div style="font-size:9px;color:var(--text3);margin-top:2px">${fechaStr}</div>
-      </div>
-      <div class="evento-fecha">${diasLabel}</div>
-    </div>
-    ${obras.length ? `<div class="evento-obras-section">
-      <div class="evento-obras-label">Obras (${obras.length})</div>
-      ${obrasHtml}
-    </div>` : ''}
-    ${!isPast ? `<div class="evento-actions">
-      <button class="evento-edit-btn" onclick="openEditEvento('${ev.id}')">Editar</button>
-      <button class="evento-delete-btn" onclick="deleteEvento('${ev.id}')">Eliminar</button>
-    </div>` : ''}
-  </div>`;
+  // Resultado detail for completed
+  let resultadoHtml = '';
+  if (isCompletado && ev.resultado?.obrasResultados?.length) {
+    const rows = ev.resultado.obrasResultados.map(r =>
+      '<div style="display:flex;justify-content:space-between;font-size:9px;color:var(--text2);padding:2px 0">' +
+      '<span>' + (r.obraName || r.obraId) + '</span>' +
+      '<span style="color:' + readinessColor(r.obraScore) + ';font-family:\'JetBrains Mono\',monospace">' + r.obraScore + '%</span></div>'
+    ).join('');
+    resultadoHtml = '<div style="padding:8px 16px 4px;border-top:1px solid var(--border2)">' + rows + '</div>';
+  }
+
+  const doneBtn = isCompletado
+    ? '<button class="evento-done-btn completado" disabled>✓ Realizado</button>'
+    : '<button class="evento-done-btn" onclick="openEventoResultado(\'' + ev.id + '\')">✓ Marcar realizado</button>';
+
+  const cardOpacity = (isPast && !isCompletado) ? ' style="opacity:0.55"' : '';
+
+  return '<div class="evento-card"' + cardOpacity + '>' +
+    '<div class="evento-header"><div>' +
+    '<span class="evento-tipo-badge ' + ev.tipo + '">' + (EVENT_LABEL[ev.tipo]||ev.tipo) + '</span>' +
+    '<div class="evento-nombre" style="margin-top:6px">' + ev.nombre + '</div>' +
+    '<div style="font-size:9px;color:var(--text3);margin-top:2px">' + fechaStr + '</div>' +
+    '</div>' +
+    '<div class="evento-fecha">' + diasLabel + '</div></div>' +
+    (obras.length ? '<div class="evento-obras-section"><div class="evento-obras-label">Obras (' + obras.length + ')</div>' + obrasHtml + '</div>' : '') +
+    readinessHtml +
+    resultadoHtml +
+    '<div class="evento-actions">' +
+    doneBtn +
+    (!isCompletado ? '<button class="evento-edit-btn" onclick="openEditEvento(\'' + ev.id + '\')">Editar</button>' : '') +
+    '<button class="evento-delete-btn" onclick="deleteEvento(\'' + ev.id + '\')">Eliminar</button>' +
+    '</div></div>';
 }
 
 // ─── EVENTO MODAL ─────────────────────────────────────────────────────────────
