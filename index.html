@@ -2102,6 +2102,7 @@
         <button class="stepper-btn" onclick="stepCompas(1)">+</button>
         <div class="stepper-meta" id="compasStepMeta"></div>
       </div>
+      <div id="compasPosMeta" style="display:none;text-align:center;margin:-4px 0 12px;padding:8px 12px;background:var(--bg3);border-radius:8px;border:1px solid var(--border2)"></div>
     </div>
 
     <!-- Fallo de memoria (solo si obra aprendida) -->
@@ -3564,13 +3565,36 @@ function stepCompas(delta) {
 
 function updateCompasMeta() {
   const meta = document.getElementById('compasStepMeta');
-  if (!meta) return;
+  const posMeta = document.getElementById('compasPosMeta');
   const obra = findObra(_hechoObraId);
-  if (!obra || !obra.compasesTotal) { meta.textContent = ''; return; }
+  if (!obra || !obra.compasesTotal) {
+    if (meta) meta.textContent = '';
+    if (posMeta) posMeta.style.display = 'none';
+    return;
+  }
   const nuevo = Math.min(obra.compasesTotal, _hechoCompasAntes + _hechoCompasStep);
   const pct = Math.round((nuevo / obra.compasesTotal) * 100);
-  meta.innerHTML = '<span style="color:var(--text2)">cc. ' + _hechoCompasAntes + ' → <strong>' + nuevo + '</strong></span><br>' +
-    '<span style="color:var(--accent)">' + pct + '% del total</span>';
+  // Stepper meta: compact delta info
+  if (meta) {
+    meta.innerHTML = _hechoCompasStep > 0
+      ? '<span style="color:var(--text3)">+' + _hechoCompasStep + ' hoy</span>'
+      : '<span style="color:var(--text3)">sin avance</span>';
+  }
+  // Position meta: prominent "X de Y"
+  if (posMeta) {
+    posMeta.style.display = 'block';
+    const barW = Math.round(pct);
+    posMeta.innerHTML =
+      '<div style="display:flex;align-items:baseline;justify-content:center;gap:6px;margin-bottom:5px">' +
+        '<span style="font-size:22px;font-weight:700;color:var(--accent)">' + nuevo + '</span>' +
+        '<span style="font-size:11px;color:var(--text3)">de</span>' +
+        '<span style="font-size:16px;color:var(--text2)">' + obra.compasesTotal + '</span>' +
+        '<span style="font-size:9px;color:var(--text3);margin-left:4px">compases (' + pct + '%)</span>' +
+      '</div>' +
+      '<div style="height:4px;background:var(--bg2);border-radius:2px;overflow:hidden">' +
+        '<div style="height:100%;width:' + barW + '%;background:var(--accent);border-radius:2px;transition:width 0.2s"></div>' +
+      '</div>';
+  }
 }
 
 function selectMemLapse(yes, btn) {
@@ -4033,6 +4057,21 @@ function generateSession() {
     }
     const recent = getRecentTicksForObra(o.id, 3);
     if (recent.length === 3 && recent.every(r => r.tick === 'hecho')) score -= 15;
+
+    // Solidez — baja solidez = más urgente de practicar
+    if (o.solHistory && o.solHistory.length) {
+      const solActual = normalizeSolVal(o.solHistory[0].val);
+      // Inversamente proporcional: sol=0 → +35pts, sol=50 → ~17pts, sol=100 → 0pts
+      score += Math.round((100 - solActual) / 100 * 35);
+      // Caída reciente de solidez: boost extra si bajó respecto a la sesión anterior
+      if (o.solHistory.length >= 2) {
+        const solPrev = normalizeSolVal(o.solHistory[1].val);
+        const caida = solPrev - solActual;
+        if (caida >= 20) score += 22;
+        else if (caida >= 10) score += 12;
+        else if (caida >= 5) score += 6;
+      }
+    }
 
     // Penalización por fatiga acumulada total (no solo hoy)
     if (cargaTotal > 80 && dif >= 5) score -= 15;
