@@ -264,6 +264,19 @@
   }
   .energy-btn.active { background: var(--accent); color: var(--bg); border-color: var(--accent); }
 
+  /* ESTADO DIARIO */
+  .estado-sliders { width: 100%; display: flex; flex-direction: column; gap: 10px; margin: 4px 0 14px; text-align: left; }
+  .estado-row { display: flex; align-items: center; gap: 8px; }
+  .estado-icon { font-size: 15px; width: 22px; flex-shrink: 0; text-align: center; }
+  .estado-label { font-size: 8px; color: var(--text3); letter-spacing: 0.08em; text-transform: uppercase; width: 70px; flex-shrink: 0; }
+  .estado-slider { flex: 1; height: 5px; border-radius: 2.5px; cursor: pointer; -webkit-appearance: none; appearance: none; outline: none; border: none; background: var(--bg2); }
+  .estado-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: currentColor; cursor: pointer; border: 2px solid var(--bg); box-shadow: 0 1px 4px rgba(0,0,0,0.25); margin-top: -6px; }
+  .estado-slider::-moz-range-thumb { width: 16px; height: 16px; border-radius: 50%; background: currentColor; border: 2px solid var(--bg); cursor: pointer; }
+  .estado-slider::-webkit-slider-runnable-track { border-radius: 2.5px; height: 5px; }
+  .estado-slider::-moz-range-track { border-radius: 2.5px; height: 5px; background: var(--bg2); }
+  .estado-slider::-moz-range-progress { border-radius: 2.5px; height: 5px; background: currentColor; }
+  .estado-val { font-family: 'JetBrains Mono', monospace; font-size: 11px; width: 28px; text-align: right; flex-shrink: 0; font-weight: bold; }
+
   .time-picker {
     display: flex; gap: 6px; margin-bottom: 20px; justify-content: center; flex-wrap: wrap;
   }
@@ -949,6 +962,8 @@
   .tick-note::placeholder { color: var(--text3); }
   .save-session-btn { width: 100%; margin-top: 14px; padding: 12px; background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; color: var(--accent); font-family: 'Cormorant Garamond', serif; font-size: 16px; cursor: pointer; transition: all 0.2s; }
   .save-session-btn:hover { background: var(--accent); color: var(--bg); }
+  .add-extra-btn { width: 100%; margin-top: 10px; padding: 9px; background: transparent; border: 1px dashed var(--border2); border-radius: 8px; color: var(--text3); font-family: 'JetBrains Mono', monospace; font-size: 11px; cursor: pointer; transition: all 0.2s; letter-spacing: 0.05em; }
+  .add-extra-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--bg3); }
 
   /* SOL MODAL (replaces inline row) */
   .hecho-modal-obra { font-family: 'Cormorant Garamond', serif; font-size: 18px; color: var(--accent); margin-bottom: 16px; line-height: 1.3; }
@@ -991,6 +1006,28 @@
   .stepper-btn:hover { background: var(--accent); color: var(--bg); }
   .stepper-val { font-family: 'JetBrains Mono', monospace; font-size: 22px; color: var(--accent); min-width: 48px; text-align: center; }
   .stepper-meta { font-size: 8px; color: var(--text3); line-height: 1.5; }
+
+  /* PASES EN SESION */
+  .pase-block { background: var(--bg3); border: 1px solid var(--border2); border-radius: 8px; padding: 10px 12px; margin-bottom: 8px; }
+  .pase-block-title { font-size: 8px; color: var(--text3); letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+  .pase-toggle-btn { font-size: 9px; color: var(--accent); background: transparent; border: 1px solid var(--border2); border-radius: 4px; padding: 2px 8px; cursor: pointer; }
+  .pase-sol-row { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
+  .pase-sol-label { font-size: 8px; color: var(--text3); min-width: 60px; }
+  .pase-sol-val { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: bold; min-width: 36px; text-align: right; }
+
+  /* PASAJE WORK */
+  .pasaje-work-block { border: 1px solid var(--border2); border-radius: 7px; padding: 10px 12px; margin-bottom: 6px; background: var(--bg3); }
+  .pasaje-work-name { font-size: 11px; color: var(--text2); margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; }
+  .intensidad-btns { display: flex; gap: 4px; }
+  .intensidad-btn { padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border2); background: transparent; font-size: 9px; cursor: pointer; transition: all 0.15s; color: var(--text3); }
+  .intensidad-btn.active.intenso  { background: var(--red);    color: #fff; border-color: var(--red); }
+  .intensidad-btn.active.normal   { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .intensidad-btn.active.superficial { background: var(--bg2); color: var(--text2); border-color: var(--border); }
+  .pasaje-sol-pair { display: flex; align-items: center; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+  .pasaje-sol-mini { flex: 1; min-width: 100px; }
+  .pasaje-sol-mini-label { font-size: 7px; color: var(--text3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 3px; display: flex; justify-content: space-between; }
+  .pasaje-sol-mini-val { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: bold; }
+  .pasaje-arrow { color: var(--text3); font-size: 14px; flex-shrink: 0; }
 
   /* MEMORY LAPSE */
   .memlapse-section { background: var(--bg3); border: 1px solid var(--border2); border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; }
@@ -1861,13 +1898,39 @@
 <div class="view active" id="view-session">
   <div class="session-hero">
     <div class="notes-deco" id="notesDeco"></div>
+    <div id="rachaDisplay" style="display:none;margin-bottom:6px"></div>
     <div class="session-hero-title">¿Cómo estás hoy?</div>
     <div class="session-hero-sub">Genera tu sesión</div>
 
-    <div class="energy-picker">
-      <button class="energy-btn" data-energy="alta" onclick="selectEnergy(this)">Alta</button>
-      <button class="energy-btn active" data-energy="normal" onclick="selectEnergy(this)">Normal</button>
-      <button class="energy-btn" data-energy="baja" onclick="selectEnergy(this)">Baja</button>
+    <div class="estado-sliders">
+      <div class="estado-row">
+        <span class="estado-icon">⚡</span>
+        <span class="estado-label">Energía</span>
+        <input type="range" class="estado-slider" id="est-energia" min="0" max="100" step="5" value="70"
+          oninput="updateEstado('energia',this.value)" style="color:#c8a030">
+        <span class="estado-val" id="estval-energia" style="color:#c8a030">70</span>
+      </div>
+      <div class="estado-row">
+        <span class="estado-icon">🧠</span>
+        <span class="estado-label">Claridad</span>
+        <input type="range" class="estado-slider" id="est-claridad" min="0" max="100" step="5" value="70"
+          oninput="updateEstado('claridad',this.value)" style="color:#6090d8">
+        <span class="estado-val" id="estval-claridad" style="color:#6090d8">70</span>
+      </div>
+      <div class="estado-row">
+        <span class="estado-icon">🎯</span>
+        <span class="estado-label">Motivación</span>
+        <input type="range" class="estado-slider" id="est-motivacion" min="0" max="100" step="5" value="70"
+          oninput="updateEstado('motivacion',this.value)" style="color:var(--green)">
+        <span class="estado-val" id="estval-motivacion" style="color:var(--green)">70</span>
+      </div>
+      <div class="estado-row">
+        <span class="estado-icon">😴</span>
+        <span class="estado-label">Sueño</span>
+        <input type="range" class="estado-slider" id="est-sueno" min="0" max="100" step="5" value="70"
+          oninput="updateEstado('sueno',this.value)" style="color:#a090e0">
+        <span class="estado-val" id="estval-sueno" style="color:#a090e0">70</span>
+      </div>
     </div>
 
     <div style="font-size:9px;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:8px">Tiempo disponible</div>
@@ -1995,6 +2058,7 @@
 
 <div class="view" id="view-historial">
   <div id="eficienciaSection" style="margin-bottom:20px"></div>
+  <div id="estadoSection" style="margin-bottom:20px"></div>
   <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--border2)">
     <div style="font-size:9px;color:var(--text3);letter-spacing:0.2em;text-transform:uppercase">Historial de sesiones</div>
     <button class="add-manual-session-btn" onclick="openSesionManual()" style="padding:6px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:6px;color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.06em;cursor:pointer;transition:all 0.2s">+ añadir estudio</button>
@@ -2085,9 +2149,59 @@
   </div>
 </div>
 
+<!-- MODAL EXTRA OBRA -->
+<div class="modal-overlay" id="modalExtraObra">
+  <div class="modal" style="max-width:380px">
+    <div class="modal-title" style="margin-bottom:4px">＋ Obra extra</div>
+    <div style="font-size:9px;color:var(--text3);margin-bottom:14px;line-height:1.6">
+      Selecciona la obra que has estudiado fuera del plan. Se registrará como trabajo adicional de hoy.
+    </div>
+    <div class="hecho-field-label">Obra</div>
+    <select id="extraObraSelect" class="modal-input" style="margin-bottom:14px">
+      <option value="">— selecciona una obra —</option>
+    </select>
+    <div class="hecho-field-label">Minutos estudiados</div>
+    <input type="number" id="extraMinutos" min="1" max="480" step="5" class="modal-input"
+      placeholder="ej: 30" style="width:90px;text-align:center;font-size:18px;color:var(--accent)">
+    <div class="modal-buttons" style="margin-top:16px">
+      <button class="modal-btn secondary" onclick="closeModal('modalExtraObra')">Cancelar</button>
+      <button class="modal-btn primary" onclick="confirmAddExtra()">Añadir al plan</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RATING SESION -->
+<div class="modal-overlay" id="modalRatingSesion">
+  <div class="modal" style="max-width:360px">
+    <div class="modal-title" style="margin-bottom:6px">Sesión completada</div>
+    <div style="font-size:9px;color:var(--text3);margin-bottom:18px;line-height:1.6">
+      Una última pregunta. Tu respuesta ayuda a correlacionar el estado previo con el rendimiento real.
+    </div>
+
+    <div class="hecho-field-label">¿Cómo fue la sesión de hoy?</div>
+    <div class="sol-pct-display" id="ratingDisplay" style="font-size:40px">—</div>
+    <div class="sol-pct-label" id="ratingLabel">mueve el slider</div>
+    <input type="range" min="0" max="100" step="5" value="70" id="ratingSlider"
+      class="sol-slider" style="color:#c8a030" oninput="updateRatingSlider(this.value)">
+    <div class="sol-ref-row" style="margin-bottom:16px">
+      <span>0 pérdida de tiempo</span>
+      <span>50 normal</span>
+      <span>100 sesión perfecta</span>
+    </div>
+
+    <input type="text" id="ratingNota" class="modal-input"
+      placeholder="algo destacable de la sesión (opcional)">
+
+    <div class="modal-buttons" style="margin-top:14px">
+      <button class="modal-btn secondary" onclick="closeRatingSesion(false)">Omitir</button>
+      <button class="modal-btn primary" onclick="closeRatingSesion(true)">Guardar</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL HECHO DATOS -->
 <div class="modal-overlay" id="modalHechoDatos">
-  <div class="modal" style="max-width:400px">
+  <div class="modal" style="max-width:420px;max-height:92vh;overflow-y:auto">
     <div class="modal-title" style="margin-bottom:4px">✓ Hecho</div>
     <div class="hecho-modal-obra" id="hechoObraName"></div>
 
@@ -2100,21 +2214,69 @@
       <span id="hechoMinDiff" style="font-size:9px;margin-left:auto"></span>
     </div>
 
-    <!-- Compases avanzados (solo si obra en aprendizaje) -->
+    <!-- Compases (solo si obra en aprendizaje) -->
     <div id="hechoCompasSection" style="display:none">
       <div class="hecho-field-label">Compases aprendidos hoy</div>
+      <div id="compasPosMeta" style="display:none;margin-bottom:10px;text-align:center;background:var(--bg3);border-radius:8px;padding:10px 12px"></div>
       <div class="compas-stepper">
+        <button class="stepper-btn" onclick="stepCompas(-5)">−−</button>
         <button class="stepper-btn" onclick="stepCompas(-1)">−</button>
         <div>
           <div class="stepper-val" id="compasStepVal">0</div>
           <div style="font-size:7px;color:var(--text3);text-align:center">cc. avanzados</div>
         </div>
         <button class="stepper-btn" onclick="stepCompas(1)">+</button>
+        <button class="stepper-btn" onclick="stepCompas(5)">++</button>
         <div class="stepper-meta" id="compasStepMeta"></div>
       </div>
     </div>
 
-    <!-- Fallo de memoria (solo si obra aprendida) -->
+    <!-- PASES (solo si obra aprendida) -->
+    <div id="hechoPasesSection" style="display:none">
+      <div class="hecho-field-label" style="margin-bottom:8px">Pases de hoy <span style="font-weight:normal;text-transform:none;letter-spacing:0;color:var(--text3);font-size:8px">(añade los que hayas dado)</span></div>
+
+      <!-- Pase Antes -->
+      <div class="pase-block" id="paseAntesBlock">
+        <div class="pase-block-title">
+          <span>Pase inicial</span>
+          <button class="pase-toggle-btn" id="paseAntesToggle" onclick="togglePaseBlock('antes')">+ añadir</button>
+        </div>
+        <div id="paseAntesContent" style="display:none">
+          <div class="pase-sol-row">
+            <span class="pase-sol-label">Solidez</span>
+            <input type="range" min="0" max="100" step="1" value="50" class="sol-slider" id="paseAntesSlider"
+              oninput="updatePaseSlider('antes',this.value)" style="flex:1;color:' + SOL_COLOR + '">
+            <span class="pase-sol-val" id="paseAntesVal" style="color:#c8a030">50%</span>
+          </div>
+          <input type="text" class="modal-input" id="paseAntesNota" placeholder="nota de este pase (opcional)" style="margin-top:8px;margin-bottom:0">
+        </div>
+      </div>
+
+      <!-- Pase Después -->
+      <div class="pase-block" id="paseDespuesBlock">
+        <div class="pase-block-title">
+          <span>Pase final</span>
+          <button class="pase-toggle-btn" id="paseDespuesToggle" onclick="togglePaseBlock('despues')">+ añadir</button>
+        </div>
+        <div id="paseDespuesContent" style="display:none">
+          <div class="pase-sol-row">
+            <span class="pase-sol-label">Solidez</span>
+            <input type="range" min="0" max="100" step="1" value="60" class="sol-slider" id="paseDespuesSlider"
+              oninput="updatePaseSlider('despues',this.value)" style="flex:1;color:#c8a030">
+            <span class="pase-sol-val" id="paseDespuesVal" style="color:#c8a030">60%</span>
+          </div>
+          <input type="text" class="modal-input" id="paseDespuesNota" placeholder="nota de este pase (opcional)" style="margin-top:8px;margin-bottom:0">
+        </div>
+      </div>
+    </div>
+
+    <!-- PASAJES TRABAJADOS (solo si hay pasajes activos) -->
+    <div id="hechoPasajesSection" style="display:none">
+      <div class="hecho-field-label" style="margin-bottom:8px">Pasajes trabajados <span style="font-weight:normal;text-transform:none;letter-spacing:0;color:var(--text3);font-size:8px">(marca los que hayas trabajado)</span></div>
+      <div id="hechoPasajesList"></div>
+    </div>
+
+    <!-- Fallo de memoria -->
     <div id="hechoMemSection" style="display:none">
       <div class="memlapse-section">
         <div class="memlapse-title">¿Fallo de memoria durante la sesión?</div>
@@ -2125,7 +2287,6 @@
         <div class="memlapse-detail" id="memLapseDetail" style="display:none">
           <div class="hecho-field-label" style="margin-top:8px">¿En qué pasaje?</div>
           <div class="pasaje-select-row" id="memPasajeRow"></div>
-          <!-- New pasaje form (shown when "+ nuevo" clicked) -->
           <div id="memNuevoPasajeForm" style="display:none">
             <input type="text" class="modal-input" id="memPasajeNombre" placeholder="nombre del pasaje (ej: coda final)">
             <div style="display:flex;gap:6px">
@@ -2137,23 +2298,9 @@
       </div>
     </div>
 
-    <!-- Solidez (solo si obra suficientemente aprendida) -->
-    <div id="hechoSolSection">
-      <div class="hecho-field-label">Solidez hoy (0–100%)</div>
-      <div class="sol-pct-display" id="solPctDisplay">—</div>
-      <div class="sol-pct-label" id="solPctLabel">mueve el slider</div>
-      <input type="range" min="0" max="100" step="1" value="0" id="solSlider" class="sol-slider"
-        oninput="updateSolSlider(this.value)">
-      <div class="sol-ref-row">
-        <span>0% sin dominio</span>
-        <span>50% con fallos</span>
-        <span>100% perfecto</span>
-      </div>
-    </div>
-
-    <!-- Nota -->
-    <div class="hecho-field-label">Nota rápida (opcional)</div>
-    <input type="text" id="hechoNota" class="modal-input" placeholder="qué fue bien, qué trabajar...">
+    <!-- Nota general -->
+    <div class="hecho-field-label">Nota general (opcional)</div>
+    <input type="text" id="hechoNota" class="modal-input" placeholder="observaciones generales...">
 
     <div class="modal-buttons" style="margin-top:16px">
       <button class="modal-btn secondary" onclick="closeHechoDatos(false)">Cancelar</button>
@@ -2422,11 +2569,12 @@ function showView(name) {
   const names = ['session','obras','pasajes','pases','calendario','historial'];
   const idx = names.indexOf(name);
   if (idx >= 0) btns[idx].classList.add('active');
-  if (name === 'obras')    renderObras();
-  if (name === 'pasajes')  renderPasajesGlobal();
-  if (name === 'pases')    renderPases();
+  if (name === 'session')    renderRacha();
+  if (name === 'obras')      renderObras();
+  if (name === 'pasajes')    renderPasajesGlobal();
+  if (name === 'pases')      renderPases();
   if (name === 'calendario') renderCalendario();
-  if (name === 'historial') { renderSesionesHistorial(); renderEficienciaSection(); }
+  if (name === 'historial')  { renderSesionesHistorial(); renderEficienciaSection(); renderEstadoSection(); }
 }
 
 function showToast(msg) {
@@ -2480,6 +2628,37 @@ function updateHeader() {
 
 let selectedEnergy = 'normal';
 let selectedTime = 2;
+let estadoDiario = { energia: 70, claridad: 70, motivacion: 70, sueno: 70 };
+const ESTADO_COLORS = { energia: '#c8a030', claridad: '#6090d8', motivacion: '#5ab87a', sueno: '#a090e0' };
+
+function fillEstadoSlider(slider, color) {
+  if (!slider) return;
+  const pct = ((parseFloat(slider.value) - parseFloat(slider.min)) / (parseFloat(slider.max) - parseFloat(slider.min))) * 100;
+  slider.style.background = 'linear-gradient(to right,' + color + ' 0%,' + color + ' ' + pct + '%,var(--bg2) ' + pct + '%,var(--bg2) 100%)';
+  slider.style.color = color;
+}
+
+function updateEstado(dim, val) {
+  estadoDiario[dim] = parseInt(val);
+  const valEl = document.getElementById('estval-' + dim);
+  if (valEl) { valEl.textContent = val; }
+  const slider = document.getElementById('est-' + dim);
+  fillEstadoSlider(slider, ESTADO_COLORS[dim]);
+  // keep selectedEnergy alias for session algorithm
+  const avg = Math.round((estadoDiario.energia + estadoDiario.claridad + estadoDiario.motivacion) / 3);
+  selectedEnergy = avg >= 65 ? 'alta' : avg >= 35 ? 'normal' : 'baja';
+}
+
+function initEstadoSliders() {
+  ['energia','claridad','motivacion','sueno'].forEach(dim => {
+    const slider = document.getElementById('est-' + dim);
+    const valEl  = document.getElementById('estval-' + dim);
+    if (!slider) return;
+    slider.value = estadoDiario[dim];
+    if (valEl) valEl.textContent = estadoDiario[dim];
+    fillEstadoSlider(slider, ESTADO_COLORS[dim]);
+  });
+}
 
 function selectEnergy(btn) {
   document.querySelectorAll('.energy-btn').forEach(b => b.classList.remove('active'));
@@ -2491,6 +2670,67 @@ function selectTime(btn) {
   document.querySelectorAll('.time-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   selectedTime = parseFloat(btn.dataset.time);
+}
+
+// ─── RACHA ───────────────────────────────────────────────────────────────────
+
+function computeRacha() {
+  // A day counts if at least one item was marked 'hecho'
+  const diasConSesion = new Set(
+    (db.sesiones || [])
+      .filter(s => (s.items || []).some(it => it.tick === 'hecho'))
+      .map(s => new Date(s.date).toDateString())
+  );
+
+  let racha = 0;
+  const hoy = new Date();
+  // Start from today; if today has no session yet, start from yesterday
+  // (don't break the streak just because today's session hasn't happened yet)
+  const todayStr = hoy.toDateString();
+  const startFromYesterday = !diasConSesion.has(todayStr);
+  const cursor = new Date(hoy);
+  if (startFromYesterday) cursor.setDate(cursor.getDate() - 1);
+
+  while (true) {
+    if (diasConSesion.has(cursor.toDateString())) {
+      racha++;
+      cursor.setDate(cursor.getDate() - 1);
+    } else {
+      break;
+    }
+  }
+
+  return { racha, hayHoy: diasConSesion.has(todayStr) };
+}
+
+function renderRacha() {
+  const el = document.getElementById('rachaDisplay');
+  if (!el) return;
+  const { racha, hayHoy } = computeRacha();
+
+  if (racha === 0) { el.style.display = 'none'; return; }
+
+  const emoji = racha >= 30 ? '🏆' : racha >= 14 ? '🔥' : racha >= 7 ? '⚡' : '✦';
+  const msg   = racha >= 30 ? 'racha increíble'
+              : racha >= 14 ? 'dos semanas seguidas'
+              : racha >= 7  ? 'una semana seguida'
+              : racha >= 3  ? 'días seguidos'
+              : racha === 2 ? 'días seguidos'
+              : 'día de racha';
+  const sub   = hayHoy ? 'Ya has estudiado hoy ✓'
+              : racha === 1 ? 'Estudia hoy para mantenerla'
+              : 'No la rompas hoy';
+  const col   = racha >= 14 ? 'var(--green)' : racha >= 7 ? '#c8a030' : 'var(--accent)';
+
+  el.style.display = 'block';
+  el.innerHTML = '<div style="display:inline-flex;align-items:center;gap:8px;background:' + col + '18;border:1px solid ' + col + '44;border-radius:20px;padding:5px 14px;margin-bottom:2px">'
+    + '<span style="font-size:18px">' + emoji + '</span>'
+    + '<div>'
+    + '<span style="font-family:\'Cormorant Garamond\',serif;font-size:22px;color:' + col + ';font-weight:400">' + racha + '</span>'
+    + '<span style="font-size:10px;color:' + col + ';opacity:0.8;margin-left:5px">' + msg + '</span>'
+    + '</div>'
+    + '</div>'
+    + '<div style="font-size:8px;color:var(--text3);letter-spacing:0.05em;margin-bottom:2px">' + sub + '</div>';
 }
 
 function renderBreakCard(tipo, energia, idx) {
@@ -2559,7 +2799,6 @@ function saveDraft() {
   currentPlan.forEach(o => {
     const pid = o._planId || o.id;
     const n = document.getElementById('tnote-' + pid);
-    const ob = document.getElementById('obj-' + pid);
     const m = document.getElementById('tmin-' + pid);
     if (n) notes[pid] = n.value;
     if (ob) objs[pid] = ob.value;
@@ -2569,6 +2808,7 @@ function saveDraft() {
   const draft = {
     date: new Date().toDateString(),
     energia: selectedEnergy,
+    estado: { ...estadoDiario },
     time: selectedTime,
     // Store full entity descriptors so we can restore movement plan items
     plan: currentPlan.map(o => ({
@@ -2646,6 +2886,7 @@ function loadDraft() {
 function _restoreDraftUI(draft) {
   Object.assign(sessionMinPlan, draft.minPlan || {});
   Object.assign(sessionSolRatings, draft.sols || {});
+  if (draft.estado) { Object.assign(estadoDiario, draft.estado); initEstadoSliders(); }
   const sesionHoy = db.sesiones.find(s => new Date(s.date).toDateString() === new Date().toDateString());
   const cargaHoy = sesionHoy ? 50 : 0;
   let html = '';
@@ -2657,8 +2898,8 @@ function _restoreDraftUI(draft) {
       html += renderTrabajoItem(entity, i, sessionMinPlan[pid] || 30, selectedEnergy, cargaHoy, analizarPases(entity._obraId || entity.id));
     }
   });
-  html += '<button class="save-session-btn" onclick="saveSession()">Guardar sesión de hoy</button>';
-  const planDiv = document.getElementById('sessionPlan');
+  html += '<button class="add-extra-btn" onclick="openAddExtra()">＋ Añadir obra extra</button>';
+  html += '<button class="save-session-btn" onclick="saveSession()">Guardar sesión de hoy</button>';  const planDiv = document.getElementById('sessionPlan');
   planDiv.innerHTML = html;
   planDiv.classList.add('visible');
   requestAnimationFrame(() => {
@@ -2682,7 +2923,6 @@ function _restoreDraftUI(draft) {
         }
       }
       const noteEl = document.getElementById('tnote-' + pid);
-      const objEl = document.getElementById('obj-' + pid);
       if (noteEl && draft.notes?.[pid]) noteEl.value = draft.notes[pid];
       if (objEl && draft.objs?.[pid]) objEl.value = draft.objs[pid];
     });
@@ -2726,15 +2966,13 @@ function setTick(planId, tick, btn, minPlan) {
   saveDraft();
 }
 
-function saveSession() {
-  const today = new Date().toDateString();
+ function saveSession() {
   const items = currentPlan.map(entity => {
     const planId = entity._planId || entity.id;
     const obraId = entity._obraId || entity.id;
     const movId = entity._movId || null;
     return {
-      obraId,
-      movId,
+      obraId, movId,
       obraName: entity._isMovimiento
         ? entity._parentName + ' · ' + entity.name
         : entity.name,
@@ -2743,27 +2981,156 @@ function saveSession() {
       minutosReales: parseInt(document.getElementById('tmin-' + planId)?.value) || null,
       solRating: sessionSolRatings[planId] || null,
       note: document.getElementById('tnote-' + planId)?.value || '',
-      objetivo: document.getElementById('obj-' + planId)?.value || ''
+      objetivo: ''
     };
   });
   items.forEach(it => {
     if (it.tick === 'hecho' && it.solRating != null) {
-      if (it.movId) {
-        recordMovSolHistory(it.obraId, it.movId, it.solRating, 'sesion');
-      } else {
-        recordSolHistory(it.obraId, it.solRating, 'sesion');
-      }
+      if (it.movId) recordMovSolHistory(it.obraId, it.movId, it.solRating, 'sesion');
+      else recordSolHistory(it.obraId, it.solRating, 'sesion');
     }
   });
+  const sesionObj = {
+    date: new Date().toISOString(),
+    energia: selectedEnergy,
+    estado: { ...estadoDiario },
+    items
+  };
+  openRatingSesion(sesionObj);
+}
+
+let _sesionPendienteRating = null;
+
+function ratingLabel(pct) {
+  if (pct >= 90) return 'Sesión excepcional 🔥';
+  if (pct >= 75) return 'Muy buena sesión';
+  if (pct >= 55) return 'Sesión productiva';
+  if (pct >= 40) return 'Regular, sin más';
+  if (pct >= 20) return 'Sesión difícil';
+  return 'No fue el día';
+}
+
+function updateRatingSlider(val) {
+  const pct = parseInt(val);
+  const col = solPctColor(pct);
+  const d = document.getElementById('ratingDisplay');
+  const l = document.getElementById('ratingLabel');
+  const s = document.getElementById('ratingSlider');
+  if (d) { d.textContent = pct; d.style.color = col; }
+  if (l) l.textContent = ratingLabel(pct);
+  fillSlider(s, col);
+}
+
+function openRatingSesion(sesionObj) {
+  _sesionPendienteRating = sesionObj;
+  const slider = document.getElementById('ratingSlider');
+  if (slider) { slider.value = 70; updateRatingSlider(70); }
+  const nota = document.getElementById('ratingNota');
+  if (nota) nota.value = '';
+  openModal('modalRatingSesion');
+}
+
+function closeRatingSesion(save) {
+  closeModal('modalRatingSesion');
+  if (!_sesionPendienteRating) return;
+  if (save) {
+    const pct = parseInt(document.getElementById('ratingSlider')?.value || 70);
+    const nota = document.getElementById('ratingNota')?.value.trim() || '';
+    _sesionPendienteRating.rating = pct;
+    if (nota) _sesionPendienteRating.ratingNota = nota;
+  }
+  const today = new Date().toDateString();
   db.sesiones = db.sesiones.filter(s => new Date(s.date).toDateString() !== today);
-  db.sesiones.unshift({ date: new Date().toISOString(), energia: selectedEnergy, items });
+  db.sesiones.unshift(_sesionPendienteRating);
   if (db.sesiones.length > 60) db.sesiones = db.sesiones.slice(0, 60);
+  _sesionPendienteRating = null;
   saveData();
   clearDraft();
+  renderRacha();
   showToast('Sesión guardada ✓');
 }
 
-// ─── ESTADO SYSTEM ────────────────────────────────────────────────────────────
+
+// ── EXTRA OBRAS ───────────────────────────────────────────────────────────────
+
+function openAddExtra() {
+  const select = document.getElementById('extraObraSelect');
+  const planIds = new Set(currentPlan.map(e => e._obraId || e.id));
+  const obras = (db.obras || []).sort((a, b) => a.name.localeCompare(b.name));
+  select.innerHTML = '<option value="">— selecciona una obra —</option>' +
+    obras.map(o => '<option value="' + o.id + '"' + (planIds.has(o.id) ? ' style="color:var(--text3)"' : '') + '>'
+      + o.name + (o.composer ? ' · ' + o.composer : '')
+      + (planIds.has(o.id) ? ' (ya en plan)' : '') + '</option>').join('');
+  const minEl = document.getElementById('extraMinutos');
+  if (minEl) minEl.value = '';
+  openModal('modalExtraObra');
+}
+
+function confirmAddExtra() {
+  const obraId = document.getElementById('extraObraSelect')?.value;
+  const minutos = parseInt(document.getElementById('extraMinutos')?.value) || 0;
+  if (!obraId) { showToast('Selecciona una obra'); return; }
+  const obra = findObra(obraId);
+  if (!obra) return;
+
+  closeModal('modalExtraObra');
+
+  // Build a pseudo-entity for the plan
+  const extraId = 'extra_' + obraId + '_' + Date.now();
+  const extraEntity = {
+    ...obra,
+    _planId: extraId,
+    _obraId: obraId,
+    _isExtra: true,
+  };
+  currentPlan.push(extraEntity);
+  sessionMinPlan[extraId] = minutos || 20;
+
+  // Render and append the item
+  const planDiv = document.getElementById('sessionPlan');
+  const saveBtn = planDiv.querySelector('.save-session-btn');
+  const addBtn  = planDiv.querySelector('.add-extra-btn');
+
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = renderExtraItem(extraEntity, minutos);
+  if (saveBtn) planDiv.insertBefore(wrapper.firstChild, addBtn || saveBtn);
+
+  SFX.add();
+  showToast('Añadida: ' + obra.name);
+}
+
+function renderExtraItem(entity, minutos) {
+  const planId = entity._planId;
+  const obraId = entity._obraId || entity.id;
+  const minPlan = minutos || 20;
+  sessionMinPlan[planId] = minPlan;
+
+  return '<div class="plan-item" style="border-left:2px solid var(--accent);opacity:0.92">' +
+    '<div class="plan-item-top">' +
+      '<div class="plan-item-num" style="color:var(--accent);font-size:10px">＋</div>' +
+      '<div class="plan-item-content">' +
+        '<div class="plan-item-name" onclick="openObraDetalleSession(\'' + obraId + '\')" style="cursor:pointer;text-decoration:underline dotted var(--border)">' +
+          entity.name + ' <span style="font-size:11px;color:var(--text3);font-style:italic">' + (entity.composer || '') + '</span>' +
+          '<span style="font-size:8px;background:var(--accent);color:var(--bg);border-radius:3px;padding:1px 5px;margin-left:6px">extra</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="plan-item-time">~' + minPlan + 'min</div>' +
+    '</div>' +
+    '<div class="tick-row">' +
+      '<button class="tick-btn" onclick="setTick(\'' + planId + '\',\'hecho\',this,' + minPlan + ')">✓ Hecho</button>' +
+      '<button class="tick-btn" onclick="setTick(\'' + planId + '\',\'saltado\',this,' + minPlan + ')">✗ Saltado</button>' +
+      '<input class="tick-note" id="tnote-' + planId + '" type="text" placeholder="nota...">' +
+    '</div>' +
+    '<div class="tick-min-row" id="tickmin-' + planId + '" style="display:none;margin-top:6px;align-items:center;gap:8px;flex-wrap:wrap">' +
+      '<span style="font-size:9px;color:var(--text3)">minutos reales:</span>' +
+      '<input type="number" class="tick-min-input" id="tmin-' + planId + '" min="1" max="480" step="5" value="' + minPlan + '"' +
+      ' oninput="updateMinDiff(\'' + planId + '\',' + minPlan + ');saveDraft()"' +
+      ' style="width:58px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:4px 7px;color:var(--accent);font-family:\'JetBrains Mono\',monospace;font-size:12px;text-align:center">' +
+      '<span style="font-size:9px;color:var(--text3)">/ ' + minPlan + ' planif.</span>' +
+      '<span id="tickmin-diff-' + planId + '" style="font-size:9px"></span>' +
+    '</div>' +
+  '</div>';
+}
 
 // ── SISTEMA DE EVALUACIÓN: 3 ESCALAS ─────────────────────────────────────────
 // apr = Aprendido (memoria + digitación)  1-10
@@ -3011,6 +3378,232 @@ function computeRecovery(obraId) {
   };
 }
 
+// ─── SOL HISTORY CHART ───────────────────────────────────────────────────────
+
+function renderSolChart(solHistRaw, escHistRaw, decayRate, solEst, sesiones, obraId, isPasaje) {
+  // solHistRaw: [{date, val, context}] desc order
+  // Builds a rich SVG showing the sawtooth pattern
+  const hist = (solHistRaw || []).map(h => ({ ...h, val: normalizeSolVal(h.val) })).slice().reverse(); // asc
+  if (hist.length < 1) return '';
+
+  const W = 320, H = 140;
+  const pad = { l: 28, r: 10, t: 10, b: 24 };
+  const cW = W - pad.l - pad.r, cH = H - pad.t - pad.b;
+
+  const now = Date.now();
+  const minT = new Date(hist[0].date).getTime();
+  const maxT = Math.max(now, new Date(hist[hist.length-1].date).getTime() + 86400000);
+  const rangeT = maxT - minT || 1;
+
+  const xOf = t => pad.l + ((t - minT) / rangeT) * cW;
+  const yOf = v => pad.t + cH - Math.max(0, Math.min(cH, (Math.max(0, Math.min(100, v)) / 100) * cH));
+
+  // ── Grid Y ──────────────────────────────────────────────────────────────────
+  const gridY = [0, 25, 50, 75, 100].map(v => {
+    const y = yOf(v);
+    const isMain = v === 0 || v === 100 || v === 50;
+    return '<line x1="' + pad.l + '" y1="' + y + '" x2="' + (W-pad.r) + '" y2="' + y + '" stroke="var(--border2)" stroke-width="' + (isMain ? 1 : 0.5) + '" stroke-dasharray="' + (isMain ? 'none' : '2,3') + '"/>'
+      + '<text x="' + (pad.l-3) + '" y="' + (y+3) + '" text-anchor="end" font-size="7" fill="var(--text3)" font-family="monospace">' + v + '</text>';
+  }).join('');
+
+  // ── Session vertical lines from sesiones that included this obraId ──────────
+  let sessionLines = '';
+  if (!isPasaje && obraId && sesiones) {
+    const sessionTs = (sesiones || [])
+      .filter(s => (s.items||[]).some(it => it.obraId === obraId && it.tick === 'hecho'))
+      .map(s => new Date(s.date).getTime())
+      .filter(t => t >= minT && t <= maxT);
+    sessionLines = sessionTs.map(t => {
+      const x = xOf(t);
+      return '<line x1="' + x + '" y1="' + pad.t + '" x2="' + x + '" y2="' + (pad.t+cH) + '" stroke="var(--accent)" stroke-width="1" opacity="0.18"/>';
+    }).join('');
+  }
+
+  // ── Build enriched path: rise at session + decay between ─────────────────────
+  // Between two consecutive sol points we draw:
+  //  1. Vertical-ish rise from prev to current (same day = steep, multi-day = calculate)
+  //  2. Then a decay curve from current to next known point
+  const rate = decayRate || 1.7; // pts/day default
+
+  let pathD = '';
+  let decaySegs = ''; // dashed decay projections
+
+  hist.forEach((pt, i) => {
+    const x = xOf(new Date(pt.date).getTime());
+    const y = yOf(pt.val);
+
+    if (i === 0) {
+      pathD += 'M' + x + ',' + y;
+      return;
+    }
+
+    const prev = hist[i-1];
+    const dayGap = (new Date(pt.date) - new Date(prev.date)) / 86400000;
+    const xPrev = xOf(new Date(prev.date).getTime());
+
+    if (dayGap < 0.5) {
+      // Same session or same day → straight rise/fall
+      pathD += ' L' + x + ',' + y;
+    } else {
+      // Multi-day gap: draw decay from prev, then jump to new session value
+      const stabilityFactor = 0.5 + (prev.val / 100) * 0.5;
+      const decayDrop = Math.min(prev.val - 1, dayGap * rate * stabilityFactor);
+      const decayedY = yOf(Math.max(0, prev.val - decayDrop));
+      const xMid = xOf(new Date(prev.date).getTime() + dayGap * 0.85 * 86400000);
+      // Decay segment (dashed)
+      decaySegs += '<path d="M' + xPrev + ',' + yOf(prev.val) + ' Q' + xMid + ',' + decayedY + ' ' + xOf(new Date(pt.date).getTime()) + ',' + decayedY + '" fill="none" stroke="var(--orange)" stroke-width="1.2" stroke-dasharray="3,2" opacity="0.5"/>';
+      // Jump up to new value (session effect)
+      pathD += ' M' + x + ',' + decayedY + ' L' + x + ',' + y;
+    }
+  });
+
+  // Decay projection to now (if last point is old)
+  if (solEst && solEst.decaying && hist.length) {
+    const last = hist[hist.length-1];
+    const xLast = xOf(new Date(last.date).getTime());
+    const yLast = yOf(last.val);
+    const yNow  = yOf(Math.max(0, solEst.val));
+    decaySegs += '<path d="M' + xLast + ',' + yLast + ' L' + (W-pad.r) + ',' + yNow + '" fill="none" stroke="var(--orange)" stroke-width="1.2" stroke-dasharray="3,2" opacity="0.6"/>';
+    // "Now" dot
+    decaySegs += '<circle cx="' + (W-pad.r) + '" cy="' + yNow + '" r="3.5" fill="var(--orange)" opacity="0.7"><title>Estimado hoy: ' + Math.round(solEst.val) + '%</title></circle>';
+    decaySegs += '<text x="' + (W-pad.r-2) + '" y="' + (yNow-6) + '" text-anchor="end" font-size="7" fill="var(--orange)" opacity="0.8">hoy~' + Math.round(solEst.val) + '%</text>';
+  }
+
+  // ── Esc overlay ──────────────────────────────────────────────────────────────
+  const escHist = (escHistRaw || []).map(h => ({ ...h, val: normalizeSolVal(h.val) })).slice().reverse();
+  let escLine = '';
+  if (escHist.length >= 2) {
+    const escD = escHist.map((p,i) => (i===0?'M':'L') + xOf(new Date(p.date).getTime()) + ',' + yOf(p.val)).join(' ');
+    escLine = '<path d="' + escD + '" fill="none" stroke="var(--green)" stroke-width="1.5" opacity="0.6" stroke-linejoin="round"/>';
+  }
+
+  // ── Data dots ────────────────────────────────────────────────────────────────
+  const dots = hist.map(p => {
+    const x = xOf(new Date(p.date).getTime()), y = yOf(p.val);
+    const col = SOL_COLOR;
+    const d = new Date(p.date).toLocaleDateString('es-ES', { day:'numeric', month:'short' });
+    return '<circle cx="' + x + '" cy="' + y + '" r="4" fill="' + col + '" stroke="var(--bg2)" stroke-width="1.5"><title>' + p.val + '% · ' + d + (p.context ? ' · ' + p.context : '') + '</title></circle>';
+  }).join('');
+
+  // ── X axis labels ────────────────────────────────────────────────────────────
+  // Show date labels at each data point but only if not too crowded
+  const showEvery = hist.length > 8 ? Math.ceil(hist.length / 6) : 1;
+  const xLabels = hist
+    .filter((_, i) => i === 0 || i === hist.length-1 || i % showEvery === 0)
+    .map(p => {
+      const x = xOf(new Date(p.date).getTime());
+      const d = new Date(p.date);
+      return '<text x="' + x + '" y="' + (H-4) + '" text-anchor="middle" font-size="6.5" fill="var(--text3)">' + d.getDate() + '/' + (d.getMonth()+1) + '</text>';
+    }).join('');
+
+  // Y axis label
+  const yAxisLabel = '<text x="8" y="' + (pad.t + cH/2) + '" text-anchor="middle" font-size="6" fill="var(--text3)" transform="rotate(-90,8,' + (pad.t+cH/2) + ')">solidez %</text>';
+
+  const svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">'
+    + gridY + sessionLines + yAxisLabel
+    + decaySegs
+    + '<path d="' + pathD + '" fill="none" stroke="' + SOL_COLOR + '" stroke-width="2" stroke-linejoin="round"/>'
+    + escLine + dots + xLabels
+    + '</svg>';
+
+  const legend = '<div style="font-size:7px;color:var(--text3);display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;padding-left:' + pad.l + 'px">'
+    + '<span style="color:' + SOL_COLOR + '">—— solidez</span>'
+    + (escHist.length >= 2 ? '<span style="color:var(--green)">—— escena</span>' : '')
+    + '<span style="color:var(--orange)">- - - decaimiento</span>'
+    + (sessionLines ? '<span style="color:var(--accent)">│ sesiones</span>' : '')
+    + '</div>';
+
+  return svg + legend;
+}
+
+function renderPasajeSolChart(pasaje) {
+  // Combines workHistory (solAntes/solDespues pairs) with any standalone solHistory
+  const points = [];
+
+  // From workHistory: add antes and despues as consecutive same-day points
+  const workH = (pasaje.workHistory || []).slice().reverse(); // asc
+  workH.forEach(w => {
+    if (w.solAntes != null)   points.push({ date: w.date, val: w.solAntes,   type: 'antes',   intensidad: w.intensidad });
+    if (w.solDespues != null) points.push({ date: w.date, val: w.solDespues, type: 'despues',  intensidad: w.intensidad });
+  });
+  // From solHistory (standalone measurements)
+  (pasaje.solHistory || []).slice().reverse().forEach(h => {
+    if (!points.some(p => Math.abs(new Date(p.date) - new Date(h.date)) < 3600000)) {
+      points.push({ date: h.date, val: normalizeSolVal(h.val), type: 'standalone' });
+    }
+  });
+
+  if (points.length < 2) return '';
+  points.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  const W = 300, H = 110;
+  const pad = { l: 26, r: 8, t: 8, b: 22 };
+  const cW = W - pad.l - pad.r, cH = H - pad.t - pad.b;
+
+  const minT = new Date(points[0].date).getTime();
+  const maxT = Math.max(Date.now(), new Date(points[points.length-1].date).getTime() + 86400000);
+  const rangeT = maxT - minT || 1;
+
+  const xOf = t => pad.l + ((t - minT) / rangeT) * cW;
+  const yOf = v => pad.t + cH - (Math.max(0, Math.min(100, v)) / 100) * cH;
+
+  const gridY = [0, 50, 100].map(v =>
+    '<line x1="' + pad.l + '" y1="' + yOf(v) + '" x2="' + (W-pad.r) + '" y2="' + yOf(v) + '" stroke="var(--border2)" stroke-width="0.8" stroke-dasharray="2,2"/>'
+    + '<text x="' + (pad.l-2) + '" y="' + (yOf(v)+3) + '" text-anchor="end" font-size="6" fill="var(--text3)">' + v + '</text>'
+  ).join('');
+
+  let pathD = '';
+  const INTENSIDAD_COL = { intenso: 'var(--red)', normal: SOL_COLOR, superficial: 'var(--text3)', standalone: SOL_COLOR };
+
+  points.forEach((pt, i) => {
+    const x = xOf(new Date(pt.date).getTime()), y = yOf(pt.val);
+    if (i === 0) { pathD += 'M' + x + ',' + y; return; }
+    const prev = points[i-1];
+    const sameDay = Math.abs(new Date(pt.date) - new Date(prev.date)) < 86400000;
+    if (sameDay) {
+      pathD += ' L' + x + ',' + y;
+    } else {
+      // small decay gap
+      pathD += ' M' + x + ',' + y;
+    }
+  });
+
+  // Session boxes (antes→despues pairs)
+  let sessionBoxes = '';
+  workH.forEach(w => {
+    if (w.solAntes == null || w.solDespues == null) return;
+    const x = xOf(new Date(w.date).getTime());
+    const y1 = yOf(Math.max(w.solAntes, w.solDespues));
+    const y2 = yOf(Math.min(w.solAntes, w.solDespues));
+    const col = w.solDespues >= w.solAntes ? 'var(--green)' : 'var(--orange)';
+    sessionBoxes += '<line x1="' + x + '" y1="' + y1 + '" x2="' + x + '" y2="' + y2 + '" stroke="' + col + '" stroke-width="3" opacity="0.4"/>';
+  });
+
+  const dots = points.map(pt => {
+    const x = xOf(new Date(pt.date).getTime()), y = yOf(pt.val);
+    const col = pt.type === 'antes' ? 'var(--orange)' : pt.type === 'despues' ? 'var(--green)' : SOL_COLOR;
+    const title = pt.val + '% · ' + new Date(pt.date).toLocaleDateString('es-ES', {day:'numeric',month:'short'}) + (pt.type !== 'standalone' ? ' · ' + pt.type : '');
+    return '<circle cx="' + x + '" cy="' + y + '" r="3.5" fill="' + col + '" stroke="var(--bg2)" stroke-width="1"><title>' + title + '</title></circle>';
+  }).join('');
+
+  const showEvery = points.length > 6 ? Math.ceil(points.length / 5) : 1;
+  const xLabels = points
+    .filter((_, i) => i === 0 || i === points.length-1 || i % showEvery === 0)
+    .map(p => {
+      const d = new Date(p.date);
+      return '<text x="' + xOf(d.getTime()) + '" y="' + (H-4) + '" text-anchor="middle" font-size="6" fill="var(--text3)">' + d.getDate() + '/' + (d.getMonth()+1) + '</text>';
+    }).join('');
+
+  const svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">'
+    + gridY + sessionBoxes
+    + '<path d="' + pathD + '" fill="none" stroke="' + SOL_COLOR + '" stroke-width="1.5" stroke-linejoin="round"/>'
+    + dots + xLabels
+    + '</svg>'
+    + '<div style="font-size:7px;color:var(--text3);display:flex;gap:8px;margin-top:3px;padding-left:' + pad.l + 'px">'
+    + '<span style="color:var(--orange)">● antes</span><span style="color:var(--green)">● después</span><span>barra = cambio en sesión</span></div>';
+  return svg;
+}
+
 function renderDecayWidget(obraId) {
   const obra = findObra(obraId);
   if (!obra) return '';
@@ -3043,36 +3636,14 @@ function renderDecayWidget(obraId) {
     alertHtml = '<div class="decay-alert ok">✓ Sol estable · último registro hace ' + (solEst.diasGap || 0) + 'd</div>';
   }
 
-  let sparkHtml = '';
-  const allHist = hist.slice(0, 30).slice().reverse();
-  if (allHist.length >= 2) {
-    const W = 280, H = 50, pad = { l: 18, r: 6, t: 6, b: 14 };
-    const cW = W - pad.l - pad.r, cH = H - pad.t - pad.b;
-    const minT = new Date(allHist[0].date).getTime();
-    const maxT = Date.now();
-    const rangeT = maxT - minT || 1;
-    const xOf = d => pad.l + ((new Date(d).getTime() - minT) / rangeT) * cW;
-    const yOf = v => pad.t + cH - (normalizeSolVal(v) / 100) * cH;
-    const grid = [0,50,100].map(v => '<line x1="' + pad.l + '" y1="' + yOf(v) + '" x2="' + (W-pad.r) + '" y2="' + yOf(v) + '" stroke="var(--border2)" stroke-dasharray="2,2"/><text x="' + (pad.l-2) + '" y="' + (yOf(v)+3) + '" text-anchor="end" font-size="6" fill="var(--text3)">' + v + '%</text>').join('');
-    const solDots = allHist.map(p => '<circle cx="' + xOf(p.date) + '" cy="' + yOf(p.val) + '" r="3" fill="' + solPctColor(normalizeSolVal(p.val)) + '" opacity="0.85"><title>' + normalizeSolVal(p.val) + '% · ' + new Date(p.date).toLocaleDateString('es-ES') + '</title></circle>').join('');
-    let decayProj = '';
-    if (solEst.decaying && solEst.lastDate) {
-      const x0 = xOf(solEst.lastDate), y0 = yOf(solEst.lastKnown);
-      const yNow = yOf(Math.max(0, solEst.val));
-      decayProj = '<line x1="' + x0 + '" y1="' + y0 + '" x2="' + (W-pad.r) + '" y2="' + yNow + '" stroke="var(--orange)" stroke-width="1" stroke-dasharray="3,2" opacity="0.5"/>';
-    }
-    const escData = escHist.slice(0, 20).slice().reverse();
-    const escLine = escData.length >= 2 ? '<path d="' + escData.map((p, i) => (i === 0 ? 'M' : 'L') + xOf(p.date) + ',' + yOf(normalizeSolVal(p.val))).join(' ') + '" fill="none" stroke="var(--green)" stroke-width="1" opacity="0.5"/>' : '';
-    const solColor = solPctColor(normalizeSolVal(allHist[allHist.length-1]?.val || 0));
-    const solLine2 = allHist.map((p, i) => (i === 0 ? 'M' : 'L') + xOf(p.date) + ',' + yOf(normalizeSolVal(p.val))).join(' ');
-    const xLabels = [allHist[0], allHist[allHist.length-1]].map((p, i) => '<text x="' + xOf(p.date) + '" y="' + (H-1) + '" text-anchor="' + (i === 0 ? 'start' : 'end') + '" font-size="6" fill="var(--text3)">' + new Date(p.date).getDate() + '/' + (new Date(p.date).getMonth()+1) + '</text>').join('');
-    sparkHtml = '<div class="decay-spark"><svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">' + grid + '<path d="' + solLine2 + '" fill="none" stroke="' + solColor + '" stroke-width="1.5" stroke-linejoin="round"/>' + escLine + decayProj + solDots + xLabels + '</svg>' +
-      '<div style="font-size:7px;color:var(--text3);margin-top:2px;display:flex;gap:10px">— solidez' + (escData.length >= 2 ? ' <span style="color:var(--green)">— escena</span>' : '') + (solEst.decaying ? ' <span style="color:var(--orange)">- - - decaimiento</span>' : '') + '</div></div>';
-  }
+  // Full chart (replaces small spark)
+  const chartHtml = hist.length >= 2
+    ? '<div class="decay-spark" style="margin-top:10px">' + renderSolChart(hist, escHist, decay.rate, solEst, db.sesiones, obraId, false) + '</div>'
+    : '';
 
   const confHtml = hist.length >= 3 ? '<div class="decay-conf"><span>Modelo</span><div class="decay-conf-bar"><div class="decay-conf-fill" style="width:' + Math.round(decay.confianza*100) + '%;background:' + (decay.confianza > 0.6 ? 'var(--green)' : decay.confianza > 0.3 ? 'var(--accent)' : 'var(--orange)') + '"></div></div><span>' + (decay.confianza < 0.2 ? 'default' : decay.confianza < 0.6 ? 'aprendiendo' : 'personalizado') + ' · ' + Math.round(decay.rate * 7) + 'pts/sem</span></div>' : '';
 
-  return '<div class="decay-widget"><div class="decay-header"><span>🎯 Solidez &amp; escena</span></div><div class="decay-kpis">' + kpisHtml + '</div>' + alertHtml + sparkHtml + confHtml + '</div>';
+  return '<div class="decay-widget"><div class="decay-header"><span>🎯 Solidez &amp; escena</span></div><div class="decay-kpis">' + kpisHtml + '</div>' + alertHtml + chartHtml + confHtml + '</div>';
 }
 
 // ── PROYECCION ────────────────────────────────────────────────────────────────
@@ -3547,7 +4118,10 @@ let _hechoShowMem = false;
 let _hechoCompasAntes = 0;
 let _hechoCompasStep = 0;
 let _memLapseYes = false;
-let _memPasajeSelected = null; // pasajeId or '__nuevo__'
+let _memPasajeSelected = null;
+let _paseAntesActive = false;
+let _paseDespuesActive = false;
+let _pasajeWork = {};
 
 function solPctColor(pct) {
   if (pct >= 85) return 'var(--green)';
@@ -3647,6 +4221,50 @@ function selectMemPasaje(pasajeId, btn) {
   if (nuevoForm) nuevoForm.style.display = pasajeId === '__nuevo__' ? 'block' : 'none';
 }
 
+function togglePaseBlock(cual) {
+  const isAntes = cual === 'antes';
+  const active = isAntes ? _paseAntesActive : _paseDespuesActive;
+  const newState = !active;
+  if (isAntes) _paseAntesActive = newState; else _paseDespuesActive = newState;
+  const content = document.getElementById('pase' + (isAntes ? 'Antes' : 'Despues') + 'Content');
+  const btn     = document.getElementById('pase' + (isAntes ? 'Antes' : 'Despues') + 'Toggle');
+  if (content) content.style.display = newState ? 'block' : 'none';
+  if (btn) btn.textContent = newState ? '− quitar' : '+ añadir';
+  if (newState) {
+    const slider = document.getElementById('pase' + (isAntes ? 'Antes' : 'Despues') + 'Slider');
+    fillSlider(slider, SOL_COLOR);
+  }
+}
+
+function updatePaseSlider(cual, val) {
+  const pct = parseInt(val);
+  const suffix = cual === 'antes' ? 'Antes' : 'Despues';
+  const valEl  = document.getElementById('pase' + suffix + 'Val');
+  const slider = document.getElementById('pase' + suffix + 'Slider');
+  if (valEl) { valEl.textContent = pct + '%'; }
+  fillSlider(slider, SOL_COLOR);
+}
+
+function selectPasajeIntensidad(pasajeId, nivel, btn) {
+  if (!_pasajeWork[pasajeId]) _pasajeWork[pasajeId] = {};
+  _pasajeWork[pasajeId].intensidad = nivel;
+  const block = document.getElementById('pw-' + pasajeId);
+  if (block) block.querySelectorAll('.intensidad-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const solPair = document.getElementById('pwsol-' + pasajeId);
+  if (solPair) solPair.style.display = 'flex';
+}
+
+function updatePasajeSolSlider(pasajeId, momento, val) {
+  const pct = parseInt(val);
+  if (!_pasajeWork[pasajeId]) _pasajeWork[pasajeId] = {};
+  _pasajeWork[pasajeId][momento] = pct;
+  const valEl  = document.getElementById('pwsolval-' + pasajeId + '-' + momento);
+  const slider = document.getElementById('pwslider-' + pasajeId + '-' + momento);
+  if (valEl) valEl.textContent = pct + '%';
+  fillSlider(slider, SOL_COLOR);
+}
+
 function openHechoDatos(planId, minPlan) {
   const { obraId, movId } = parsePlanId(planId);
   _hechoPlanId = planId;
@@ -3656,25 +4274,24 @@ function openHechoDatos(planId, minPlan) {
   _hechoCompasStep = 0;
   _memLapseYes = false;
   _memPasajeSelected = null;
+  _paseAntesActive = false;
+  _paseDespuesActive = false;
+  _pasajeWork = {};
 
-  // Entity = movimiento if movId, else obra
   const obra = findObra(obraId);
   const entity = movId ? findMovimiento(obraId, movId) : obra;
   const fase = entity ? obraFase(entity) : 'digitando';
   const pct = entity ? compasPercent(entity) : null;
 
-  // Determine which sections to show
   _hechoShowCompas = fase === 'digitando' || (pct !== null && pct < 100);
-  _hechoShowSol = (pct !== null && pct >= 50) || fase === 'consolidando' || fase === 'mantenimiento';
-  // Memory lapse section only for obra-level (not movements — they have no pasajes)
   _hechoShowMem = !movId && (fase === 'consolidando' || fase === 'mantenimiento');
+  const showPases = !movId && (fase === 'consolidando' || fase === 'mantenimiento');
 
-  // Title: show obra name and movement name if applicable
+  // Title
   const obraTitle = obra ? obra.name + (obra.composer ? ' · ' + obra.composer : '') : '';
   const nameEl = document.getElementById('hechoObraName');
   if (movId && entity) {
-    nameEl.innerHTML = '<span style="font-size:12px;color:var(--text3)">' + obraTitle + '</span>'
-      + '<br><span>' + entity.name + '</span>';
+    nameEl.innerHTML = '<span style="font-size:12px;color:var(--text3)">' + obraTitle + '</span><br><span>' + entity.name + '</span>';
   } else {
     nameEl.textContent = obraTitle;
   }
@@ -3683,7 +4300,6 @@ function openHechoDatos(planId, minPlan) {
   document.getElementById('hechoMinutos').value = minPlan || '';
   document.getElementById('hechoMinPlan').textContent = minPlan ? minPlan + ' min' : '—';
   document.getElementById('hechoMinDiff').textContent = '';
-
   const minInp = document.getElementById('hechoMinutos');
   if (minInp) {
     minInp.oninput = function() {
@@ -3695,60 +4311,97 @@ function openHechoDatos(planId, minPlan) {
     };
   }
 
-  // Compas section
+  // Compas — show current position + total
   const compasSection = document.getElementById('hechoCompasSection');
   if (compasSection) {
     compasSection.style.display = _hechoShowCompas ? 'block' : 'none';
     if (_hechoShowCompas && entity) {
       _hechoCompasAntes = entity.compasActual || 0;
-      const el = document.getElementById('compasStepVal');
-      if (el) el.textContent = '0';
+      const stepEl = document.getElementById('compasStepVal');
+      if (stepEl) stepEl.textContent = '0';
       updateCompasMeta();
     }
   }
 
-  // Memory lapse section
+  // Pases section
+  const pasesSection = document.getElementById('hechoPasesSection');
+  if (pasesSection) pasesSection.style.display = showPases ? 'block' : 'none';
+  if (showPases) {
+    ['Antes','Despues'].forEach(s => {
+      const c = document.getElementById('pase' + s + 'Content');
+      const t = document.getElementById('pase' + s + 'Toggle');
+      if (c) c.style.display = 'none';
+      if (t) t.textContent = '+ añadir';
+    });
+    const lastSol = obra?.solHistory?.[0]?.val != null ? normalizeSolVal(obra.solHistory[0].val) : 50;
+    const slA = document.getElementById('paseAntesSlider');
+    const slD = document.getElementById('paseDespuesSlider');
+    const vA  = document.getElementById('paseAntesVal');
+    const vD  = document.getElementById('paseDespuesVal');
+    if (slA) { slA.value = lastSol; }
+    if (slD) { slD.value = Math.min(100, lastSol + 5); }
+    if (vA) vA.textContent = lastSol + '%';
+    if (vD) vD.textContent = Math.min(100, lastSol + 5) + '%';
+  }
+
+  // Pasajes section
+  const pasajosActivos = !movId ? (obra?.pasajes || []).filter(p => p.status !== 'resuelto') : [];
+  const pasajesSection = document.getElementById('hechoPasajesSection');
+  const pasajesList    = document.getElementById('hechoPasajesList');
+  if (pasajesSection) pasajesSection.style.display = pasajosActivos.length ? 'block' : 'none';
+  if (pasajesList && pasajosActivos.length) {
+    pasajesList.innerHTML = pasajosActivos.map(p => {
+      const lastSolP = p.solHistory?.[0]?.val != null ? normalizeSolVal(p.solHistory[0].val) : 50;
+      const solD = Math.min(100, lastSolP + 10);
+      return '<div class="pasaje-work-block" id="pw-' + p.id + '">' +
+        '<div class="pasaje-work-name"><span>' + p.text.slice(0,40) + (p.text.length>40?'…':'') + '</span>' +
+        '<div class="intensidad-btns">' +
+          '<button class="intensidad-btn intenso"    onclick="selectPasajeIntensidad(\'' + p.id + '\',\'intenso\',this)"    title="Trabajo intenso">🔥</button>' +
+          '<button class="intensidad-btn normal"     onclick="selectPasajeIntensidad(\'' + p.id + '\',\'normal\',this)"     title="Normal">●</button>' +
+          '<button class="intensidad-btn superficial" onclick="selectPasajeIntensidad(\'' + p.id + '\',\'superficial\',this)" title="Superficial">○</button>' +
+        '</div></div>' +
+        '<div class="pasaje-sol-pair" id="pwsol-' + p.id + '" style="display:none">' +
+          '<div class="pasaje-sol-mini"><div class="pasaje-sol-mini-label"><span>Antes</span>' +
+          '<span class="pasaje-sol-mini-val" id="pwsolval-' + p.id + '-solAntes" style="color:#c8a030">' + lastSolP + '%</span></div>' +
+          '<input type="range" min="0" max="100" step="1" value="' + lastSolP + '" class="sol-slider" id="pwslider-' + p.id + '-solAntes" style="color:#c8a030" oninput="updatePasajeSolSlider(\'' + p.id + '\',\'solAntes\',this.value)"></div>' +
+          '<span class="pasaje-arrow">→</span>' +
+          '<div class="pasaje-sol-mini"><div class="pasaje-sol-mini-label"><span>Después</span>' +
+          '<span class="pasaje-sol-mini-val" id="pwsolval-' + p.id + '-solDespues" style="color:#c8a030">' + solD + '%</span></div>' +
+          '<input type="range" min="0" max="100" step="1" value="' + solD + '" class="sol-slider" id="pwslider-' + p.id + '-solDespues" style="color:#c8a030" oninput="updatePasajeSolSlider(\'' + p.id + '\',\'solDespues\',this.value)"></div>' +
+        '</div></div>';
+    }).join('');
+    requestAnimationFrame(() => {
+      pasajosActivos.forEach(p => {
+        fillSlider(document.getElementById('pwslider-' + p.id + '-solAntes'), SOL_COLOR);
+        fillSlider(document.getElementById('pwslider-' + p.id + '-solDespues'), SOL_COLOR);
+      });
+    });
+  }
+
+  // Memory lapse
   const memSection = document.getElementById('hechoMemSection');
   if (memSection) {
     memSection.style.display = _hechoShowMem ? 'block' : 'none';
     if (_hechoShowMem) {
-      // Reset to "No"
       document.querySelectorAll('.memlapse-btn').forEach(b => b.classList.remove('active'));
       const noBtn = document.querySelector('.memlapse-btn.no');
       if (noBtn) noBtn.classList.add('active');
       const detail = document.getElementById('memLapseDetail');
       if (detail) detail.style.display = 'none';
-      // Populate pasaje chips
       const pasajes = (obra?.pasajes || []).filter(p => p.status !== 'resuelto');
       const row = document.getElementById('memPasajeRow');
       if (row) {
         row.innerHTML = pasajes.map(p =>
-          '<button class="pasaje-chip" onclick="selectMemPasaje(\'' + p.id + '\',this)">' + p.text.slice(0, 28) + '</button>'
+          '<button class="pasaje-chip" onclick="selectMemPasaje(\'' + p.id + '\',this)">' + p.text.slice(0,28) + '</button>'
         ).join('') + '<button class="pasaje-chip nuevo" onclick="selectMemPasaje(\'__nuevo__\',this)">+ nuevo pasaje</button>';
       }
-      const nuevoForm = document.getElementById('memNuevoPasajeForm');
-      if (nuevoForm) {
-        nuevoForm.style.display = 'none';
-        const n = document.getElementById('memPasajeNombre');
-        const c1 = document.getElementById('memPasajeCcInicio');
-        const c2 = document.getElementById('memPasajeCcFin');
-        if (n) n.value = '';
-        if (c1) c1.value = '';
-        if (c2) c2.value = '';
+      const nf = document.getElementById('memNuevoPasajeForm');
+      if (nf) {
+        nf.style.display = 'none';
+        ['memPasajeNombre','memPasajeCcInicio','memPasajeCcFin'].forEach(id => {
+          const el = document.getElementById(id); if (el) el.value = '';
+        });
       }
-    }
-  }
-
-  // Sol section
-  const solSection = document.getElementById('hechoSolSection');
-  if (solSection) {
-    solSection.style.display = _hechoShowSol ? 'block' : 'none';
-    if (_hechoShowSol) {
-      const solSrc = entity;
-      const lastSol = solSrc?.solHistory?.[0]?.val != null ? normalizeSolVal(solSrc.solHistory[0].val)
-        : (solSrc?.sol ? Math.min(100, (solSrc.sol - 1) * 11) : 0);
-      const slider = document.getElementById('solSlider');
-      if (slider) { slider.value = lastSol; updateSolSlider(lastSol); }
     }
   }
 
@@ -3767,16 +4420,57 @@ function closeHechoDatos(save) {
   const entity = movId ? findMovimiento(obraId, movId) : obra;
   const minutos = parseInt(document.getElementById('hechoMinutos').value) || _hechoMinPlan || null;
   const nota = document.getElementById('hechoNota').value.trim();
-  const solPct = _hechoShowSol ? parseInt(document.getElementById('solSlider').value) : null;
 
-  // Store minutes and notes — keyed by planId
+  // Store minutes and notes
   const minInp = document.getElementById('tmin-' + planId);
   if (minInp && minutos) { minInp.value = minutos; minInp._touched = true; }
   const noteInp = document.getElementById('tnote-' + planId);
   if (noteInp && nota) noteInp.value = nota;
-  if (solPct !== null) sessionSolRatings[planId] = solPct;
 
-  // Advance compases (on the entity: obra or movimiento)
+  // Save pases to paseHistory + solHistory
+  if (obra && !movId) {
+    const now = new Date().toISOString();
+    if (_paseAntesActive) {
+      const sol = parseInt(document.getElementById('paseAntesSlider')?.value || 50);
+      const paseNota = document.getElementById('paseAntesNota')?.value.trim() || '';
+      if (!obra.paseHistory) obra.paseHistory = [];
+      obra.paseHistory.unshift({ date: now, tipo: 'informal', score: Math.round(sol/10), nota: paseNota, momento: 'antes' });
+      recordSolHistory(obraId, sol, 'pase-informal');
+      sessionSolRatings[planId] = sol; // use last pase as session sol
+    }
+    if (_paseDespuesActive) {
+      const sol = parseInt(document.getElementById('paseDespuesSlider')?.value || 60);
+      const paseNota = document.getElementById('paseDespuesNota')?.value.trim() || '';
+      if (!obra.paseHistory) obra.paseHistory = [];
+      obra.paseHistory.unshift({ date: now, tipo: 'informal', score: Math.round(sol/10), nota: paseNota, momento: 'despues' });
+      recordSolHistory(obraId, sol, 'pase-informal');
+      sessionSolRatings[planId] = sol; // final pase wins
+      obra.lastPase = now;
+    }
+    if (obra.paseHistory?.length > 40) obra.paseHistory = obra.paseHistory.slice(0, 40);
+
+    // Save pasaje work
+    Object.entries(_pasajeWork).forEach(([pasajeId, work]) => {
+      const pasaje = (obra.pasajes || []).find(p => p.id === pasajeId);
+      if (!pasaje || !work.intensidad) return;
+      if (!pasaje.workHistory) pasaje.workHistory = [];
+      pasaje.workHistory.unshift({
+        date: now,
+        intensidad: work.intensidad,
+        solAntes: work.solAntes ?? null,
+        solDespues: work.solDespues ?? null,
+      });
+      if (pasaje.workHistory.length > 30) pasaje.workHistory = pasaje.workHistory.slice(0, 30);
+      // Update pasaje sol if we have antes/despues
+      if (work.solDespues != null) {
+        if (!pasaje.solHistory) pasaje.solHistory = [];
+        pasaje.solHistory.unshift({ date: now, val: work.solDespues, context: 'trabajo-' + work.intensidad });
+        if (pasaje.solHistory.length > 20) pasaje.solHistory = pasaje.solHistory.slice(0, 20);
+      }
+    });
+  }
+
+  // Advance compases
   if (_hechoShowCompas && entity && _hechoCompasStep > 0) {
     const nuevo = Math.min(entity.compasesTotal || 9999, (entity.compasActual || 0) + _hechoCompasStep);
     entity.compasActual = nuevo;
@@ -3792,14 +4486,12 @@ function closeHechoDatos(save) {
       entity.compasHistory.unshift({ date: new Date().toISOString(), compas: nuevo, minAcum });
       if (entity.compasHistory.length > 60) entity.compasHistory = entity.compasHistory.slice(0, 60);
     }
-    saveData();
     if (movId) {
-      // Update mov compas field if visible in expanded obra card
-      const compasEl = document.getElementById('mov-compas-' + obraId + '-' + movId + '-actual');
-      if (compasEl) compasEl.value = nuevo;
+      const el = document.getElementById('mov-compas-' + obraId + '-' + movId + '-actual');
+      if (el) el.value = nuevo;
     } else {
-      const compasEl = document.getElementById('obra-compas-' + obraId + '-actual');
-      if (compasEl) compasEl.value = nuevo;
+      const el = document.getElementById('obra-compas-' + obraId + '-actual');
+      if (el) el.value = nuevo;
     }
   }
 
@@ -3807,35 +4499,33 @@ function closeHechoDatos(save) {
   if (_hechoShowMem && _memLapseYes && obra) {
     let pasajeId = _memPasajeSelected;
     if (pasajeId === '__nuevo__') {
-      // Create new pasaje
       const nombre = document.getElementById('memPasajeNombre')?.value.trim();
-      const ccIni = document.getElementById('memPasajeCcInicio')?.value;
-      const ccFin = document.getElementById('memPasajeCcFin')?.value;
+      const ccIni  = document.getElementById('memPasajeCcInicio')?.value;
+      const ccFin  = document.getElementById('memPasajeCcFin')?.value;
       if (nombre || ccIni) {
         const label = nombre || ('cc. ' + ccIni + (ccFin ? '–' + ccFin : ''));
-        const text = label + (ccIni ? ' (cc.' + ccIni + (ccFin ? '–' + ccFin : '') + ')' : '');
+        const text  = label + (ccIni ? ' (cc.' + ccIni + (ccFin ? '–' + ccFin : '') + ')' : '');
         if (!obra.pasajes) obra.pasajes = [];
         const newP = { id: 'ml' + Date.now(), text, status: 'activo', tempoAct: null, tempoObj: null };
         obra.pasajes.unshift(newP);
         pasajeId = newP.id;
-        saveData();
       }
     }
     if (pasajeId && pasajeId !== '__nuevo__') {
-      // Mark as memory lapse with Anki-style urgency
       const pasaje = (obra.pasajes || []).find(p => p.id === pasajeId);
       if (pasaje) {
         if (!pasaje.memLapses) pasaje.memLapses = [];
         pasaje.memLapses.unshift({ date: new Date().toISOString(), nota });
-        pasaje.status = 'activo'; // reactivate if mantenimiento
+        pasaje.status = 'activo';
         pasaje.lastMemLapse = new Date().toISOString();
-        saveData();
         showToast('Fallo de memoria registrado en "' + pasaje.text.slice(0, 30) + '"');
       }
     }
   }
 
-  // Apply tick visually — match by planId encoded in onclick attribute
+  saveData();
+
+  // Apply tick visually
   const planItems = document.querySelectorAll('#sessionPlan .tick-row');
   planItems.forEach(row => {
     const btn = row.querySelector('.tick-btn[onclick*="' + planId + '"][onclick*="hecho"]');
@@ -3846,7 +4536,6 @@ function closeHechoDatos(save) {
   });
   sessionTicks[planId] = 'hecho';
 
-  // Show minutes row
   const minRow = document.getElementById('tickmin-' + planId);
   if (minRow) {
     minRow.style.display = 'flex';
@@ -4432,6 +5121,7 @@ function generateSession() {
   }
 
   currentPlan = currentPlanLocal;
+  html += `<button class="add-extra-btn" onclick="openAddExtra()">＋ Añadir obra extra</button>`;
   html += `<button class="save-session-btn" onclick="saveSession()">Guardar sesión de hoy</button>`;
 
   const planDiv = document.getElementById('sessionPlan');
@@ -4456,7 +5146,6 @@ function renderMicropaseItem(obra, totalMin, tipoSug) {
     '<div class="plan-item-name" onclick="openObraDetalleSession(\'' + obra.id + '\')" style="cursor:pointer;text-decoration:underline dotted var(--border)">' + obra.name + ' <span style="font-size:11px;color:var(--text3);font-style:italic">' + obra.composer + '</span></div>' +
     '<div class="plan-item-detail">pase ' + tipoSug + (obra.duracion ? ' · ' + obra.duracion + ' min' : '') + '</div></div>' +
     '<div class="plan-item-time">' + (obra.duracion || '?') + ' min</div></div>' +
-    '<div class="objetivo-row"><input class="objetivo-input" id="obj-' + obra.id + '" type="text" placeholder="nota post-pase..."></div>' +
     '<div class="tick-row"><button class="tick-btn" onclick="setTick(\'' + obra.id + '\',\'hecho\',this,' + minPlan + ')">✓ Hecho</button>' +
     '<button class="tick-btn" onclick="setTick(\'' + obra.id + '\',\'saltado\',this,' + minPlan + ')">✗ Saltado</button>' +
     '<input class="tick-note" id="tnote-' + obra.id + '" type="text" placeholder="nota..."></div>' +
@@ -4540,7 +5229,6 @@ function renderMovimientoPlanItem(entity, i, minAsignado, energia, cargaTotal) {
     + '</div>'
     + '</div>'
     // objetivo
-    + '<div class="objetivo-row"><input class="objetivo-input" id="obj-' + planId + '" type="text" placeholder="objetivo de hoy..."></div>'
     // tick buttons
     + '<div class="tick-row">'
     + '<button class="tick-btn" onclick="setTick(\'' + planId + '\',\'hecho\',this,' + minAsignado + ')">✓ Hecho</button>'
@@ -4562,7 +5250,6 @@ function renderConciertoItem(obra, i, minDeadlineDays) {
     '<div class="plan-item-name" onclick="openObraDetalleSession(\'' + obra.id + '\')" style="cursor:pointer;text-decoration:underline dotted var(--border)">' + obra.name + ' <span style="font-size:11px;color:var(--text3);font-style:italic">' + obra.composer + '</span></div>' +
     '<div class="plan-item-detail">pase completo' + (obra.duracion ? ' · ' + obra.duracion + ' min' : '') + (diasSinConcierto !== null ? ' · último ' + diasSinConcierto + 'd' : '') + '</div></div>' +
     '<div class="plan-item-time">' + (obra.duracion || '?') + ' min</div></div>' +
-    '<div class="objetivo-row"><input class="objetivo-input" id="obj-' + obra.id + '" type="text" placeholder="qué observaste..."></div>' +
     '<div class="tick-row"><button class="tick-btn" onclick="setTick(\'' + obra.id + '\',\'hecho\',this,' + minPlan + ')">✓ Hecho</button>' +
     '<button class="tick-btn" onclick="setTick(\'' + obra.id + '\',\'saltado\',this,' + minPlan + ')">✗ Saltado</button>' +
     '<input class="tick-note" id="tnote-' + obra.id + '" type="text" placeholder="nota..."></div>' +
@@ -4643,11 +5330,10 @@ function renderTrabajoItem(obra, i, minAsignado, energia, cargaTotal, paseAnalis
   sessionMinPlan[obra.id] = minAsignado;
   return '<div class="plan-item">' +
     '<div class="plan-item-top"><div class="plan-item-num">' + (i+1) + '.</div><div class="plan-item-content">' +
-    '<div class="plan-item-name" onclick="openObraDetalleSession(\'' + obra.id + '\')" style="cursor:pointer;text-decoration:underline dotted var(--border)">' + obra.name + recBadge + tipoPaseBadge + urgBadge + tickBadge + ' <span style="font-size:11px;color:var(--text3);font-style:italic">' + obra.composer + '</span></div>' +
-    '<div class="plan-item-detail">' + detailLines.join('<br>') + '</div></div>' +
+    '<div class="plan-item-name" onclick="openObraDetalleSession(\'' + obra.id + '\')" style="cursor:pointer;text-decoration:underline dotted var(--border)">' + obra.name + recBadge + urgBadge + tickBadge + ' <span style="font-size:11px;color:var(--text3);font-style:italic">' + obra.composer + '</span></div>' +
+    '</div>' +
     '<div class="plan-item-time" style="text-align:right"><div>~' + minAsignado + 'min</div>' +
     '</div></div>' +
-    '<div class="objetivo-row"><input class="objetivo-input" id="obj-' + obra.id + '" type="text" placeholder="objetivo de hoy..."></div>' +
     '<div class="tick-row"><button class="tick-btn" onclick="setTick(\'' + obra.id + '\',\'hecho\',this,' + minAsignado + ')">✓ Hecho</button>' +
     '<button class="tick-btn" onclick="setTick(\'' + obra.id + '\',\'saltado\',this,' + minAsignado + ')">✗ Saltado</button>' +
     '<input class="tick-note" id="tnote-' + obra.id + '" type="text" placeholder="nota..."></div>' +
@@ -5050,6 +5736,11 @@ function renderPasajeItem(obraId, p) {
     memBadge = '<span style="font-size:8px;color:' + col + ';background:' + col + '18;border:1px solid ' + col + '44;border-radius:4px;padding:1px 6px;margin-left:4px" title="Fallo de memoria hace ' + dias + 'd">⚠ mem ' + (dias === 0 ? 'hoy' : dias + 'd') + '</span>';
   }
 
+  const hasSolData = (p.workHistory?.length >= 2) || (p.solHistory?.length >= 2);
+  const pasajeChart = hasSolData
+    ? '<div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border2)">' + renderPasajeSolChart(p) + '</div>'
+    : '';
+
   return `<div class="pasaje-item" style="flex-wrap:wrap" id="pitem-${obraId}-${p.id}">
     <button class="pasaje-status-icon" onclick="cyclePasajeStatus('${obraId}','${p.id}')"
       title="Estado: ${st} (click para cambiar)"
@@ -5062,7 +5753,7 @@ function renderPasajeItem(obraId, p) {
       ${isTracking ? '📈 seguimiento' : '📈'}
     </button>
     <button class="pasaje-delete" onclick="deletePasaje('${obraId}','${p.id}')">×</button>
-    ${trackingHtml}
+    ${trackingHtml}${pasajeChart}
   </div>`;
 }
 
@@ -6466,6 +7157,134 @@ function startBreakTimer(id, totalSecs) {
 
 // ─── HISTORIAL SESIONES ──────────────────────────────────────────────────────
 
+// ─── ESTADO DIARIO CHART ─────────────────────────────────────────────────────
+
+function renderEstadoSection() {
+  const el = document.getElementById('estadoSection');
+  if (!el) return;
+
+  // Collect all sessions with estado data, chronological asc
+  const sesionesConEstado = (db.sesiones || [])
+    .filter(s => s.estado && typeof s.estado.energia === 'number')
+    .slice()
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  if (sesionesConEstado.length < 2) {
+    el.innerHTML = '<div style="background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:14px 16px;margin-bottom:4px">'
+      + '<div style="font-family:\'Cormorant Garamond\',serif;font-size:18px;color:var(--accent);font-weight:300;margin-bottom:8px">Estado diario</div>'
+      + '<div style="font-size:9px;color:var(--text3);line-height:1.6">Genera al menos 2 sesiones con los sliders de estado para ver la gráfica de ciclos.<br>'
+      + (sesionesConEstado.length === 1 ? 'Ya tienes 1 sesión registrada.' : 'Los sliders aparecen al inicio de cada sesión.') + '</div></div>';
+    return;
+  }
+
+  const W = 340, H = 160;
+  const pad = { l: 28, r: 12, t: 12, b: 28 };
+  const cW = W - pad.l - pad.r, cH = H - pad.t - pad.b;
+
+  const minT = new Date(sesionesConEstado[0].date).getTime();
+  const maxT = new Date(sesionesConEstado[sesionesConEstado.length-1].date).getTime();
+  const rangeT = maxT - minT || 1;
+
+  const xOf = t => pad.l + ((t - minT) / rangeT) * cW;
+  const yOf = v => pad.t + cH - (Math.max(0, Math.min(100, v)) / 100) * cH;
+
+  // Grid
+  const gridY = [0, 25, 50, 75, 100].map(v => {
+    const y = yOf(v);
+    return '<line x1="' + pad.l + '" y1="' + y + '" x2="' + (W-pad.r) + '" y2="' + y
+      + '" stroke="var(--border2)" stroke-width="' + (v === 50 ? 1 : 0.5) + '" stroke-dasharray="2,3"/>'
+      + '<text x="' + (pad.l-3) + '" y="' + (y+3) + '" text-anchor="end" font-size="6.5" fill="var(--text3)">' + v + '</text>';
+  }).join('');
+
+  // Lines per dimension
+  const dims = [
+    { key: 'energia',   color: '#c8a030', label: 'Energía',    src: 'estado' },
+    { key: 'claridad',  color: '#6090d8', label: 'Claridad',   src: 'estado' },
+    { key: 'motivacion',color: '#5ab87a', label: 'Motivación', src: 'estado' },
+    { key: 'sueno',     color: '#a090e0', label: 'Sueño',      src: 'estado' },
+    { key: 'rating',    color: '#e07060', label: 'Sesión',     src: 'root'   },
+  ];
+
+  const lines = dims.map(d => {
+    const pts = sesionesConEstado
+      .filter(s => d.src === 'root' ? s.rating != null : true)
+      .map(s => {
+        const val = d.src === 'root' ? s.rating : (s.estado?.[d.key] || 50);
+        const x = xOf(new Date(s.date).getTime());
+        const y = yOf(val);
+        return { x, y, val, date: s.date };
+      });
+    if (pts.length < 2) return '';
+    const pathD = pts.map((p,i) => (i===0?'M':'L') + p.x + ',' + p.y).join(' ');
+    const dotsHtml = pts.map(p =>
+      '<circle cx="' + p.x + '" cy="' + p.y + '" r="3" fill="' + d.color + '" stroke="var(--bg2)" stroke-width="1" opacity="0.85">'
+      + '<title>' + d.label + ': ' + p.val + ' · ' + new Date(p.date).toLocaleDateString('es-ES',{day:'numeric',month:'short'}) + '</title></circle>'
+    ).join('');
+    const dashAttr = d.src === 'root' ? ' stroke-dasharray="5,3"' : '';
+    return '<path d="' + pathD + '" fill="none" stroke="' + d.color + '" stroke-width="1.8" stroke-linejoin="round" opacity="0.85"' + dashAttr + '/>' + dotsHtml;
+  }).join('');
+
+  // X date labels (sparse)
+  const showEvery = Math.max(1, Math.ceil(sesionesConEstado.length / 6));
+  const xLabels = sesionesConEstado
+    .filter((_, i) => i === 0 || i === sesionesConEstado.length-1 || i % showEvery === 0)
+    .map(s => {
+      const d = new Date(s.date);
+      return '<text x="' + xOf(d.getTime()) + '" y="' + (H-4) + '" text-anchor="middle" font-size="6.5" fill="var(--text3)">'
+        + d.getDate() + '/' + (d.getMonth()+1) + '</text>';
+    }).join('');
+
+  // Detect pattern: average cycle length where a dimension dips below 40
+  let patternNote = '';
+  const motivSeries = sesionesConEstado.map(s => s.estado.motivacion || 50);
+  const dips = [];
+  for (let i = 1; i < motivSeries.length-1; i++) {
+    if (motivSeries[i] < 40 && motivSeries[i-1] >= 40) dips.push(i);
+  }
+  if (dips.length >= 2) {
+    const gaps = [];
+    for (let i = 1; i < dips.length; i++) {
+      const t1 = new Date(sesionesConEstado[dips[i-1]].date).getTime();
+      const t2 = new Date(sesionesConEstado[dips[i]].date).getTime();
+      gaps.push((t2-t1)/86400000);
+    }
+    const avgCycle = Math.round(gaps.reduce((s,g)=>s+g,0)/gaps.length);
+    patternNote = '<div style="font-size:9px;color:var(--text3);background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:7px 10px;margin-top:8px">'
+      + '📊 Ciclo detectado: bajón de motivación cada ~<strong style="color:var(--accent)">' + avgCycle + ' días</strong> de media'
+      + ' (' + dips.length + ' bajones registrados). Con más datos se afinará.</div>';
+  } else if (sesionesConEstado.length >= 5) {
+    patternNote = '<div style="font-size:9px;color:var(--text3);margin-top:6px">Registra más sesiones para detectar tu ciclo de motivación.</div>';
+  }
+
+  // Recent averages
+  const recent = sesionesConEstado.slice(-7);
+  const avgBlock = dims.map(d => {
+    const vals = recent
+      .map(s => d.src === 'root' ? s.rating : (s.estado?.[d.key]))
+      .filter(v => v != null);
+    if (!vals.length) return '';
+    const avg = Math.round(vals.reduce((s,v)=>s+v,0)/vals.length);
+    return '<div style="text-align:center;flex:1">'
+      + '<div style="font-family:\'Cormorant Garamond\',serif;font-size:18px;color:' + d.color + '">' + avg + '</div>'
+      + '<div style="font-size:7px;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em">' + d.label + '</div>'
+      + '</div>';
+  }).join('');
+
+  const legend = dims.map(d => '<span style="color:' + d.color + '">— ' + d.label + '</span>').join(' ');
+
+  el.innerHTML = '<div style="background:var(--bg2);border:1px solid var(--border2);border-radius:10px;padding:14px 16px">'
+    + '<div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px">'
+    + '<div><div style="font-family:\'Cormorant Garamond\',serif;font-size:18px;color:var(--accent);font-weight:300">Estado diario</div>'
+    + '<div style="font-size:8px;color:var(--text3);letter-spacing:0.1em;text-transform:uppercase">Últimas ' + sesionesConEstado.length + ' sesiones registradas</div></div>'
+    + '<div style="font-size:8px;color:var(--text3)">Media 7d</div></div>'
+    + '<div style="display:flex;gap:4px;margin-bottom:12px">' + avgBlock + '</div>'
+    + '<svg viewBox="0 0 ' + W + ' ' + H + '" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;display:block">'
+    + gridY + lines + xLabels + '</svg>'
+    + '<div style="font-size:7px;color:var(--text3);display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;padding-left:' + pad.l + 'px">' + legend + '</div>'
+    + patternNote
+    + '</div>';
+}
+
 function renderSesionesHistorial() {
   const el = document.getElementById('sesionesHistorial');
   if (!db.sesiones || !db.sesiones.length) {
@@ -6503,7 +7322,7 @@ function renderSesionesHistorial() {
     }).join('');
     return `<div class="sesion-hist-item">
       <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:6px">
-        <div class="sesion-hist-date" style="margin-bottom:0">${label}${s.energia && s.energia !== 'manual' ? ' · ' + s.energia : ''}${s.energia === 'manual' ? ' <span style="font-size:8px;background:var(--bg3);border:1px solid var(--border2);border-radius:4px;padding:1px 5px;color:var(--text3)">manual</span>' : ''}</div>
+        <div class="sesion-hist-date" style="margin-bottom:0">${label}${s.energia && s.energia !== 'manual' ? ' · ' + s.energia : ''}${s.energia === 'manual' ? ' <span style="font-size:8px;background:var(--bg3);border:1px solid var(--border2);border-radius:4px;padding:1px 5px;color:var(--text3)">manual</span>' : ''}${s.rating != null ? ' <span style="font-size:8px;padding:1px 6px;border-radius:4px;margin-left:4px;background:' + solPctColor(s.rating) + '22;color:' + solPctColor(s.rating) + ';border:1px solid ' + solPctColor(s.rating) + '44">' + s.rating + '% sesión</span>' : ''}</div>
         <button onclick="deleteSession('${s.date}')"
           style="background:none;border:none;color:var(--text3);font-size:10px;cursor:pointer;padding:0 2px;font-family:'JetBrains Mono',monospace"
           class="del-session-btn-inner">✕</button>
@@ -6970,7 +7789,7 @@ function confirmPase() {
 
 // Save draft on any note/objetivo input in the session plan
 document.addEventListener('input', function(e) {
-  if (e.target.matches('#sessionPlan .tick-note, #sessionPlan .objetivo-input')) {
+  if (e.target.matches('#sessionPlan .tick-note')) {
     saveDraft();
   }
 });
@@ -7437,37 +8256,80 @@ function playTone(freq, type = 'triangle', dur = 0.25, vol = 0.10, delay = 0) {
 
 // Named sound palette — warm, woody, pianistic
 const SFX = {
-  // Soft piano key tap
+  // Major chord — like pressing piano keys gently
   generate() {
-    // Major chord, soft attack, quick decay — like pressing piano keys gently
     [[261.6, 0, 'triangle', 0.6, 0.11],
      [329.6, 0.05, 'triangle', 0.55, 0.09],
      [392.0, 0.10, 'triangle', 0.55, 0.08]
     ].forEach(([f, d, t, dur, v]) => playTone(f, t, dur, v, d));
   },
-  // Single soft key click — like a gentle piano keypress
+  // Single soft key — gentle piano keypress
   tick() {
     playTone(523.3, 'triangle', 0.35, 0.10, 0);
-    // tiny body resonance
     playTone(262.0, 'triangle', 0.18, 0.04, 0);
   },
-  // Warm two-note save
+  // Warm two-note ascending save
   save() {
     playTone(392.0, 'triangle', 0.45, 0.10, 0);
     playTone(523.3, 'triangle', 0.50, 0.10, 0.10);
   },
-  // Muted low thud — like a damped string
+  // Session complete — four-note resolved cadence (V→I feel)
+  saveSession() {
+    [[349.2, 0,    'triangle', 0.50, 0.09],
+     [392.0, 0.08, 'triangle', 0.45, 0.09],
+     [440.0, 0.16, 'triangle', 0.45, 0.09],
+     [523.3, 0.26, 'triangle', 0.60, 0.11],
+    ].forEach(([f, d, t, dur, v]) => playTone(f, t, dur, v, d));
+  },
+  // Muted low thud — damped string
   skip() {
     playTone(196.0, 'triangle', 0.20, 0.08, 0);
-    playTone(185.0, 'triangle', 0.15, 0.04, 0.04); // slight pitch drop
+    playTone(185.0, 'triangle', 0.15, 0.04, 0.04);
   },
-  // Very quiet soft tap
+  // Very quiet soft tap — nav/open
   open() { playTone(440, 'triangle', 0.18, 0.06, 0); },
-  // Pase — ascending minor third, warm
+  // Pase — ascending minor third
   pase() {
     playTone(440.0, 'triangle', 0.30, 0.09, 0);
     playTone(523.3, 'triangle', 0.35, 0.09, 0.12);
-  }
+  },
+  // Add obra — rising two-note (D→F#, major feel)
+  add() {
+    playTone(293.7, 'triangle', 0.28, 0.09, 0);
+    playTone(369.9, 'triangle', 0.32, 0.09, 0.10);
+  },
+  // Delete — descending short drop
+  del() {
+    playTone(369.9, 'triangle', 0.18, 0.07, 0);
+    playTone(246.9, 'triangle', 0.22, 0.07, 0.08);
+  },
+  // Tab nav — single soft higher note
+  nav() { playTone(587.3, 'sine', 0.14, 0.05, 0); },
+  // Slider move — tiny sine blip (called throttled)
+  slider() { playTone(880, 'sine', 0.06, 0.03, 0); },
+  // Toggle/select — quick double tap
+  toggle() {
+    playTone(523.3, 'triangle', 0.12, 0.06, 0);
+    playTone(659.3, 'triangle', 0.12, 0.06, 0.07);
+  },
+  // Event done / milestone — full arpeggio
+  milestone() {
+    [[261.6, 0,    'triangle', 0.55, 0.10],
+     [329.6, 0.08, 'triangle', 0.50, 0.09],
+     [392.0, 0.16, 'triangle', 0.50, 0.09],
+     [523.3, 0.25, 'triangle', 0.55, 0.10],
+     [659.3, 0.36, 'triangle', 0.55, 0.09],
+    ].forEach(([f, d, t, dur, v]) => playTone(f, t, dur, v, d));
+  },
+  // Rating modal confirm — warm resolved pair
+  rating() {
+    playTone(440.0, 'triangle', 0.40, 0.09, 0);
+    playTone(554.4, 'triangle', 0.45, 0.10, 0.14);
+  },
+  // New pasaje — single mid note
+  pasaje() { playTone(493.9, 'triangle', 0.22, 0.07, 0); },
+  // Close modal — subtle low tap
+  close() { playTone(329.6, 'triangle', 0.16, 0.05, 0); },
 };
 
 // ─── RIPPLE ──────────────────────────────────────────────────────────────────
@@ -7482,12 +8344,6 @@ function addRipple(el, e) {
   el.appendChild(r);
   r.addEventListener('animationend', () => r.remove());
 }
-
-// Attach ripple to key buttons
-document.addEventListener('click', function(e) {
-  const btn = e.target.closest('.generate-btn,.save-session-btn,.modal-btn.primary,.energy-btn,.tick-btn,.nav-btn,.time-btn,.register-pase-btn,.pase-btn,.obra-quick-btn');
-  if (btn) addRipple(btn, e);
-});
 
 // ─── FLOATING NOTES ──────────────────────────────────────────────────────────
 
@@ -7514,32 +8370,111 @@ function spawnNotes() {
 
 // ─── WIRE UP SOUNDS ──────────────────────────────────────────────────────────
 
-// Patch key functions to emit sounds
+// Generate session
 const _origGenerateSession = generateSession;
 generateSession = function() { SFX.generate(); _origGenerateSession(); };
 
+// Save session → opens rating modal (sound plays on rating confirm)
 const _origSaveSession = saveSession;
-saveSession = function() {
-  SFX.save();
-  _origSaveSession();
-  const btn = document.querySelector('.save-session-btn');
-  if (btn) { btn.classList.remove('pulse-once'); void btn.offsetWidth; btn.classList.add('pulse-once'); }
+saveSession = function() { _origSaveSession(); };
+
+// Rating confirm — the real "session saved" sound
+const _origCloseRatingSesion = closeRatingSesion;
+closeRatingSesion = function(save) {
+  if (save) SFX.saveSession(); else SFX.close();
+  _origCloseRatingSesion(save);
 };
 
+// Tick buttons
 const _origSetTick = setTick;
 setTick = function(planId, tick, btn, minPlan) {
-  // 'hecho' opens modal — sound plays on confirm in closeHechoDatos
   if (tick === 'saltado') SFX.skip();
   else if (tick !== 'hecho') SFX.open();
   btn.classList.remove('tick-pop'); void btn.offsetWidth; btn.classList.add('tick-pop');
   _origSetTick(planId, tick, btn, minPlan);
 };
 
+// Hecho modal confirm
+const _origCloseHechoDatos = closeHechoDatos;
+closeHechoDatos = function(save) {
+  if (save) SFX.tick();
+  else SFX.close();
+  _origCloseHechoDatos(save);
+};
+
+// Open modal — soft tap
 const _origOpenModal = openModal;
 openModal = function(id) { SFX.open(); _origOpenModal(id); };
 
+// Close modal — subtle
+const _origCloseModal = closeModal;
+closeModal = function(id) { SFX.close(); _origCloseModal(id); };
+
+// Pase confirm
 const _origConfirmPase = confirmPase;
 confirmPase = function() { SFX.pase(); _origConfirmPase(); };
+
+// Tab navigation
+const _origShowView = showView;
+showView = function(name) { SFX.nav(); _origShowView(name); };
+
+// Add obra / evento
+const _origOpenAddObra = openAddObra;
+openAddObra = function() { SFX.add(); _origOpenAddObra(); };
+
+// Confirm add obra
+const _origConfirmAddObra = confirmAddObra;
+confirmAddObra = function() { SFX.save(); _origConfirmAddObra(); };
+
+// Delete obra/pasaje — subtle descending
+const _origDeleteObra = deleteObra;
+deleteObra = function(id) { SFX.del(); _origDeleteObra(id); };
+
+// Add pasaje
+const _origAddPasaje = addPasaje;
+addPasaje = function(obraId) { SFX.pasaje(); _origAddPasaje(obraId); };
+
+// Event realizado — milestone arpeggio
+const _origConfirmEventoResultado = confirmEventoResultado;
+confirmEventoResultado = function() { SFX.milestone(); _origConfirmEventoResultado(); };
+
+// Estado sliders — throttled blip
+let _sliderSfxTimeout = null;
+const _origUpdateEstado = updateEstado;
+updateEstado = function(dim, val) {
+  clearTimeout(_sliderSfxTimeout);
+  _sliderSfxTimeout = setTimeout(() => SFX.slider(), 80);
+  _origUpdateEstado(dim, val);
+};
+
+// Rating slider — throttled blip
+const _origUpdateRatingSlider = updateRatingSlider;
+updateRatingSlider = function(val) {
+  clearTimeout(_sliderSfxTimeout);
+  _sliderSfxTimeout = setTimeout(() => SFX.slider(), 80);
+  _origUpdateRatingSlider(val);
+};
+
+// Time picker
+const _origSelectTime = selectTime;
+selectTime = function(btn) { SFX.toggle(); _origSelectTime(btn); };
+
+// Pase toggle (antes/despues in hecho modal)
+const _origTogglePaseBlock = togglePaseBlock;
+togglePaseBlock = function(cual) { SFX.toggle(); _origTogglePaseBlock(cual); };
+
+// Intensidad pasaje
+const _origSelectPasajeIntensidad = selectPasajeIntensidad;
+selectPasajeIntensidad = function(id, nivel, btn) {
+  SFX.toggle();
+  _origSelectPasajeIntensidad(id, nivel, btn);
+};
+
+// Ripple on key buttons
+document.addEventListener('click', function(e) {
+  const btn = e.target.closest('.generate-btn,.save-session-btn,.modal-btn.primary,.energy-btn,.tick-btn,.nav-btn,.time-btn,.register-pase-btn,.pase-btn,.obra-quick-btn,.stepper-btn,.memlapse-btn,.pase-toggle-btn,.evento-done-btn');
+  if (btn) addRipple(btn, e);
+});
 
 
 
@@ -7549,6 +8484,8 @@ updateHeader();
 loadTheme();
 loadAppTitle();
 spawnNotes();
+initEstadoSliders();
+renderRacha();
 // Restore any in-progress session from today
 loadDraft();
 // Show Forest reopen button if a previous import session was saved
