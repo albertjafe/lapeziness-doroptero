@@ -6,7 +6,7 @@
 <meta name="theme-color" content="#1a1a2e">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Alberto · Piano</title>
+<title>Planificador de estudio</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   /* FUENTE CONFIGURABLE */
@@ -303,6 +303,16 @@
     padding: 14px 16px;
     margin-bottom: 10px;
     display: flex; align-items: flex-start; gap: 14px;
+  }
+  /* Movement plan items — stronger accent border to distinguish from obra-level */
+  .plan-item-mov {
+    border-left: 4px solid var(--accent2) !important;
+    background: var(--bg3) !important;
+  }
+  [data-theme="cozy"] .plan-item-mov {
+    border-left: 4px solid var(--accent2) !important;
+    border-radius: var(--cozy-radius-sm) !important;
+    background: var(--bg2) !important;
   }
   .plan-item-num {
     font-size: 11px; color: var(--accent);
@@ -1793,7 +1803,7 @@
       <text x="22" y="7" font-size="7" fill="var(--accent2)" opacity="0.5" font-family="serif">♩</text>
     </svg>
     <div>
-      <div class="header-title">Alberto · Piano</div>
+      <div class="header-title" id="headerTitle" onclick="editHeaderTitle()" title="Pulsa para editar" style="cursor:pointer">Planificador de estudio</div>
       <div class="header-date" id="headerDate"></div>
     </div>
   </div>
@@ -2102,7 +2112,6 @@
         <button class="stepper-btn" onclick="stepCompas(1)">+</button>
         <div class="stepper-meta" id="compasStepMeta"></div>
       </div>
-      <div id="compasPosMeta" style="display:none;text-align:center;margin:-4px 0 12px;padding:8px 12px;background:var(--bg3);border-radius:8px;border:1px solid var(--border2)"></div>
     </div>
 
     <!-- Fallo de memoria (solo si obra aprendida) -->
@@ -2383,27 +2392,9 @@ function saveData() {
 }
 
 function getDefaultData() {
-  const today = new Date();
-  const inDays = (n) => {
-    const d = new Date(today); d.setDate(d.getDate() + n);
-    return d.toISOString().split('T')[0];
-  };
   return {
-    obras: [
-      { id: 'b1', name: 'Rapsodia Húngara nº 2', composer: 'Liszt', origen: 'nueva', dificultad: 8, duracion: 11, apr: 7, sol: 5, esc: 3, lastPase: null, pasajes: [{id:'p1',text:'Octavas finales, mano derecha',status:'activo',tempoAct:null,tempoObj:null},{id:'p2',text:'Transición lenta–rápida cc.60-70',status:'activo',tempoAct:null,tempoObj:null}], notes: '' },
-      { id: 'b2', name: 'Sonata K.466 y K.481', composer: 'Scarlatti', origen: 'nueva', dificultad: 4, duracion: 6, apr: 9, sol: 8, esc: 7, lastPase: null, pasajes: [], notes: '' },
-      { id: 'b3', name: 'Sonata Hob.XVI', composer: 'Haydn', origen: 'nueva', dificultad: 4, duracion: 8, apr: 8, sol: 6, esc: 4, lastPase: null, pasajes: [{id:'p3',text:'Desarrollo, cc.45-60',status:'activo',tempoAct:null,tempoObj:null}], notes: '' },
-      { id: 'b4', name: 'Estudios op.39 nº 1 y 6', composer: 'Rachmaninov', origen: 'nueva', dificultad: 8, duracion: 9, apr: 7, sol: 4, esc: 2, lastPase: null, pasajes: [{id:'p4',text:'Polirritmia central estudio 1',status:'activo',tempoAct:null,tempoObj:null}], notes: '' },
-      { id: 'b5', name: 'Obras Kapralova', composer: 'Kapralova', origen: 'nueva', dificultad: 4, duracion: 7, apr: 6, sol: 5, esc: 3, lastPase: null, pasajes: [], notes: '' },
-      { id: 'b6', name: 'Composición propia', composer: 'Alberto', origen: 'nueva', dificultad: 3, duracion: 5, apr: 4, sol: 2, esc: 1, lastPase: null, pasajes: [{id:'p5',text:'Sección central, memorizar',status:'activo',tempoAct:null,tempoObj:null}], notes: '' },
-      { id: 'br1', name: 'Sonata nº 2 op.99 — mvt. I y II', composer: 'Brahms', origen: 'recuperacion', dificultad: 6, duracion: 16, apr: 6, sol: 4, esc: 2, lastPase: null, pasajes: [{id:'p6',text:'Entrada piano mvt. II, tempo rubato',status:'activo',tempoAct:null,tempoObj:null}], notes: 'Ya ensayado con Emma.' }
-    ],
-    eventos: [
-      { id: 'ev1', tipo: 'concurso', nombre: 'Concurso Basilea', fecha: inDays(55), obras: ['b1','b2','b3','b4','b5','b6'] },
-      { id: 'ev2', tipo: 'clase', nombre: 'Clase Claudio Martínez', fecha: inDays(8), obras: ['b1','b3','b4'] },
-      { id: 'ev3', tipo: 'concierto', nombre: 'Concierto con Emma', fecha: inDays(30), obras: ['br1'] },
-      { id: 'ev4', tipo: 'ensayo', nombre: 'Ensayo con Emma', fecha: inDays(6), obras: ['br1'] }
-    ],
+    obras: [],
+    eventos: [],
     sesiones: [],
     registro: []
   };
@@ -2566,19 +2557,25 @@ const DRAFT_KEY = 'alberto_session_draft';
 function saveDraft() {
   const notes = {}, objs = {}, mins = {}, sols = {};
   currentPlan.forEach(o => {
-    const n = document.getElementById('tnote-' + o.id);
-    const ob = document.getElementById('obj-' + o.id);
-    const m = document.getElementById('tmin-' + o.id);
-    if (n) notes[o.id] = n.value;
-    if (ob) objs[o.id] = ob.value;
-    if (m) mins[o.id] = m.value;
-    if (sessionSolRatings[o.id]) sols[o.id] = sessionSolRatings[o.id];
+    const pid = o._planId || o.id;
+    const n = document.getElementById('tnote-' + pid);
+    const ob = document.getElementById('obj-' + pid);
+    const m = document.getElementById('tmin-' + pid);
+    if (n) notes[pid] = n.value;
+    if (ob) objs[pid] = ob.value;
+    if (m) mins[pid] = m.value;
+    if (sessionSolRatings[pid]) sols[pid] = sessionSolRatings[pid];
   });
   const draft = {
     date: new Date().toDateString(),
     energia: selectedEnergy,
     time: selectedTime,
-    plan: currentPlan.map(o => o.id),
+    // Store full entity descriptors so we can restore movement plan items
+    plan: currentPlan.map(o => ({
+      planId: o._planId || o.id,
+      obraId: o._obraId || o.id,
+      movId: o._movId || null,
+    })),
     ticks: { ...sessionTicks },
     minPlan: { ...sessionMinPlan },
     mins, notes, objs, sols,
@@ -2604,8 +2601,38 @@ function loadDraft() {
     document.querySelectorAll('.time-btn').forEach(b => {
       b.classList.toggle('active', parseFloat(b.dataset.time) === selectedTime);
     });
-    // Rebuild plan from stored IDs
-    const planObras = draft.plan.map(id => findObra(id)).filter(Boolean);
+    // Rebuild plan from stored descriptors (new format) or IDs (legacy)
+    let planObras = [];
+    if (draft.plan && draft.plan.length > 0 && typeof draft.plan[0] === 'object') {
+      // New format: array of {planId, obraId, movId}
+      planObras = draft.plan.map(desc => {
+        if (desc.movId) {
+          const obra = findObra(desc.obraId);
+          const mov = obra ? (obra.movimientos || []).find(m => m.id === desc.movId) : null;
+          if (!obra || !mov) return null;
+          const pid = desc.obraId + '__' + desc.movId;
+          const syntheticSolHistory = (mov.solHistory && mov.solHistory.length)
+            ? mov.solHistory
+            : (mov.sol ? [{ date: new Date().toISOString(), val: mov.sol * 10, context: 'initial' }] : []);
+          return {
+            ...mov,
+            _planId: pid, _obraId: desc.obraId, _movId: desc.movId,
+            _isMovimiento: true, _parentName: obra.name,
+            id: pid, composer: obra.composer,
+            sol: mov.sol || 1, esc: mov.esc || 1,
+            dificultad: mov.dificultad || obra.dificultad || 3,
+            paseHistory: mov.paseHistory || [],
+            solHistory: syntheticSolHistory,
+            pasajes: [], origen: obra.origen,
+          };
+        } else {
+          return findObra(desc.obraId);
+        }
+      }).filter(Boolean);
+    } else {
+      // Legacy format: array of obra IDs
+      planObras = draft.plan.map(id => findObra(id)).filter(Boolean);
+    }
     if (!planObras.length) return false;
     currentPlan = planObras;
     // Restore ticks
@@ -2622,19 +2649,25 @@ function _restoreDraftUI(draft) {
   const sesionHoy = db.sesiones.find(s => new Date(s.date).toDateString() === new Date().toDateString());
   const cargaHoy = sesionHoy ? 50 : 0;
   let html = '';
-  currentPlan.forEach((obra, i) => {
-    html += renderTrabajoItem(obra, i, sessionMinPlan[obra.id] || 30, selectedEnergy, cargaHoy, analizarPases(obra.id));
+  currentPlan.forEach((entity, i) => {
+    const pid = entity._planId || entity.id;
+    if (entity._isMovimiento) {
+      html += renderMovimientoPlanItem(entity, i, sessionMinPlan[pid] || (entity.duracion || 20), selectedEnergy, cargaHoy);
+    } else {
+      html += renderTrabajoItem(entity, i, sessionMinPlan[pid] || 30, selectedEnergy, cargaHoy, analizarPases(entity._obraId || entity.id));
+    }
   });
   html += '<button class="save-session-btn" onclick="saveSession()">Guardar sesión de hoy</button>';
   const planDiv = document.getElementById('sessionPlan');
   planDiv.innerHTML = html;
   planDiv.classList.add('visible');
   requestAnimationFrame(() => {
-    currentPlan.forEach(obra => {
-      const tick = draft.ticks?.[obra.id];
+    currentPlan.forEach(entity => {
+      const pid = entity._planId || entity.id;
+      const tick = draft.ticks?.[pid];
       if (tick) {
         document.querySelectorAll('#sessionPlan .tick-row').forEach(r => {
-          const btn = r.querySelector('.tick-btn[onclick*="' + obra.id + '"]');
+          const btn = r.querySelector('.tick-btn[onclick*="' + pid + '"]');
           if (btn) {
             r.querySelectorAll('.tick-btn').forEach(b => b.classList.remove('hecho','parcial','saltado'));
             const target = r.querySelector('.tick-btn[onclick*="' + tick + '"]');
@@ -2642,29 +2675,16 @@ function _restoreDraftUI(draft) {
           }
         });
         if (tick === 'hecho') {
-          const minRow = document.getElementById('tickmin-' + obra.id);
+          const minRow = document.getElementById('tickmin-' + pid);
           if (minRow) minRow.style.display = 'flex';
-          const minInp = document.getElementById('tmin-' + obra.id);
-          if (minInp && draft.mins?.[obra.id]) minInp.value = draft.mins[obra.id];
-          const solRow = document.getElementById('solrow-' + obra.id);
-          if (solRow) solRow.classList.add('visible');
-          const savedSol = draft.sols?.[obra.id];
-          if (savedSol && solRow) {
-            const SOL_COLORS = ['','#c84040','#c84040','#d06020','#d06020','#c8a030','#c8a030','#8aaa30','#5ab87a','#5ab87a','#3aaa6a'];
-            solRow.querySelectorAll('.sol-btn').forEach(b => {
-              if (parseInt(b.dataset.sol) === savedSol) {
-                b.classList.add('active');
-                b.style.background = SOL_COLORS[savedSol] || '';
-                b.style.color = '#fff';
-              }
-            });
-          }
+          const minInp = document.getElementById('tmin-' + pid);
+          if (minInp && draft.mins?.[pid]) minInp.value = draft.mins[pid];
         }
       }
-      const noteEl = document.getElementById('tnote-' + obra.id);
-      const objEl = document.getElementById('obj-' + obra.id);
-      if (noteEl && draft.notes?.[obra.id]) noteEl.value = draft.notes[obra.id];
-      if (objEl && draft.objs?.[obra.id]) objEl.value = draft.objs[obra.id];
+      const noteEl = document.getElementById('tnote-' + pid);
+      const objEl = document.getElementById('obj-' + pid);
+      if (noteEl && draft.notes?.[pid]) noteEl.value = draft.notes[pid];
+      if (objEl && draft.objs?.[pid]) objEl.value = draft.objs[pid];
     });
   });
 }
@@ -2692,35 +2712,47 @@ function getRecentTicksForObra(obraId, n) {
     .slice(-n);
 }
 
-function setTick(obraId, tick, btn, minPlan) {
+function setTick(planId, tick, btn, minPlan) {
   if (tick === 'hecho') {
-    openHechoDatos(obraId, minPlan);
+    openHechoDatos(planId, minPlan);
     return;
   }
   const row = btn.closest('.tick-row');
   row.querySelectorAll('.tick-btn').forEach(b => b.classList.remove('hecho','parcial','saltado'));
   btn.classList.add(tick);
-  sessionTicks[obraId] = tick;
-  const minRow = document.getElementById('tickmin-' + obraId);
+  sessionTicks[planId] = tick;
+  const minRow = document.getElementById('tickmin-' + planId);
   if (minRow) minRow.style.display = 'none';
   saveDraft();
 }
 
 function saveSession() {
   const today = new Date().toDateString();
-  const items = currentPlan.map(obra => ({
-    obraId: obra.id,
-    obraName: obra.name,
-    tick: sessionTicks[obra.id] || null,
-    minutosPlan: sessionMinPlan[obra.id] || null,
-    minutosReales: parseInt(document.getElementById('tmin-' + obra.id)?.value) || null,
-    solRating: sessionSolRatings[obra.id] || null,  // stored as 0-100
-    note: document.getElementById('tnote-' + obra.id)?.value || '',
-    objetivo: document.getElementById('obj-' + obra.id)?.value || ''
-  }));
+  const items = currentPlan.map(entity => {
+    const planId = entity._planId || entity.id;
+    const obraId = entity._obraId || entity.id;
+    const movId = entity._movId || null;
+    return {
+      obraId,
+      movId,
+      obraName: entity._isMovimiento
+        ? entity._parentName + ' · ' + entity.name
+        : entity.name,
+      tick: sessionTicks[planId] || null,
+      minutosPlan: sessionMinPlan[planId] || null,
+      minutosReales: parseInt(document.getElementById('tmin-' + planId)?.value) || null,
+      solRating: sessionSolRatings[planId] || null,
+      note: document.getElementById('tnote-' + planId)?.value || '',
+      objetivo: document.getElementById('obj-' + planId)?.value || ''
+    };
+  });
   items.forEach(it => {
     if (it.tick === 'hecho' && it.solRating != null) {
-      recordSolHistory(it.obraId, it.solRating, 'sesion'); // 0-100
+      if (it.movId) {
+        recordMovSolHistory(it.obraId, it.movId, it.solRating, 'sesion');
+      } else {
+        recordSolHistory(it.obraId, it.solRating, 'sesion');
+      }
     }
   });
   db.sesiones = db.sesiones.filter(s => new Date(s.date).toDateString() !== today);
@@ -3506,6 +3538,8 @@ function selectSolRating(obraId, val, btn) {} // replaced by modal
 // ── HECHO DATOS MODAL ─────────────────────────────────────────────────────────
 
 let _hechoObraId = null;
+let _hechoMovId = null;
+let _hechoPlanId = null;
 let _hechoMinPlan = 0;
 let _hechoShowSol = false;
 let _hechoShowCompas = false;
@@ -3566,34 +3600,34 @@ function stepCompas(delta) {
 function updateCompasMeta() {
   const meta = document.getElementById('compasStepMeta');
   const posMeta = document.getElementById('compasPosMeta');
-  const obra = findObra(_hechoObraId);
-  if (!obra || !obra.compasesTotal) {
+  const entity = _hechoMovId
+    ? findMovimiento(_hechoObraId, _hechoMovId)
+    : findObra(_hechoObraId);
+  if (!entity || !entity.compasesTotal) {
     if (meta) meta.textContent = '';
     if (posMeta) posMeta.style.display = 'none';
     return;
   }
-  const nuevo = Math.min(obra.compasesTotal, _hechoCompasAntes + _hechoCompasStep);
-  const pct = Math.round((nuevo / obra.compasesTotal) * 100);
-  // Stepper meta: compact delta info
+  const nuevo = Math.min(entity.compasesTotal, _hechoCompasAntes + _hechoCompasStep);
+  const pct = Math.round((nuevo / entity.compasesTotal) * 100);
   if (meta) {
     meta.innerHTML = _hechoCompasStep > 0
       ? '<span style="color:var(--text3)">+' + _hechoCompasStep + ' hoy</span>'
       : '<span style="color:var(--text3)">sin avance</span>';
   }
-  // Position meta: prominent "X de Y"
   if (posMeta) {
     posMeta.style.display = 'block';
     const barW = Math.round(pct);
     posMeta.innerHTML =
-      '<div style="display:flex;align-items:baseline;justify-content:center;gap:6px;margin-bottom:5px">' +
-        '<span style="font-size:22px;font-weight:700;color:var(--accent)">' + nuevo + '</span>' +
-        '<span style="font-size:11px;color:var(--text3)">de</span>' +
-        '<span style="font-size:16px;color:var(--text2)">' + obra.compasesTotal + '</span>' +
-        '<span style="font-size:9px;color:var(--text3);margin-left:4px">compases (' + pct + '%)</span>' +
-      '</div>' +
-      '<div style="height:4px;background:var(--bg2);border-radius:2px;overflow:hidden">' +
-        '<div style="height:100%;width:' + barW + '%;background:var(--accent);border-radius:2px;transition:width 0.2s"></div>' +
-      '</div>';
+      '<div style="display:flex;align-items:baseline;justify-content:center;gap:6px;margin-bottom:5px">'
+      + '<span style="font-size:22px;font-weight:700;color:var(--accent)">' + nuevo + '</span>'
+      + '<span style="font-size:11px;color:var(--text3)">de</span>'
+      + '<span style="font-size:16px;color:var(--text2)">' + entity.compasesTotal + '</span>'
+      + '<span style="font-size:9px;color:var(--text3);margin-left:4px">compases (' + pct + '%)</span>'
+      + '</div>'
+      + '<div style="height:4px;background:var(--bg2);border-radius:2px;overflow:hidden">'
+      + '<div style="height:100%;width:' + barW + '%;background:var(--accent);border-radius:2px;transition:width 0.2s"></div>'
+      + '</div>';
   }
 }
 
@@ -3613,25 +3647,37 @@ function selectMemPasaje(pasajeId, btn) {
   if (nuevoForm) nuevoForm.style.display = pasajeId === '__nuevo__' ? 'block' : 'none';
 }
 
-function openHechoDatos(obraId, minPlan) {
+function openHechoDatos(planId, minPlan) {
+  const { obraId, movId } = parsePlanId(planId);
+  _hechoPlanId = planId;
   _hechoObraId = obraId;
+  _hechoMovId = movId;
   _hechoMinPlan = minPlan || 0;
   _hechoCompasStep = 0;
   _memLapseYes = false;
   _memPasajeSelected = null;
 
+  // Entity = movimiento if movId, else obra
   const obra = findObra(obraId);
-  const fase = obra ? obraFase(obra) : 'digitando';
-  const pct = obra ? compasPercent(obra) : null;
+  const entity = movId ? findMovimiento(obraId, movId) : obra;
+  const fase = entity ? obraFase(entity) : 'digitando';
+  const pct = entity ? compasPercent(entity) : null;
 
   // Determine which sections to show
   _hechoShowCompas = fase === 'digitando' || (pct !== null && pct < 100);
   _hechoShowSol = (pct !== null && pct >= 50) || fase === 'consolidando' || fase === 'mantenimiento';
-  _hechoShowMem = fase === 'consolidando' || fase === 'mantenimiento';
+  // Memory lapse section only for obra-level (not movements — they have no pasajes)
+  _hechoShowMem = !movId && (fase === 'consolidando' || fase === 'mantenimiento');
 
-  // Obra name
-  document.getElementById('hechoObraName').textContent = obra
-    ? obra.name + (obra.composer ? ' · ' + obra.composer : '') : '';
+  // Title: show obra name and movement name if applicable
+  const obraTitle = obra ? obra.name + (obra.composer ? ' · ' + obra.composer : '') : '';
+  const nameEl = document.getElementById('hechoObraName');
+  if (movId && entity) {
+    nameEl.innerHTML = '<span style="font-size:12px;color:var(--text3)">' + obraTitle + '</span>'
+      + '<br><span>' + entity.name + '</span>';
+  } else {
+    nameEl.textContent = obraTitle;
+  }
 
   // Minutes
   document.getElementById('hechoMinutos').value = minPlan || '';
@@ -3653,8 +3699,8 @@ function openHechoDatos(obraId, minPlan) {
   const compasSection = document.getElementById('hechoCompasSection');
   if (compasSection) {
     compasSection.style.display = _hechoShowCompas ? 'block' : 'none';
-    if (_hechoShowCompas && obra) {
-      _hechoCompasAntes = obra.compasActual || 0;
+    if (_hechoShowCompas && entity) {
+      _hechoCompasAntes = entity.compasActual || 0;
       const el = document.getElementById('compasStepVal');
       if (el) el.textContent = '0';
       updateCompasMeta();
@@ -3698,13 +3744,15 @@ function openHechoDatos(obraId, minPlan) {
   if (solSection) {
     solSection.style.display = _hechoShowSol ? 'block' : 'none';
     if (_hechoShowSol) {
-      const lastSol = obra?.solHistory?.[0]?.val != null ? normalizeSolVal(obra.solHistory[0].val) : 0;
+      const solSrc = entity;
+      const lastSol = solSrc?.solHistory?.[0]?.val != null ? normalizeSolVal(solSrc.solHistory[0].val)
+        : (solSrc?.sol ? Math.min(100, (solSrc.sol - 1) * 11) : 0);
       const slider = document.getElementById('solSlider');
       if (slider) { slider.value = lastSol; updateSolSlider(lastSol); }
     }
   }
 
-  document.getElementById('hechoNota').value = document.getElementById('tnote-' + obraId)?.value || '';
+  document.getElementById('hechoNota').value = document.getElementById('tnote-' + planId)?.value || '';
   openModal('modalHechoDatos');
 }
 
@@ -3713,37 +3761,46 @@ function closeHechoDatos(save) {
   if (!save || !_hechoObraId) return;
 
   const obraId = _hechoObraId;
+  const movId = _hechoMovId;
+  const planId = _hechoPlanId || obraId;
   const obra = findObra(obraId);
+  const entity = movId ? findMovimiento(obraId, movId) : obra;
   const minutos = parseInt(document.getElementById('hechoMinutos').value) || _hechoMinPlan || null;
   const nota = document.getElementById('hechoNota').value.trim();
   const solPct = _hechoShowSol ? parseInt(document.getElementById('solSlider').value) : null;
 
-  // Store minutes
-  const minInp = document.getElementById('tmin-' + obraId);
+  // Store minutes and notes — keyed by planId
+  const minInp = document.getElementById('tmin-' + planId);
   if (minInp && minutos) { minInp.value = minutos; minInp._touched = true; }
-  const noteInp = document.getElementById('tnote-' + obraId);
+  const noteInp = document.getElementById('tnote-' + planId);
   if (noteInp && nota) noteInp.value = nota;
-  if (solPct !== null) sessionSolRatings[obraId] = solPct;
+  if (solPct !== null) sessionSolRatings[planId] = solPct;
 
-  // Advance compases
-  if (_hechoShowCompas && obra && _hechoCompasStep > 0) {
-    const nuevo = Math.min(obra.compasesTotal || 9999, (obra.compasActual || 0) + _hechoCompasStep);
-    obra.compasActual = nuevo;
-    obra.apr = aprFromCompas(obra);
-    // Log to compasHistory
-    if (!obra.compasHistory) obra.compasHistory = [];
-    const minAcum = getMinutosObra(obraId) + (minutos || 0);
+  // Advance compases (on the entity: obra or movimiento)
+  if (_hechoShowCompas && entity && _hechoCompasStep > 0) {
+    const nuevo = Math.min(entity.compasesTotal || 9999, (entity.compasActual || 0) + _hechoCompasStep);
+    entity.compasActual = nuevo;
+    entity.apr = aprFromCompas(entity);
+    if (!entity.compasHistory) entity.compasHistory = [];
+    const minAcum = movId
+      ? getMinutosMovimiento(obraId, movId) + (minutos || 0)
+      : getMinutosObra(obraId) + (minutos || 0);
     const today = new Date().toDateString();
-    if (obra.compasHistory[0] && new Date(obra.compasHistory[0].date).toDateString() === today) {
-      obra.compasHistory[0] = { date: new Date().toISOString(), compas: nuevo, minAcum };
+    if (entity.compasHistory[0] && new Date(entity.compasHistory[0].date).toDateString() === today) {
+      entity.compasHistory[0] = { date: new Date().toISOString(), compas: nuevo, minAcum };
     } else {
-      obra.compasHistory.unshift({ date: new Date().toISOString(), compas: nuevo, minAcum });
-      if (obra.compasHistory.length > 60) obra.compasHistory = obra.compasHistory.slice(0, 60);
+      entity.compasHistory.unshift({ date: new Date().toISOString(), compas: nuevo, minAcum });
+      if (entity.compasHistory.length > 60) entity.compasHistory = entity.compasHistory.slice(0, 60);
     }
     saveData();
-    // Update compas field in obra card if visible
-    const compasEl = document.getElementById('obra-compas-' + obraId + '-actual');
-    if (compasEl) compasEl.value = nuevo;
+    if (movId) {
+      // Update mov compas field if visible in expanded obra card
+      const compasEl = document.getElementById('mov-compas-' + obraId + '-' + movId + '-actual');
+      if (compasEl) compasEl.value = nuevo;
+    } else {
+      const compasEl = document.getElementById('obra-compas-' + obraId + '-actual');
+      if (compasEl) compasEl.value = nuevo;
+    }
   }
 
   // Memory lapse
@@ -3778,23 +3835,23 @@ function closeHechoDatos(save) {
     }
   }
 
-  // Apply tick visually
+  // Apply tick visually — match by planId encoded in onclick attribute
   const planItems = document.querySelectorAll('#sessionPlan .tick-row');
   planItems.forEach(row => {
-    const btn = row.querySelector('.tick-btn[onclick*="' + obraId + '"][onclick*="hecho"]');
+    const btn = row.querySelector('.tick-btn[onclick*="' + planId + '"][onclick*="hecho"]');
     if (btn) {
       row.querySelectorAll('.tick-btn').forEach(b => b.classList.remove('hecho','parcial','saltado'));
       btn.classList.add('hecho');
     }
   });
-  sessionTicks[obraId] = 'hecho';
+  sessionTicks[planId] = 'hecho';
 
   // Show minutes row
-  const minRow = document.getElementById('tickmin-' + obraId);
+  const minRow = document.getElementById('tickmin-' + planId);
   if (minRow) {
     minRow.style.display = 'flex';
     if (minutos && _hechoMinPlan) {
-      const diffEl = document.getElementById('tickmin-diff-' + obraId);
+      const diffEl = document.getElementById('tickmin-diff-' + planId);
       if (diffEl) {
         const diff = minutos - _hechoMinPlan;
         diffEl.textContent = diff > 0 ? '+' + diff + 'min' : diff < 0 ? diff + 'min' : '= exacto';
@@ -3819,9 +3876,9 @@ function openObraDetalleSession(obraId) {
   openModal('modalObraDetalleSession');
 }
 
-function updateMinDiff(obraId, minPlan) {
-  const input = document.getElementById('tmin-' + obraId);
-  const diffEl = document.getElementById('tickmin-diff-' + obraId);
+function updateMinDiff(planId, minPlan) {
+  const input = document.getElementById('tmin-' + planId);
+  const diffEl = document.getElementById('tickmin-diff-' + planId);
   if (!input || !diffEl) return;
   input._touched = true;
   const real = parseInt(input.value), diff = real - minPlan;
@@ -3923,6 +3980,128 @@ function obraTipoPase(obra) {
   return 'solo';
 }
 
+// ── ANÁLISIS DE PASES ────────────────────────────────────────────────────────
+function analizarPases(obraId) {
+  const hist = (findObra(obraId)?.paseHistory || []).slice(0, 10);
+  const counts = { tecnico: 0, memoria: 0, concierto: 0 };
+  hist.forEach(p => { if (p.tipo && counts[p.tipo] !== undefined) counts[p.tipo]++; });
+  const total = hist.length;
+  return { counts, total,
+    necesitaConcierto: total >= 3 && counts.concierto === 0,
+    excesivamenteTecnico: total >= 5 && counts.tecnico / total > 0.7,
+    necesitaMemoria: total >= 3 && counts.memoria === 0 && counts.tecnico > 0
+  };
+}
+
+// ── PLAN ENTITY SYSTEM ──────────────────────────────────────────────────────
+// Expands obras-with-movimientos into independent plan entities so each
+// movement gets its own priority score, time allocation, and tick tracking.
+
+function parsePlanId(planId) {
+  if (!planId || typeof planId !== 'string') return { obraId: String(planId), movId: null };
+  const sep = planId.indexOf('__');
+  if (sep === -1) return { obraId: planId, movId: null };
+  return { obraId: planId.slice(0, sep), movId: planId.slice(sep + 2) };
+}
+
+// Returns a flat list of "plan entities". Obras without movimientos map to
+// themselves (backward-compatible). Obras with movimientos expand to one
+// entity per movement, each carrying its own stats.
+function buildPlanEntities(obras) {
+  const entities = [];
+  obras.forEach(obra => {
+    const movs = (obra.movimientos || []).filter(m => m.name);
+    if (!movs.length) {
+      entities.push({
+        ...obra,
+        _planId: obra.id, _obraId: obra.id, _movId: null,
+        _isMovimiento: false, _parentName: null
+      });
+    } else {
+      movs.forEach(mov => {
+        const planId = obra.id + '__' + mov.id;
+        // For solHistory: movements store sol as 1-10 direct val; build a
+        // synthetic solHistory from mov.sol so scoring can use it uniformly.
+        const syntheticSolHistory = (mov.solHistory && mov.solHistory.length)
+          ? mov.solHistory
+          : (mov.sol ? [{ date: new Date().toISOString(), val: mov.sol * 10, context: 'initial' }] : []);
+        entities.push({
+          _planId: planId,
+          _obraId: obra.id,
+          _movId: mov.id,
+          _isMovimiento: true,
+          _parentName: obra.name,
+          // Use planId as .id so existing compat code that reads .id still works
+          id: planId,
+          name: mov.name,
+          composer: obra.composer,
+          // Stats from movement (with obra fallbacks)
+          sol: mov.sol || 1,
+          esc: mov.esc || 1,
+          dificultad: mov.dificultad || obra.dificultad || 3,
+          duracion: mov.duracion || 0,
+          compasActual: mov.compasActual,
+          compasesTotal: mov.compasesTotal,
+          compasHistory: mov.compasHistory || [],
+          paseHistory: mov.paseHistory || [],
+          lastPase: mov.lastPase || null,
+          solHistory: syntheticSolHistory,
+          // Movements don't have pasajes/origen/eventos — inherit from obra
+          pasajes: [],
+          origen: obra.origen,
+          eventos: obra.eventos,
+          _obraRef: obra,
+        });
+      });
+    }
+  });
+  return entities;
+}
+
+// Tick history lookup aware of movId (null = obra-level item)
+function getLastTickForEntity(planId) {
+  const { obraId, movId } = parsePlanId(planId);
+  const hoy = new Date().toDateString();
+  for (const s of db.sesiones) {
+    if (new Date(s.date).toDateString() === hoy) continue;
+    const item = movId
+      ? (s.items || []).find(i => i.obraId === obraId && i.movId === movId)
+      : (s.items || []).find(i => i.obraId === obraId && !i.movId);
+    if (item) return item;
+  }
+  return null;
+}
+
+function getRecentTicksForEntity(planId, n) {
+  const { obraId, movId } = parsePlanId(planId);
+  const hoy = new Date().toDateString();
+  return db.sesiones
+    .filter(s => new Date(s.date).toDateString() !== hoy)
+    .flatMap(s => (s.items || []).filter(i =>
+      movId ? (i.obraId === obraId && i.movId === movId)
+            : (i.obraId === obraId && !i.movId)
+    ))
+    .slice(-n);
+}
+
+// Record solidez for a movement (0-100 scale, same as obras)
+function recordMovSolHistory(obraId, movId, val, context) {
+  const mov = findMovimiento(obraId, movId);
+  if (!mov || val == null) return;
+  if (!mov.solHistory) mov.solHistory = [];
+  const today = new Date().toDateString();
+  const last = mov.solHistory[0];
+  if (last && new Date(last.date).toDateString() === today && last.context === context) {
+    mov.solHistory[0] = { date: new Date().toISOString(), val: parseInt(val), context };
+  } else {
+    mov.solHistory.unshift({ date: new Date().toISOString(), val: parseInt(val), context });
+    if (mov.solHistory.length > 80) mov.solHistory = mov.solHistory.slice(0, 80);
+  }
+  // Also keep the 1-10 .sol field in sync
+  mov.sol = Math.max(1, Math.min(10, Math.round(parseInt(val) / 10)));
+  saveData();
+}
+
 function generateSession() {
   if (!db.obras || db.obras.length === 0) { showToast('Añade obras primero'); return; }
 
@@ -3984,86 +4163,83 @@ function generateSession() {
   let tipoSesion = esMicropase ? 'micropase' : esConcierto ? 'concierto' : 'trabajo';
 
   // ── Análisis de pases históricos por obra ─────────────────────────────────
-  // Determina si hay desequilibrio en tipos de pase (demasiado técnico, falta concierto)
-  function analizarPases(obraId) {
-    const hist = (findObra(obraId)?.paseHistory || []).slice(0, 10);
-    const counts = { tecnico: 0, memoria: 0, concierto: 0 };
-    hist.forEach(p => { if (p.tipo && counts[p.tipo] !== undefined) counts[p.tipo]++; });
-    const total = hist.length;
-    return { counts, total,
-      necesitaConcierto: total >= 3 && counts.concierto === 0,
-      excesivamenteTecnico: total >= 5 && counts.tecnico / total > 0.7,
-      necesitaMemoria: total >= 3 && counts.memoria === 0 && counts.tecnico > 0
-    };
-  }
+  // (defined at module scope below — referenced here for clarity)
+
 
   // ── SCORING ───────────────────────────────────────────────────────────────
-  const scored = obras.map(o => {
+  // Shared scoring function for both obra-level and movement-level entities.
+  function scoreEntity(o, rootObraId) {
     let score = 0;
+    const planId = o._planId || o.id;
     const dif = o.dificultad || 3;
     const dur = o.duracion || 8;
     const fase = obraFase(o);
 
-    // Estado base urgency
     score += (o.esc || 1) < 7 ? 20 : 10;
     if (o.origen === 'recuperacion') score += 20;
 
-    // Pasajes — con ratio de tempo + fallo de memoria reciente (Anki-style boost)
-    (o.pasajes || []).filter(p => p.status === 'activo').forEach(p => {
-      let pScore = 8;
-      if (p.tempoAct && p.tempoObj && p.tempoObj > p.tempoAct) {
-        const ratio = p.tempoAct / p.tempoObj;
-        pScore = 8 + Math.round((1 - ratio) * 10);
-      }
-      // Memory lapse urgency: more recent = more urgent, multiplied by event proximity
-      if (p.lastMemLapse) {
-        const diasLapse = (now - new Date(p.lastMemLapse)) / 86400000;
-        const urgEv = computeUrgencia(o.id);
-        const evMultiplier = urgEv.nivel === 'critico' ? 3 : urgEv.nivel === 'urgente' ? 2 : 1.2;
-        if (diasLapse < 1)  pScore += 35 * evMultiplier;
-        else if (diasLapse < 3)  pScore += 22 * evMultiplier;
-        else if (diasLapse < 7)  pScore += 14 * evMultiplier;
-        else if (diasLapse < 14) pScore += 8  * evMultiplier;
-      }
-      score += pScore;
-    });
+    // Pasajes — only for obra-level entries (movements don't have pasajes)
+    if (!o._isMovimiento) {
+      (o.pasajes || []).filter(p => p.status === 'activo').forEach(p => {
+        let pScore = 8;
+        if (p.tempoAct && p.tempoObj && p.tempoObj > p.tempoAct) {
+          const ratio = p.tempoAct / p.tempoObj;
+          pScore = 8 + Math.round((1 - ratio) * 10);
+        }
+        if (p.lastMemLapse) {
+          const diasLapse = (now - new Date(p.lastMemLapse)) / 86400000;
+          const urgEv = computeUrgencia(rootObraId);
+          const evMultiplier = urgEv.nivel === 'critico' ? 3 : urgEv.nivel === 'urgente' ? 2 : 1.2;
+          if (diasLapse < 1)  pScore += 35 * evMultiplier;
+          else if (diasLapse < 3)  pScore += 22 * evMultiplier;
+          else if (diasLapse < 7)  pScore += 14 * evMultiplier;
+          else if (diasLapse < 14) pScore += 8  * evMultiplier;
+        }
+        score += pScore;
+      });
+    }
 
-    // Urgencia calendario — per obra, no global
-    const urg = computeUrgencia(o.id);
-    if (urg.nivel === 'sin-evento') score += 5; // suelo mínimo: nunca desaparece
+    // Urgencia calendario — movements inherit from parent obra
+    const urg = computeUrgencia(rootObraId);
+    if (urg.nivel === 'sin-evento') score += 5;
     else score += Math.min(60, urg.score * 4);
 
-    // Tiempo desde último pase
-    if (!o.lastPase) score += 15;
+    // Tiempo desde último pase (movement-aware)
+    const lastPaseDate = o.lastPase;
+    if (!lastPaseDate) score += 15;
     else {
-      const dias = Math.floor((now - new Date(o.lastPase)) / 86400000);
+      const dias = Math.floor((now - new Date(lastPaseDate)) / 86400000);
       if (fase === 'consolidando' && dias > 2) score += 10;
       if (fase === 'mantenimiento' && dias > 7) score += 8;
       if (o.origen === 'recuperacion' && dias > 1) score += 12;
-      // Garantía de cobertura semanal: si no aparece en 7 días, boost fuerte
-      const diasSinSesion = db.sesiones
+      const { movId } = parsePlanId(planId);
+      const fueEnSesion = db.sesiones
         .filter(s => (now - new Date(s.date)) <= 7 * 86400000)
         .flatMap(s => s.items || [])
-        .some(it => it.obraId === o.id) ? 0 : 7;
-      if (diasSinSesion > 0) score += 18;
+        .some(it => movId
+          ? (it.obraId === rootObraId && it.movId === movId)
+          : (it.obraId === rootObraId && !it.movId));
+      if (!fueEnSesion) score += 18;
     }
 
-    // Historial de ticks
-    const lastTick = getLastTickForObra(o.id);
+    // Historial de ticks (movement-aware)
+    const lastTick = getLastTickForEntity(planId);
     if (lastTick) {
       if (lastTick.tick === 'saltado') score += 25;
       else if (lastTick.tick === 'parcial') score += 12;
       else if (lastTick.tick === 'hecho') score -= 8;
     }
-    const recent = getRecentTicksForObra(o.id, 3);
+    const recent = getRecentTicksForEntity(planId, 3);
     if (recent.length === 3 && recent.every(r => r.tick === 'hecho')) score -= 15;
 
-    // Solidez — baja solidez = más urgente de practicar
+    // Fatiga acumulada
+    if (cargaTotal > 80 && dif >= 5) score -= 15;
+    if (cargaTotal > 130 && dif >= 4) score -= 20;
+
+    // Solidez — baja solidez = más urgente
     if (o.solHistory && o.solHistory.length) {
       const solActual = normalizeSolVal(o.solHistory[0].val);
-      // Inversamente proporcional: sol=0 → +35pts, sol=50 → ~17pts, sol=100 → 0pts
       score += Math.round((100 - solActual) / 100 * 35);
-      // Caída reciente de solidez: boost extra si bajó respecto a la sesión anterior
       if (o.solHistory.length >= 2) {
         const solPrev = normalizeSolVal(o.solHistory[1].val);
         const caida = solPrev - solActual;
@@ -4073,12 +4249,15 @@ function generateSession() {
       }
     }
 
-    // Penalización por fatiga acumulada total (no solo hoy)
-    if (cargaTotal > 80 && dif >= 5) score -= 15;
-    if (cargaTotal > 130 && dif >= 4) score -= 20;
-
     return { ...o, score, dif, dur, fase };
-  }).sort((a, b) => b.score - a.score);
+  }
+
+  // scoredObras: whole-obra scoring for concierto mode (plays full pieces)
+  const scoredObras = obras.map(o => scoreEntity(o, o.id)).sort((a, b) => b.score - a.score);
+
+  // scored: entity-level — each movement of multi-movement obras is independent
+  const allEntities = buildPlanEntities(obras);
+  const scored = allEntities.map(o => scoreEntity(o, o._obraId || o.id)).sort((a, b) => b.score - a.score);
 
   // ── Construir plan ────────────────────────────────────────────────────────
   let currentPlanLocal = [];
@@ -4115,19 +4294,27 @@ function generateSession() {
       : 'tiempo reducido — un pase enfocado';
 
     // Tipo de pase sugerido basado en M/T/L
-    const pa = analizarPases(elegida.id);
+    const pa = elegida._isMovimiento ? null : analizarPases(elegida.id);
     const tipoSug = obraTipoPase(elegida) || 'concierto';
+    const micropaseTitle = elegida._isMovimiento
+      ? `Micropase · ${totalMin} min · ${elegida._parentName} – ${elegida.name}`
+      : `Micropase · ${totalMin} min · ${tipoSug}`;
 
     html += `<div class="session-type-banner micropase">
-      <div class="session-type-title">Micropase · ${totalMin} min · ${tipoSug}</div>
+      <div class="session-type-title">${micropaseTitle}</div>
     </div>`;
-    html += renderMicropaseItem(elegida, totalMin, tipoSug);
+    if (elegida._isMovimiento) {
+      html += renderMovimientoPlanItem(elegida, 0, elegida.duracion || totalMin, selectedEnergy, cargaTotal);
+    } else {
+      html += renderMicropaseItem(elegida, totalMin, tipoSug);
+    }
 
   // ── RONDA DE CONCIERTO ────────────────────────────────────────────────────
   } else if (tipoSesion === 'concierto') {
     let tiempoRestante = totalMin;
     const seleccionadas = [];
-    for (const o of scored.filter(x => obraFase(x) !== 'digitando' && x.origen !== 'recuperacion')) {
+    // concierto uses scoredObras: full pieces (movimientos not split here)
+    for (const o of scoredObras.filter(x => obraFase(x) !== 'digitando' && x.origen !== 'recuperacion')) {
       const dur = (o.duracion || 8) + 2;
       if (tiempoRestante - dur >= 0) { seleccionadas.push(o); tiempoRestante -= dur; }
       if (seleccionadas.length >= 6) break;
@@ -4150,8 +4337,8 @@ function generateSession() {
     const baseMaxObras =
       totalMin <= 65  ? 3 :
       totalMin <= 100 ? 4 :
-      totalMin <= 145 ? 4 :
-      totalMin <= 200 ? 5 : 6;
+      totalMin <= 145 ? 5 :
+      totalMin <= 200 ? 6 : 7;
     const maxObras =
       selectedEnergy === 'alta' ? baseMaxObras + 1 :
       selectedEnergy === 'baja' ? Math.max(3, baseMaxObras - 1) : baseMaxObras;
@@ -4161,11 +4348,25 @@ function generateSession() {
       : scored;
     let pool = filtered.length === 0 ? scored : filtered;
     if (cargaTotal > 80) pool = pool.filter(o => (o.dificultad || 3) <= 5);
-    currentPlanLocal = pool.slice(0, maxObras);
 
-    // ── Tiempos base por obra ────────────────────────────────────────────────
+    // Smart deduplication: if an obra appears as multiple movements, group them together
+    // so one multi-movement obra doesn't crowd out other obras entirely.
+    // Strategy: limit max movements per obra to 2 within a single session (unless very short session)
+    const maxMovsPerObra = totalMin >= 90 ? 3 : 2;
+    const obraMovCount = {};
+    const poolFiltered = [];
+    for (const entity of pool) {
+      const oid = entity._obraId || entity.id;
+      obraMovCount[oid] = (obraMovCount[oid] || 0) + 1;
+      if (obraMovCount[oid] <= maxMovsPerObra) poolFiltered.push(entity);
+      if (poolFiltered.length >= maxObras) break;
+    }
+    currentPlanLocal = poolFiltered;
+
+    // ── Tiempos base por entidad (obra o movimiento) ────────────────────────
     const tiemposBase = currentPlanLocal.map(o => {
-      const dur = o.duracion || 8;
+      // For movements without explicit duracion, estimate from compases or use 15min default
+      const dur = o.duracion || (o.compasesTotal ? Math.max(8, Math.round(o.compasesTotal / 20)) : 15);
       const fase = obraFase(o);
       let minimo;
       if (fase === 'mantenimiento')    minimo = dur + Math.max(3, Math.round(dur * 0.25));
@@ -4178,9 +4379,10 @@ function generateSession() {
     // ── Distribuir surplus ───────────────────────────────────────────────────
     const totalMinimos = tiemposBase.reduce((s, m) => s + m, 0);
     const surplus = Math.max(0, totalMin - totalMinimos);
-    const weights = currentPlanLocal.map(o =>
-      Math.max(1, (computeUrgencia(o.id).score || 1)) * (o.dificultad || 3)
-    );
+    const weights = currentPlanLocal.map(o => {
+      const rootId = o._obraId || o.id;
+      return Math.max(1, (computeUrgencia(rootId).score || 1)) * (o.dificultad || 3);
+    });
     const totalWeight = weights.reduce((s, w) => s + w, 0) || 1;
 
     // Redondear a 5 min (mín 10)
@@ -4201,8 +4403,31 @@ function generateSession() {
       ${cargaTotal > 80 ? '<span style="color:var(--orange)">Carga alta — obras filtradas por dificultad</span>' : ''}
     </div>`;
 
-    currentPlanLocal.forEach((obra, i) => {
-      html += renderTrabajoItem(obra, i, minPorObra[i], selectedEnergy, cargaTotal, analizarPases(obra.id));
+    // Group consecutive movement entities under their parent obra header
+    let lastObraIdSeen = null;
+    currentPlanLocal.forEach((entity, i) => {
+      if (entity._isMovimiento) {
+        if (entity._obraId !== lastObraIdSeen) {
+          // Emit a subtle obra-group header
+          const obra = entity._obraRef || findObra(entity._obraId);
+          const urgInfo = computeUrgencia(entity._obraId);
+          const urgSpan = urgInfo.nivel !== 'sin-evento'
+            ? ' <span style="font-size:9px;color:' + urgInfo.color + '">' + urgInfo.label + ' · ' + urgInfo.dias + 'd</span>'
+            : '';
+          html += '<div style="font-size:10px;color:var(--text3);letter-spacing:0.07em;text-transform:uppercase;'
+            + 'padding:6px 4px 4px;margin-top:' + (lastObraIdSeen ? '10px' : '0') + ';'
+            + 'border-top:' + (lastObraIdSeen ? '1px solid var(--border2)' : 'none') + '">'
+            + '<span style="color:var(--text2);font-family:\"Cormorant Garamond\",serif;font-size:14px;text-transform:none">'
+            + entity._parentName + '</span>'
+            + (entity.composer ? ' <span style="font-size:9px;font-style:italic">' + entity.composer + '</span>' : '')
+            + urgSpan + '</div>';
+          lastObraIdSeen = entity._obraId;
+        }
+        html += renderMovimientoPlanItem(entity, i, minPorObra[i], selectedEnergy, cargaTotal);
+      } else {
+        lastObraIdSeen = null; // reset grouping context
+        html += renderTrabajoItem(entity, i, minPorObra[i], selectedEnergy, cargaTotal, analizarPases(entity._obraId || entity.id));
+      }
     });
   }
 
@@ -4241,6 +4466,90 @@ function renderMicropaseItem(obra, totalMin, tipoSug) {
     '<input type="number" class="tick-min-input" id="tmin-' + obra.id + '" min="1" max="480" step="5" value="' + minPlan + '" placeholder="' + minPlan + '" oninput="updateMinDiff(\'' + obra.id + '\',' + minPlan + ');saveDraft()" style="width:58px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:4px 7px;color:var(--accent);font-family:\'JetBrains Mono\',monospace;font-size:12px;text-align:center">' +
     '<span style="font-size:9px;color:var(--text3)">/ ' + minPlan + ' planif.</span>' +
     '<span id="tickmin-diff-' + obra.id + '" style="font-size:9px"></span></div></div>';
+}
+
+function renderMovimientoPlanItem(entity, i, minAsignado, energia, cargaTotal) {
+  const planId = entity._planId;
+  const fase = entity.fase || obraFase(entity);
+  const urgObra = computeUrgencia(entity._obraId);
+
+  // --- Sugerencia de actividad según fase del movimiento ---
+  let actividad = '';
+  let sugerencias = '';
+  if (fase === 'digitando') {
+    actividad = 'estudio · digitación';
+    const pct = compasPercent(entity);
+    if (pct !== null) sugerencias = 'cc. ' + (entity.compasActual || 0) + '/' + entity.compasesTotal + ' (' + pct + '%)';
+  } else if (fase === 'consolidando') {
+    const urgNivel = urgObra.nivel;
+    const paseFirst = urgNivel === 'critico' || urgNivel === 'urgente' || i === 0;
+    actividad = paseFirst ? 'pase · estudio' : 'estudio · pase';
+    const sol = entity.sol || 1;
+    sugerencias = 'sol ' + sol + '/10';
+  } else {
+    actividad = 'pase de mantenimiento';
+    const sol = entity.sol || 1;
+    sugerencias = 'sol ' + sol + '/10';
+    if (entity.lastPase) {
+      const dias = Math.floor((Date.now() - new Date(entity.lastPase)) / 86400000);
+      sugerencias += ' · último ' + dias + 'd';
+    }
+  }
+
+  // --- Badges ---
+  const urgBadge = urgObra.nivel !== 'sin-evento'
+    ? '<span style="font-size:9px;color:' + urgObra.color + ';margin-left:6px">' + urgObra.label + ' · ' + urgObra.dias + 'd</span>'
+    : '';
+  const lastTick = getLastTickForEntity(planId);
+  const tickBadge = lastTick?.tick
+    ? '<span style="font-size:10px;color:' + ({hecho:'var(--green)',parcial:'var(--orange)',saltado:'var(--red)'}[lastTick.tick]) + ';margin-left:4px">'
+      + ({hecho:'✓',parcial:'≈',saltado:'✗'}[lastTick.tick]) + '</span>'
+    : '';
+
+  const faseLabel = obraFaseLabel(entity);
+  const faseBadge = '<span style="font-size:8px;padding:1px 6px;border-radius:6px;background:' + faseLabel.color + '22;color:' + faseLabel.color + ';border:1px solid ' + faseLabel.color + '44">' + faseLabel.label + '</span>';
+
+  sessionMinPlan[planId] = minAsignado;
+
+  const minRow = '<div class="tick-min-row" id="tickmin-' + planId + '" style="display:none;margin-top:6px;align-items:center;gap:8px;flex-wrap:wrap">'
+    + '<span style="font-size:9px;color:var(--text3)">minutos reales:</span>'
+    + '<input type="number" class="tick-min-input" id="tmin-' + planId + '" min="1" max="480" step="5" value="' + minAsignado + '"'
+    + ' oninput="updateMinDiff(\'' + planId + '\',' + minAsignado + ');saveDraft()"'
+    + ' style="width:58px;background:var(--bg3);border:1px solid var(--border);border-radius:4px;padding:4px 7px;color:var(--accent);font-family:\'JetBrains Mono\',monospace;font-size:12px;text-align:center">'
+    + '<span style="font-size:9px;color:var(--text3)">/ ' + minAsignado + ' planif.</span>'
+    + '<span id="tickmin-diff-' + planId + '" style="font-size:9px"></span></div>';
+
+  return '<div class="plan-item plan-item-mov">'
+    + '<div class="plan-item-top">'
+    + '<div class="plan-item-num" style="font-size:11px;opacity:0.6">' + (i + 1) + '.</div>'
+    + '<div class="plan-item-content">'
+    // Parent obra subtitle
+    + '<div style="font-size:9px;color:var(--text3);margin-bottom:3px;display:flex;align-items:center;gap:6px">'
+    + '<span>' + entity._parentName + (entity.composer ? ' <em>· ' + entity.composer + '</em>' : '') + '</span>'
+    + urgBadge + tickBadge
+    + '</div>'
+    // Movement name as title
+    + '<div class="plan-item-name" style="font-size:16px">' + entity.name + '</div>'
+    + '<div style="margin-top:4px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">'
+    + '<div class="plan-item-detail" style="margin:0">' + actividad + (sugerencias ? ' · ' + sugerencias : '') + '</div>'
+    + faseBadge
+    + '</div>'
+    + '</div>'
+    + '<div class="plan-item-time" style="text-align:right"><div>~' + minAsignado + 'min</div>'
+    + (entity.duracion ? '<div style="font-size:8px;color:var(--text3);margin-top:2px">' + entity.duracion + 'min mov.</div>' : '')
+    + '</div>'
+    + '</div>'
+    // objetivo
+    + '<div class="objetivo-row"><input class="objetivo-input" id="obj-' + planId + '" type="text" placeholder="objetivo de hoy..."></div>'
+    // tick buttons
+    + '<div class="tick-row">'
+    + '<button class="tick-btn" onclick="setTick(\'' + planId + '\',\'hecho\',this,' + minAsignado + ')">✓ Hecho</button>'
+    + '<button class="tick-btn" onclick="setTick(\'' + planId + '\',\'saltado\',this,' + minAsignado + ')">✗ Saltado</button>'
+    + '<input class="tick-note" id="tnote-' + planId + '" type="text" placeholder="nota...">'
+    + '</div>'
+    + renderSolRatingRow(planId)
+    + minRow
+    + '</div>';
 }
 
 function renderConciertoItem(obra, i, minDeadlineDays) {
@@ -4337,7 +4646,7 @@ function renderTrabajoItem(obra, i, minAsignado, energia, cargaTotal, paseAnalis
     '<div class="plan-item-name" onclick="openObraDetalleSession(\'' + obra.id + '\')" style="cursor:pointer;text-decoration:underline dotted var(--border)">' + obra.name + recBadge + tipoPaseBadge + urgBadge + tickBadge + ' <span style="font-size:11px;color:var(--text3);font-style:italic">' + obra.composer + '</span></div>' +
     '<div class="plan-item-detail">' + detailLines.join('<br>') + '</div></div>' +
     '<div class="plan-item-time" style="text-align:right"><div>~' + minAsignado + 'min</div>' +
-    (obra.duracion ? '<div style="font-size:8px;color:var(--text3);margin-top:2px">' + obra.duracion + 'min obra</div>' : '') + '</div></div>' +
+    '</div></div>' +
     '<div class="objetivo-row"><input class="objetivo-input" id="obj-' + obra.id + '" type="text" placeholder="objetivo de hoy..."></div>' +
     '<div class="tick-row"><button class="tick-btn" onclick="setTick(\'' + obra.id + '\',\'hecho\',this,' + minAsignado + ')">✓ Hecho</button>' +
     '<button class="tick-btn" onclick="setTick(\'' + obra.id + '\',\'saltado\',this,' + minAsignado + ')">✗ Saltado</button>' +
@@ -7040,6 +7349,36 @@ function applyZoom(z) {
   }
 }
 
+function editHeaderTitle() {
+  const el = document.getElementById('headerTitle');
+  if (!el) return;
+  const current = localStorage.getItem('alberto_app_title') || 'Planificador de estudio';
+  const input = document.createElement('input');
+  input.value = current;
+  input.style.cssText = 'background:transparent;border:none;border-bottom:1px solid var(--border);color:inherit;font:inherit;width:180px;outline:none;text-align:center;padding:0';
+  el.textContent = '';
+  el.appendChild(input);
+  input.focus();
+  input.select();
+  const save = () => {
+    const val = input.value.trim() || 'Planificador de estudio';
+    localStorage.setItem('alberto_app_title', val);
+    document.title = val;
+    el.textContent = val;
+  };
+  input.onblur = save;
+  input.onkeydown = e => { if (e.key === 'Enter') { e.preventDefault(); input.blur(); } if (e.key === 'Escape') { el.textContent = current; } };
+}
+
+function loadAppTitle() {
+  const saved = localStorage.getItem('alberto_app_title');
+  if (saved) {
+    const el = document.getElementById('headerTitle');
+    if (el) el.textContent = saved;
+    document.title = saved;
+  }
+}
+
 function setTheme(theme, btn) {
   document.documentElement.setAttribute('data-theme', theme);
   localStorage.setItem('alberto_theme', theme);
@@ -7048,7 +7387,7 @@ function setTheme(theme, btn) {
 }
 
 function loadTheme() {
-  const theme = localStorage.getItem('alberto_theme') || '';
+  const theme = localStorage.getItem('alberto_theme') || 'cozy';
   const font  = localStorage.getItem('alberto_font')  || 'mono';
   const size  = localStorage.getItem('alberto_size')  || 'normal';
   const zooms = { small: 0.82, normal: 1, large: 1.22, xlarge: 1.5 };
@@ -7188,12 +7527,12 @@ saveSession = function() {
 };
 
 const _origSetTick = setTick;
-setTick = function(obraId, tick, btn, minPlan) {
+setTick = function(planId, tick, btn, minPlan) {
   // 'hecho' opens modal — sound plays on confirm in closeHechoDatos
   if (tick === 'saltado') SFX.skip();
   else if (tick !== 'hecho') SFX.open();
   btn.classList.remove('tick-pop'); void btn.offsetWidth; btn.classList.add('tick-pop');
-  _origSetTick(obraId, tick, btn, minPlan);
+  _origSetTick(planId, tick, btn, minPlan);
 };
 
 const _origOpenModal = openModal;
@@ -7208,6 +7547,7 @@ confirmPase = function() { SFX.pase(); _origConfirmPase(); };
 
 updateHeader();
 loadTheme();
+loadAppTitle();
 spawnNotes();
 // Restore any in-progress session from today
 loadDraft();
