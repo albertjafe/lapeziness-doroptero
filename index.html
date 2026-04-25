@@ -2545,18 +2545,21 @@
 // ─── DATA ───────────────────────────────────────────────────────────────────
 
 const DB_KEY = 'alberto_piano_v2';
+// Auth & sync globals — declared with var to avoid TDZ errors
+var _authMode = 'login';
+var _sbClient = null;
+var _saveTimeout = null;
 const SUPABASE_URL = 'https://fexfeekifzgszluemihs.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_Elra9S5SZVWELp6MvKSyoA_iBW5KqD2';
 
-let _sb = null;
 function getSB() {
-  if (_sb) return _sb;
+  if (_sbClient) return _sbClient;
   // Check supabase global is available
   if (typeof supabase === 'undefined' || typeof supabase.createClient !== 'function') {
     throw new Error('La librería de Supabase no cargó. Comprueba tu conexión a internet.');
   }
-  _sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-  return _sb;
+  _sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  return _sbClient;
 }
 
 function loadData() {
@@ -2577,13 +2580,12 @@ function loadData() {
   return getDefaultData();
 }
 
-let _saveTimeout = null;
 function saveData() {
   // 1. Save to localStorage immediately (always works offline)
   localStorage.setItem(DB_KEY, JSON.stringify(db));
   // 2. Debounced save to Supabase
   clearTimeout(_saveTimeout);
-  _saveTimeout = setTimeout(() => syncToCloud(), 1500);
+  _saveTimeout = setTimeout(function() { syncToCloud(); }, 1500);
 }
 
 async function syncToCloud() {
@@ -8589,7 +8591,6 @@ document.addEventListener('click', function(e) {
 
 // ─── AUTH & SUPABASE INIT ─────────────────────────────────────────────────────
 
-let _authMode = 'login'; // 'login' | 'signup'
 
 function toggleAuthMode() {
   _authMode = _authMode === 'login' ? 'signup' : 'login';
@@ -8715,34 +8716,53 @@ async function initApp() {
 
   // Try Supabase auth
   try {
+    if (typeof supabase === 'undefined') {
+      throw new Error('Supabase not loaded');
+    }
     const sb = getSB();
     const { data: { session } } = await sb.auth.getSession();
     if (session) {
       await onAuthSuccess();
     } else {
-      // Show login screen
-      document.getElementById('authScreen').style.display = 'flex';
+      // Show login screen — already visible by default
     }
-    // Listen for auth changes (e.g. token refresh)
+    // Listen for auth changes
     sb.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && session) {
-        if (document.getElementById('authScreen').style.display !== 'none') {
+        const authEl = document.getElementById('authScreen');
+        if (authEl && authEl.style.display !== 'none') {
           await onAuthSuccess();
         }
       }
       if (event === 'SIGNED_OUT') {
-        document.getElementById('authScreen').style.display = 'flex';
+        const authEl = document.getElementById('authScreen');
+        if (authEl) authEl.style.display = 'flex';
       }
     });
   } catch(e) {
-    // Supabase unavailable — run in offline mode
-    console.warn('Offline mode:', e);
+    // Supabase unavailable — hide auth, work offline
+    console.warn('Offline mode:', e.message);
+    const authEl = document.getElementById('authScreen');
+    if (authEl) authEl.style.display = 'none';
   }
 }
 
 // ─── INIT ────────────────────────────────────────────────────────────────────
 
 initApp();
+
+// Check Supabase loaded - show visible error if not
+window.addEventListener('load', function() {
+  if (typeof supabase === 'undefined') {
+    const errEl = document.getElementById('authError');
+    const stEl  = document.getElementById('authStatus');
+    if (errEl) errEl.textContent = 'Error: no se pudo cargar Supabase. Comprueba tu conexión.';
+    if (stEl)  stEl.textContent  = 'La app funciona en modo offline (datos solo locales).';
+    // Still show the app — hide auth screen and work offline
+    const authEl = document.getElementById('authScreen');
+    if (authEl) authEl.style.display = 'none';
+  }
+});
 
 // Allow Enter key in auth form
 document.addEventListener('keydown', e => {
