@@ -3249,62 +3249,108 @@ function closeRatingSesion(save) {
 
 function openAddExtra() {
   const select = document.getElementById('extraObraSelect');
-  const planIds = new Set(currentPlan.map(e => e._obraId || e.id));
+  const planIds = new Set(currentPlan.map(e => e._planId || e.id));
+
   const obras = (db.obras || []).sort((a, b) => a.name.localeCompare(b.name));
-  select.innerHTML = '<option value="">— selecciona una obra —</option>' +
-    obras.map(o => '<option value="' + o.id + '"' + (planIds.has(o.id) ? ' style="color:var(--text3)"' : '') + '>'
-      + o.name + (o.composer ? ' · ' + o.composer : '')
-      + (planIds.has(o.id) ? ' (ya en plan)' : '') + '</option>').join('');
+  let opts = '<option value="">— selecciona —</option>';
+
+  obras.forEach(o => {
+    const movs = (o.movimientos || []).filter(m => m.name);
+    if (!movs.length) {
+      // Obra sin movimientos — entrada directa
+      const inPlan = currentPlan.some(e => (e._obraId || e.id) === o.id && !e._movId && !e._isExtra);
+      opts += '<option value="obra::' + o.id + '"' + (inPlan ? ' style="color:var(--text3)"' : '') + '>'
+        + o.name + (o.composer ? ' · ' + o.composer : '')
+        + (inPlan ? ' (ya en plan)' : '') + '</option>';
+    } else {
+      // Obra con movimientos — mostrar como grupo con cada movimiento
+      opts += '<option value="" disabled style="color:var(--text3);font-style:italic">── ' + o.name
+        + (o.composer ? ' · ' + o.composer : '') + ' ──</option>';
+      movs.forEach(m => {
+        const inPlan = currentPlan.some(e => (e._obraId || e.id) === o.id && e._movId === m.id && !e._isExtra);
+        opts += '<option value="mov::' + o.id + '::' + m.id + '"' + (inPlan ? ' style="color:var(--text3)"' : '') + '>'
+          + '  ' + m.name + (m.duracion ? ' (' + m.duracion + ' min)' : '')
+          + (inPlan ? ' (ya en plan)' : '') + '</option>';
+      });
+    }
+  });
+
+  select.innerHTML = opts;
   const minEl = document.getElementById('extraMinutos');
   if (minEl) minEl.value = '';
   openModal('modalExtraObra');
 }
 
 function confirmAddExtra() {
-  const obraId = document.getElementById('extraObraSelect')?.value;
+  const val = document.getElementById('extraObraSelect')?.value;
   const minutos = parseInt(document.getElementById('extraMinutos')?.value) || 0;
-  if (!obraId) { showToast('Selecciona una obra'); return; }
-  const obra = findObra(obraId);
-  if (!obra) return;
+  if (!val) { showToast('Selecciona una obra o movimiento'); return; }
+
+  let obra, mov, displayName, obraId, movId;
+
+  if (val.startsWith('mov::')) {
+    const parts = val.split('::');
+    obraId = parts[1]; movId = parts[2];
+    obra = findObra(obraId);
+    mov  = obra?.movimientos?.find(m => m.id === movId);
+    if (!obra || !mov) return;
+    displayName = obra.name + ' · ' + mov.name;
+  } else {
+    obraId = val.replace('obra::', '');
+    obra = findObra(obraId);
+    if (!obra) return;
+    movId = null;
+    displayName = obra.name;
+  }
 
   closeModal('modalExtraObra');
 
-  // Build a pseudo-entity for the plan
-  const extraId = 'extra_' + obraId + '_' + Date.now();
+  const extraId = 'extra_' + obraId + (movId ? '_' + movId : '') + '_' + Date.now();
+  const baseEntity = movId ? { ...mov, _parentName: obra.name, composer: obra.composer } : { ...obra };
+
   const extraEntity = {
-    ...obra,
+    ...baseEntity,
     _planId: extraId,
     _obraId: obraId,
+    _movId: movId || null,
+    _isMovimiento: !!movId,
     _isExtra: true,
+    _displayName: displayName,
   };
-  currentPlan.push(extraEntity);
-  sessionMinPlan[extraId] = minutos || 20;
 
-  // Render and append the item
+  currentPlan.push(extraEntity);
+  sessionMinPlan[extraId] = minutos || (mov?.duracion || obra?.duracion || 20);
+
   const planDiv = document.getElementById('sessionPlan');
-  const saveBtn = planDiv.querySelector('.save-session-btn');
   const addBtn  = planDiv.querySelector('.add-extra-btn');
+  const saveBtn = planDiv.querySelector('.save-session-btn');
 
   const wrapper = document.createElement('div');
-  wrapper.innerHTML = renderExtraItem(extraEntity, minutos);
-  if (saveBtn) planDiv.insertBefore(wrapper.firstChild, addBtn || saveBtn);
+  wrapper.innerHTML = renderExtraItem(extraEntity, sessionMinPlan[extraId]);
+  planDiv.insertBefore(wrapper.firstChild, addBtn || saveBtn);
 
   SFX.add();
-  showToast('Añadida: ' + obra.name);
+  showToast('Añadido: ' + displayName);
 }
 
 function renderExtraItem(entity, minutos) {
-  const planId = entity._planId;
-  const obraId = entity._obraId || entity.id;
+  const planId  = entity._planId;
+  const obraId  = entity._obraId || entity.id;
   const minPlan = minutos || 20;
   sessionMinPlan[planId] = minPlan;
 
-  return '<div class="plan-item" style="border-left:2px solid var(--accent);opacity:0.92">' +
+  const displayName = entity._displayName || entity.name;
+  const subName = entity._isMovimiento
+    ? (entity._parentName || '') + ' · ' + entity.name
+    : (entity.composer || '');
+
+  return '<div class="plan-item" style="border-left:2px solid var(--accent);opacity:0.95">' +
     '<div class="plan-item-top">' +
       '<div class="plan-item-num" style="color:var(--accent);font-size:10px">＋</div>' +
       '<div class="plan-item-content">' +
         '<div class="plan-item-name" onclick="openObraDetalleSession(\'' + obraId + '\')" style="cursor:pointer;text-decoration:underline dotted var(--border)">' +
-          entity.name + ' <span style="font-size:11px;color:var(--text3);font-style:italic">' + (entity.composer || '') + '</span>' +
+          (entity._isMovimiento ? entity.name : displayName) +
+          ' <span style="font-size:11px;color:var(--text3);font-style:italic">' + subName + '</span>' +
           '<span style="font-size:8px;background:var(--accent);color:var(--bg);border-radius:3px;padding:1px 5px;margin-left:6px">extra</span>' +
         '</div>' +
       '</div>' +
@@ -4470,11 +4516,12 @@ function updatePasajeSolSlider(pasajeId, momento, val) {
 }
 
 function openHechoDatos(planId, minPlan) {
-  const { obraId: parsedObraId, movId } = parsePlanId(planId);
+  const { obraId: parsedObraId, movId: parsedMovId } = parsePlanId(planId);
 
-  // For extra obras, planId doesn't match obraId directly — look it up in currentPlan
+  // For extra obras, look up the entity in currentPlan to get correct obraId/movId
   const planEntity = currentPlan.find(e => (e._planId || e.id) === planId);
   const obraId = planEntity ? (planEntity._obraId || planEntity.id) : parsedObraId;
+  const movId  = planEntity ? (planEntity._movId || null) : parsedMovId;
 
   _hechoPlanId = planId;
   _hechoObraId = obraId;
