@@ -1189,7 +1189,7 @@
   .forest-obra-select:focus { outline: none; border-color: var(--border); }
   .forest-section-label { font-size: 8px; color: var(--text3); letter-spacing: 0.15em; text-transform: uppercase; padding: 10px 0 5px; border-bottom: 1px solid var(--border2); margin-bottom: 4px; }
   /* SETTINGS BTN */
-  .settings-icon { background: none; border: 1px solid var(--border2); border-radius: 6px; color: var(--text3); font-size: 14px; cursor: pointer; padding: 5px 9px; transition: all 0.2s; }
+  .settings-icon { background: none; border: 1px solid var(--border2); border-radius: 6px; color: var(--text3); font-size: 18px; cursor: pointer; padding: 5px 10px; transition: all 0.2s; }
   .settings-icon:hover { border-color: var(--border); color: var(--accent); }
   /* SETTINGS MODAL THEMES */
   .theme-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 4px; }
@@ -1200,8 +1200,8 @@
   .settings-section { font-size: 9px; color: var(--text3); letter-spacing: 0.2em; text-transform: uppercase; margin: 16px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border2); }
   /* HISTORIAL SESIONES */
   .sesion-hist-item { background: var(--bg2); border-left: 2px solid var(--border); padding: 10px 14px; margin-bottom: 8px; border-radius: 0 6px 6px 0; }
-  .sesion-hist-date { font-size: 9px; color: var(--accent); margin-bottom: 6px; }
-  .sesion-hist-obra { display: flex; align-items: center; gap: 8px; font-size: 10px; color: var(--text2); margin-bottom: 3px; }
+  .sesion-hist-date { font-size: 11px; color: var(--accent); margin-bottom: 6px; }
+  .sesion-hist-obra { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--text2); margin-bottom: 3px; }
   .sesion-tick { font-size: 11px; }
   /* PASE QUALITY */
   .pase-q-row { display: flex; gap: 6px; margin-top: 8px; }
@@ -1838,7 +1838,7 @@
 <body>
 
 <!-- AUTH SCREEN -->
-<div id="authScreen" style="display:none">
+<div id="authScreen">
   <div class="auth-card">
     <div class="auth-title">♩ Estudio</div>
     <div class="auth-sub" id="authMode">Iniciar sesión</div>
@@ -1876,7 +1876,7 @@
       <text x="22" y="7" font-size="7" fill="var(--accent2)" opacity="0.5" font-family="serif">♩</text>
     </svg>
     <div>
-      <div class="header-title" id="headerTitle" onclick="editHeaderTitle()" title="Pulsa para editar" style="cursor:pointer">Planificador de estudio</div>
+      <div class="header-title" id="headerTitle" onclick="editHeaderTitle()" title="Pulsa para editar" style="cursor:pointer"><span style="color:var(--accent);margin-right:5px">♩</span>Planificador de estudio</div>
       <div class="header-date" id="headerDate"></div>
     </div>
   </div>
@@ -8634,9 +8634,12 @@ async function doAuth() {
 }
 
 async function onAuthSuccess() {
+  // Hide auth screen immediately
+  const authEl = document.getElementById('authScreen');
+  if (authEl) authEl.style.display = 'none';
+
   const reloaded = await loadFromCloud();
   if (reloaded) {
-    // Re-render everything with cloud data
     renderObras();
     renderCalendario();
     if (document.getElementById('view-historial').classList.contains('active')) {
@@ -8646,9 +8649,6 @@ async function onAuthSuccess() {
     }
     updateHeader();
   }
-  // Hide auth, show app
-  document.getElementById('authScreen').style.display = 'none';
-  document.body.classList.remove('auth-visible');
 }
 
 async function initApp() {
