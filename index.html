@@ -2611,10 +2611,38 @@ async function loadFromCloud() {
     const sb = getSB();
     const { data: { user } } = await sb.auth.getUser();
     if (!user) return false;
+
     showSyncIndicator('↓ cargando…');
-    const { data, error } = await sb.from('user_data').select('data,updated_at').eq('id', user.id).single();
-    if (error || !data) return false;
-    // Compare timestamps: use cloud if newer
+    const { data, error } = await sb.from('user_data')
+      .select('data,updated_at').eq('id', user.id).single();
+
+    const hasCloudData = !error && data && data.data &&
+      (data.data.obras?.length > 0 || data.data.sesiones?.length > 0);
+
+    if (!hasCloudData) {
+      // Cloud is empty — upload whatever we have locally
+      const localRaw = localStorage.getItem(DB_KEY);
+      if (localRaw) {
+        try {
+          const localDb = JSON.parse(localRaw);
+          const hasLocalData = (localDb.obras?.length > 0 || localDb.sesiones?.length > 0);
+          if (hasLocalData) {
+            showSyncIndicator('↑ subiendo datos locales…');
+            await sb.from('user_data').upsert({
+              id: user.id,
+              data: localDb,
+              updated_at: new Date().toISOString()
+            });
+            showSyncIndicator('✓ datos subidos a la nube');
+            return false; // local is already loaded
+          }
+        } catch(e) {}
+      }
+      showSyncIndicator('✓ cuenta nueva');
+      return false;
+    }
+
+    // Cloud has data — compare timestamps
     const cloudDate = new Date(data.updated_at).getTime();
     const localRaw = localStorage.getItem(DB_KEY);
     let useCloud = true;
@@ -2622,20 +2650,31 @@ async function loadFromCloud() {
       try {
         const local = JSON.parse(localRaw);
         const localDate = local._savedAt ? new Date(local._savedAt).getTime() : 0;
-        useCloud = cloudDate > localDate;
+        // Only use local if it's more than 60 seconds newer (avoid race conditions)
+        useCloud = cloudDate >= (localDate - 60000);
       } catch(e) {}
     }
-    if (useCloud && data.data) {
+
+    if (useCloud) {
       db = data.data;
       db._savedAt = data.updated_at;
       localStorage.setItem(DB_KEY, JSON.stringify(db));
       showSyncIndicator('✓ sincronizado');
       return true;
     }
-    showSyncIndicator('✓ local más reciente');
+
+    // Local is newer — upload it
+    showSyncIndicator('↑ local más reciente, subiendo…');
+    await sb.from('user_data').upsert({
+      id: user.id,
+      data: db,
+      updated_at: new Date().toISOString()
+    });
+    showSyncIndicator('✓ sincronizado');
     return false;
+
   } catch(e) {
-    showSyncIndicator('✓ modo offline');
+    showSyncIndicator('offline');
     return false;
   }
 }
