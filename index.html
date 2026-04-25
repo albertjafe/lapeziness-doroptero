@@ -2798,14 +2798,17 @@ const ESTADO_COLORS = { energia: '#c8a030', claridad: '#6090d8', motivacion: '#5
 function resolveThemeBg2() {
   // Resolve --bg2 CSS variable to actual color by measuring a temp element
   try {
+    var parent = document.body || document.documentElement;
     var tmp = document.createElement('span');
     tmp.setAttribute('style', 'display:block;position:fixed;top:-9999px;left:-9999px;width:1px;height:1px;background:var(--bg2)');
-    document.body.appendChild(tmp);
+    parent.appendChild(tmp);
     var bg = window.getComputedStyle(tmp).backgroundColor;
-    document.body.removeChild(tmp);
+    parent.removeChild(tmp);
     if (bg && bg !== 'transparent' && bg !== 'rgba(0, 0, 0, 0)') return bg;
   } catch(e) {}
-  return '#e8ddd0'; // fallback: light cozy
+  // Fallback based on current theme
+  var t = document.documentElement.getAttribute('data-theme') || 'cozy';
+  return (t === 'noche' || t === 'estudio') ? '#2a2520' : '#e8ddd0';
 }
 
 function fillEstadoSlider(slider, color) {
@@ -8391,6 +8394,16 @@ function setTheme(theme, btn) {
 }
 
 function loadTheme() {
+  // Migration: reset noche to cozy on first run of new version
+  if (!localStorage.getItem('alberto_theme_v2_migrated')) {
+    localStorage.setItem('alberto_theme_v2_migrated', '1');
+    if (!localStorage.getItem('alberto_theme') || localStorage.getItem('alberto_theme') === 'noche') {
+      localStorage.setItem('alberto_theme', 'cozy');
+    }
+    if (!localStorage.getItem('alberto_size') || localStorage.getItem('alberto_size') === 'normal') {
+      localStorage.setItem('alberto_size', 'large');
+    }
+  }
   const theme = localStorage.getItem('alberto_theme') || 'cozy';
   const font  = localStorage.getItem('alberto_font')  || 'mono';
   const size  = localStorage.getItem('alberto_size')  || 'large';
@@ -8886,5 +8899,13 @@ if (window.ResizeObserver) {
   new ResizeObserver(adjustTopPadding).observe(document.querySelector('.topbar'));
 }
 </script>
+
 </body>
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function() {
+      navigator.serviceWorker.register('./sw.js');
+    });
+  }
+</script>
 </html>
