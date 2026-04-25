@@ -4369,76 +4369,45 @@ function stepCompas(delta) {
 }
 
 function updateCompasMeta() {
-  const entity = _hechoMovId ? findMovimiento(_hechoObraId, _hechoMovId) : findObra(_hechoObraId);
-  const posMeta = document.getElementById('compasPosMeta');
-  const metaEl  = document.getElementById('compasStepMeta');
-
-  if (!entity || !entity.compasesTotal) {
-    if (posMeta) posMeta.style.display = 'none';
-    if (metaEl) metaEl.textContent = '';
-    return;
-  }
-
-  const total = entity.compasesTotal;
-  const actual = _hechoCompasStep; // now absolute
-  const pct = Math.round((actual / total) * 100);
-  const antes = _hechoCompasAntes;
-  const avanzados = actual - antes;
-
-  if (posMeta) {
-    posMeta.style.display = 'block';
-    const absEl  = document.getElementById('compasAbsVal');
-    const metaS  = document.getElementById('compasAbsMeta');
-    const barEl  = document.getElementById('compasAbsBar');
-    const pctEl  = document.getElementById('compasAbsPct');
-    if (absEl)  absEl.textContent = actual;
-    if (metaS)  metaS.textContent = 'de ' + total + ' cc.';
-    if (barEl)  barEl.style.width = pct + '%';
-    if (pctEl)  pctEl.textContent = pct + '%';
-  }
-
-  if (metaEl) {
-    metaEl.innerHTML = avanzados > 0
-      ? '<span style="color:var(--green)">+' + avanzados + ' cc. de avance hoy</span>'
-      : avanzados < 0
-        ? '<span style="color:var(--orange)">' + avanzados + ' cc. (retroceso)</span>'
-        : '<span style="color:var(--text3)">sin cambio respecto al inicio</span>';
-  }
-}
-
-function updateCompasMeta() {
   const meta = document.getElementById('compasStepMeta');
   const posMeta = document.getElementById('compasPosMeta');
   const entity = _hechoMovId
     ? findMovimiento(_hechoObraId, _hechoMovId)
     : findObra(_hechoObraId);
+
   if (!entity || !entity.compasesTotal) {
     if (meta) meta.textContent = '';
     if (posMeta) posMeta.style.display = 'none';
     return;
   }
-  const nuevo = Math.min(entity.compasesTotal, _hechoCompasAntes + _hechoCompasStep);
-  const pct = Math.round((nuevo / entity.compasesTotal) * 100);
-  if (meta) {
-    meta.innerHTML = _hechoCompasStep > 0
-      ? '<span style="color:var(--text3)">+' + _hechoCompasStep + ' hoy</span>'
-      : '<span style="color:var(--text3)">sin avance</span>';
-  }
+
+  // _hechoCompasStep is now absolute current position
+  const actual = Math.max(0, Math.min(entity.compasesTotal, _hechoCompasStep));
+  const total = entity.compasesTotal;
+  const pct = Math.round((actual / total) * 100);
+  const avanzados = actual - _hechoCompasAntes;
+
   if (posMeta) {
     posMeta.style.display = 'block';
-    const barW = Math.round(pct);
     posMeta.innerHTML =
       '<div style="display:flex;align-items:baseline;justify-content:center;gap:6px;margin-bottom:5px">'
-      + '<span style="font-size:22px;font-weight:700;color:var(--accent)">' + nuevo + '</span>'
+      + '<span style="font-size:28px;font-weight:700;color:var(--accent)">' + actual + '</span>'
       + '<span style="font-size:11px;color:var(--text3)">de</span>'
-      + '<span style="font-size:16px;color:var(--text2)">' + entity.compasesTotal + '</span>'
+      + '<span style="font-size:18px;color:var(--text2)">' + total + '</span>'
       + '<span style="font-size:9px;color:var(--text3);margin-left:4px">compases (' + pct + '%)</span>'
       + '</div>'
-      + '<div style="height:4px;background:var(--bg2);border-radius:2px;overflow:hidden">'
-      + '<div style="height:100%;width:' + barW + '%;background:var(--accent);border-radius:2px;transition:width 0.2s"></div>'
-      + '</div>';
+      + '<div style="height:6px;background:var(--bg2);border-radius:3px;overflow:hidden;margin-bottom:4px">'
+      + '<div style="height:100%;width:' + pct + '%;background:var(--accent);border-radius:3px;transition:width 0.2s"></div>'
+      + '</div>'
+      + (avanzados !== 0 ? '<div style="font-size:9px;color:' + (avanzados > 0 ? 'var(--green)' : 'var(--orange)') + '">'
+        + (avanzados > 0 ? '+' : '') + avanzados + ' cc. hoy</div>' : '');
   }
+
+  const stepEl = document.getElementById('compasStepVal');
+  if (stepEl) stepEl.textContent = actual;
 }
+
+
 
 function selectMemLapse(yes, btn) {
   _memLapseYes = yes;
@@ -4501,7 +4470,12 @@ function updatePasajeSolSlider(pasajeId, momento, val) {
 }
 
 function openHechoDatos(planId, minPlan) {
-  const { obraId, movId } = parsePlanId(planId);
+  const { obraId: parsedObraId, movId } = parsePlanId(planId);
+
+  // For extra obras, planId doesn't match obraId directly — look it up in currentPlan
+  const planEntity = currentPlan.find(e => (e._planId || e.id) === planId);
+  const obraId = planEntity ? (planEntity._obraId || planEntity.id) : parsedObraId;
+
   _hechoPlanId = planId;
   _hechoObraId = obraId;
   _hechoMovId = movId;
