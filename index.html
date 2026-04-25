@@ -28,6 +28,21 @@
   /* SYNC INDICATOR */
   #syncIndicator { position:fixed;top:calc(env(safe-area-inset-top,0px) + 6px);left:50%;transform:translateX(-50%);font-size:9px;color:var(--text2);letter-spacing:0.05em;opacity:0;transition:opacity 0.4s;pointer-events:none;z-index:9999;background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:4px 12px;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.3); }
   #syncIndicator.visible { opacity:1; }
+
+  /* MOBILE OVERFLOW FIXES */
+  @media (max-width: 480px) {
+    .plan-item-top { flex-wrap: wrap; gap: 6px; }
+    .plan-item-time { min-width: 0; }
+    .tick-row { flex-wrap: wrap; }
+    .tick-note { min-width: 0; width: 100%; }
+    .compas-stepper { flex-wrap: wrap; gap: 6px; }
+    .obra-card { overflow: hidden; }
+    .estado-label { width: 54px; font-size: 7px; }
+    .estado-val { width: 24px; }
+    .header-title { font-size: 18px; }
+    .session-hero-title { font-size: 36px; }
+  }
+
   /* FUENTE CONFIGURABLE */
   :root {
     --ui-font: 'JetBrains Mono', monospace;
@@ -191,7 +206,7 @@
   .topbar {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     background: var(--bg);
-    padding-top: env(safe-area-inset-top, 0px);
+    padding-top: max(env(safe-area-inset-top, 0px), 10px);
   }
   .header {
     background: var(--bg);
@@ -2551,7 +2566,13 @@ function getSB() {
     throw new Error('La librería de Supabase no cargó. Comprueba tu conexión a internet.');
   }
   _sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-    auth: { persistSession: true, storageKey: 'piano_auth_v1', autoRefreshToken: true }
+    auth: {
+      persistSession: true,
+      storageKey: 'piano_auth_v1',
+      autoRefreshToken: true,
+      detectSessionInUrl: false,
+      storage: window.localStorage
+    }
   });
   return _sbClient;
 }
@@ -2777,8 +2798,12 @@ const ESTADO_COLORS = { energia: '#c8a030', claridad: '#6090d8', motivacion: '#5
 
 function fillEstadoSlider(slider, color) {
   if (!slider) return;
-  const pct = ((parseFloat(slider.value) - parseFloat(slider.min)) / (parseFloat(slider.max) - parseFloat(slider.min))) * 100;
-  slider.style.background = 'linear-gradient(to right,' + color + ' 0%,' + color + ' ' + pct + '%,var(--bg2) ' + pct + '%,var(--bg2) 100%)';
+  const min = parseFloat(slider.min) || 0;
+  const max = parseFloat(slider.max) || 100;
+  const val = parseFloat(slider.value) || 0;
+  const pct = ((val - min) / (max - min)) * 100;
+  const bg2 = getComputedStyle(document.documentElement).getPropertyValue('--bg2').trim() || '#2a2520';
+  slider.style.background = 'linear-gradient(to right,' + color + ' 0%,' + color + ' ' + pct + '%,' + bg2 + ' ' + pct + '%,' + bg2 + ' 100%)';
   slider.style.color = color;
 }
 
@@ -2800,6 +2825,8 @@ function initEstadoSliders() {
     if (!slider) return;
     slider.value = estadoDiario[dim];
     if (valEl) valEl.textContent = estadoDiario[dim];
+    // Set color AND fill the track
+    slider.style.color = ESTADO_COLORS[dim];
     fillEstadoSlider(slider, ESTADO_COLORS[dim]);
   });
 }
@@ -8352,7 +8379,7 @@ function setTheme(theme, btn) {
 function loadTheme() {
   const theme = localStorage.getItem('alberto_theme') || 'cozy';
   const font  = localStorage.getItem('alberto_font')  || 'mono';
-  const size  = localStorage.getItem('alberto_size')  || 'normal';
+  const size  = localStorage.getItem('alberto_size')  || 'large';
   const zooms = { small: 0.82, normal: 1, large: 1.22, xlarge: 1.5 };
   const z = zooms[size] || 1;
 
