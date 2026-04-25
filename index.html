@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Estudio">
 <title>Planificador de estudio</title>
 <link rel="manifest" href="manifest.json">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@300;400&family=Caveat:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   /* AUTH SCREEN */
@@ -19,10 +19,10 @@
   .auth-sub { font-size:9px;color:#7a6f66;letter-spacing:0.15em;text-transform:uppercase;text-align:center;margin-bottom:24px; }
   .auth-input { width:100%;background:#2a2520;border:1px solid #4a4540;border-radius:8px;padding:12px 14px;color:#e8ddd0;font-family:"JetBrains Mono",monospace;font-size:14px;margin-bottom:10px;box-sizing:border-box;outline:none;transition:border-color 0.2s; }
   .auth-input:focus { border-color:#c9a96e; }
-  .auth-btn { width:100%;padding:13px;background:#c9a96e;color:#1a1612;border:none;border-radius:8px;font-family:"Cormorant Garamond",serif;font-size:20px;cursor:pointer;margin-top:6px;transition:opacity 0.2s; }
+  .auth-btn { width:100%;padding:13px;background:#c9a96e;color:#1a1612;border:none;border-radius:8px;font-family:"Cormorant Garamond",serif;font-size:20px;cursor:pointer;margin-top:6px;transition:opacity 0.2s;user-select:none;-webkit-user-select:none; }
   .auth-btn:hover { opacity:0.85; }
   .auth-btn:disabled { opacity:0.45;cursor:default; }
-  .auth-toggle { text-align:center;margin-top:14px;font-size:10px;color:#7a6f66;cursor:pointer;text-decoration:underline; }
+  .auth-toggle { text-align:center;margin-top:14px;font-size:10px;color:#7a6f66;cursor:pointer;text-decoration:underline;user-select:none;-webkit-user-select:none; }
   .auth-error { font-size:10px;color:#c96e6e;text-align:center;margin-top:8px;min-height:16px; }
   .auth-status { font-size:9px;color:#7a6f66;text-align:center;margin-top:8px;min-height:14px; }
   /* SYNC INDICATOR */
@@ -2550,7 +2550,12 @@ const SUPABASE_KEY = 'sb_publishable_Elra9S5SZVWELp6MvKSyoA_iBW5KqD2';
 
 let _sb = null;
 function getSB() {
-  if (!_sb) _sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  if (_sb) return _sb;
+  // Check supabase global is available
+  if (typeof supabase === 'undefined' || typeof supabase.createClient !== 'function') {
+    throw new Error('La librería de Supabase no cargó. Comprueba tu conexión a internet.');
+  }
+  _sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
   return _sb;
 }
 
@@ -8588,47 +8593,81 @@ let _authMode = 'login'; // 'login' | 'signup'
 
 function toggleAuthMode() {
   _authMode = _authMode === 'login' ? 'signup' : 'login';
-  document.getElementById('authMode').textContent = _authMode === 'login' ? 'Iniciar sesión' : 'Crear cuenta';
-  document.getElementById('authBtn').textContent = _authMode === 'login' ? 'Entrar' : 'Registrarse';
-  document.getElementById('authToggle').textContent = _authMode === 'login' ? '¿Sin cuenta? Regístrate' : '¿Ya tienes cuenta? Entra';
+  const isLogin = _authMode === 'login';
+  document.getElementById('authMode').textContent = isLogin ? 'Iniciar sesión' : 'Crear cuenta';
+  const btn = document.getElementById('authBtn');
+  btn.textContent = isLogin ? 'Entrar' : 'Registrarse';
+  btn.disabled = false;
+  document.getElementById('authToggle').textContent = isLogin ? '¿Sin cuenta? Regístrate' : '¿Ya tienes cuenta? Entra';
   document.getElementById('authError').textContent = '';
-  document.getElementById('authPass').autocomplete = _authMode === 'login' ? 'current-password' : 'new-password';
+  document.getElementById('authStatus').textContent = '';
 }
 
 async function doAuth() {
-  const email = document.getElementById('authEmail').value.trim();
-  const pass  = document.getElementById('authPass').value;
+  const email = (document.getElementById('authEmail').value || '').trim();
+  const pass  = document.getElementById('authPass').value || '';
   const errEl = document.getElementById('authError');
   const stEl  = document.getElementById('authStatus');
   const btn   = document.getElementById('authBtn');
+
   errEl.textContent = '';
-  if (!email || !pass) { errEl.textContent = 'Rellena email y contraseña'; return; }
+  stEl.textContent = '';
+
+  if (!email) { errEl.textContent = 'Escribe tu email'; return; }
+  if (!pass)  { errEl.textContent = 'Escribe tu contraseña'; return; }
+
   btn.disabled = true;
-  stEl.textContent = _authMode === 'login' ? 'Entrando…' : 'Creando cuenta…';
+  btn.textContent = '…';
+
   try {
-    const sb = getSB();
+    let sb;
+    try { sb = getSB(); }
+    catch(e) {
+      errEl.textContent = e.message;
+      btn.disabled = false;
+      btn.textContent = _authMode === 'login' ? 'Entrar' : 'Registrarse';
+      return;
+    }
+
+    stEl.textContent = _authMode === 'login' ? 'Entrando…' : 'Creando cuenta…';
     let result;
     if (_authMode === 'login') {
       result = await sb.auth.signInWithPassword({ email, password: pass });
     } else {
       result = await sb.auth.signUp({ email, password: pass });
     }
-    if (result.error) throw result.error;
-    if (_authMode === 'signup' && result.data?.user && !result.data.session) {
-      stEl.textContent = 'Revisa tu email para confirmar la cuenta';
+
+    if (result.error) {
+      const msgs = {
+        'Invalid login credentials': 'Email o contraseña incorrectos',
+        'Email not confirmed': 'Revisa tu email para confirmar la cuenta',
+        'User already registered': 'Este email ya tiene cuenta — pulsa "Iniciar sesión"',
+        'Password should be at least 6 characters': 'La contraseña debe tener al menos 6 caracteres',
+      };
+      errEl.textContent = msgs[result.error.message] || result.error.message;
       btn.disabled = false;
+      btn.textContent = _authMode === 'login' ? 'Entrar' : 'Registrarse';
+      stEl.textContent = '';
       return;
     }
+
+    if (_authMode === 'signup' && result.data?.user && !result.data?.session) {
+      stEl.textContent = '✓ Revisa tu email para confirmar la cuenta';
+      btn.disabled = false;
+      btn.textContent = 'Entrar';
+      _authMode = 'login';
+      document.getElementById('authMode').textContent = 'Iniciar sesión';
+      document.getElementById('authToggle').textContent = '¿Sin cuenta? Regístrate';
+      return;
+    }
+
     stEl.textContent = 'Cargando datos…';
     await onAuthSuccess();
+
   } catch(e) {
-    const msgs = {
-      'Invalid login credentials': 'Email o contraseña incorrectos',
-      'Email not confirmed': 'Confirma tu email primero',
-      'User already registered': 'Este email ya tiene cuenta — inicia sesión',
-    };
-    errEl.textContent = msgs[e.message] || e.message;
+    errEl.textContent = 'Error: ' + (e.message || 'desconocido');
     btn.disabled = false;
+    btn.textContent = _authMode === 'login' ? 'Entrar' : 'Registrarse';
     stEl.textContent = '';
   }
 }
