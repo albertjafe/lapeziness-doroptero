@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -2259,7 +2258,7 @@
 
     <!-- Compases (solo si obra en aprendizaje) -->
     <div id="hechoCompasSection" style="display:none">
-      <div class="hecho-field-label">¿Por qué compás vas ahora?</div>
+      <div class="hecho-field-label">Compás por el que vas <span style="font-weight:normal;text-transform:none;letter-spacing:0;font-size:9px;color:var(--text3)">(ajusta si has avanzado hoy)</span></div>
       <!-- Position display -->
       <div id="compasPosMeta" style="text-align:center;background:var(--bg3);border-radius:8px;padding:12px;margin-bottom:10px;display:none">
         <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--accent)" id="compasAbsVal">—</div>
@@ -4519,7 +4518,7 @@ function openHechoDatos(planId, minPlan) {
   const fase = entity ? obraFase(entity) : 'digitando';
   const pct = entity ? compasPercent(entity) : null;
 
-  _hechoShowCompas = fase === 'digitando' || (pct !== null && pct < 100);
+  _hechoShowCompas = !!(entity && entity.compasesTotal);  // show if obra has compas defined
   _hechoShowMem = !movId && (fase === 'consolidando' || fase === 'mantenimiento');
   const showPases = !movId && (fase === 'consolidando' || fase === 'mantenimiento');
 
