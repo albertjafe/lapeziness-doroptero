@@ -206,12 +206,11 @@
   .topbar {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     background: var(--bg);
-    padding-top: max(env(safe-area-inset-top, 0px), 10px);
   }
   .header {
     background: var(--bg);
     border-bottom: 1px solid var(--border);
-    padding: 20px 20px 14px;
+    padding: calc(max(env(safe-area-inset-top, 12px), 12px) + 10px) 20px 14px;
     display: flex; align-items: center; justify-content: space-between;
   }
   .header-title {
@@ -234,7 +233,7 @@
   }
   /* Content offset — set via JS after measuring topbar height */
   .app-content {
-    padding-top: 130px; /* fallback; overridden by JS */
+    padding-top: 150px; /* fallback; overridden by JS */
   }
   .nav-btn {
     flex: 1; min-width: 80px;
@@ -8851,14 +8850,25 @@ document.addEventListener('keydown', e => {
   }
 });
 
-// Adjust app-content top padding
-(function() {
+// Adjust app-content top padding - measure after layout settles
+function adjustTopPadding() {
   const topbar = document.querySelector('.topbar');
   const c = document.querySelector('.app-content');
-  if (topbar && c) {
-    c.style.paddingTop = topbar.getBoundingClientRect().height + 'px';
+  if (!topbar || !c) return;
+  const h = topbar.getBoundingClientRect().height;
+  if (h > 20) {
+    c.style.paddingTop = (h + 4) + 'px'; // +4px buffer
   }
-})();
+}
+// Run immediately, after 100ms, and on resize/orientation change
+adjustTopPadding();
+setTimeout(adjustTopPadding, 100);
+setTimeout(adjustTopPadding, 500);
+window.addEventListener('resize', adjustTopPadding);
+window.addEventListener('orientationchange', function() { setTimeout(adjustTopPadding, 300); });
+if (window.ResizeObserver) {
+  new ResizeObserver(adjustTopPadding).observe(document.querySelector('.topbar'));
+}
 </script>
 </body>
 </html>
