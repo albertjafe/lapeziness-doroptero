@@ -2801,8 +2801,9 @@ function fillEstadoSlider(slider, color) {
   const max = parseFloat(slider.max) || 100;
   const val = parseFloat(slider.value) || 0;
   const pct = ((val - min) / (max - min)) * 100;
-  const bg2 = getComputedStyle(document.documentElement).getPropertyValue('--bg2').trim() || '#2a2520';
-  slider.style.background = 'linear-gradient(to right,' + color + ' 0%,' + color + ' ' + pct + '%,' + bg2 + ' ' + pct + '%,' + bg2 + ' 100%)';
+  // Use a neutral dark track — works on all themes
+  const track = '#3a3530';
+  slider.style.background = 'linear-gradient(to right,' + color + ' 0%,' + color + ' ' + pct + '%,' + track + ' ' + pct + '%,' + track + ' 100%)';
   slider.style.color = color;
 }
 
@@ -8864,6 +8865,7 @@ function adjustTopPadding() {
 adjustTopPadding();
 setTimeout(adjustTopPadding, 100);
 setTimeout(adjustTopPadding, 500);
+setTimeout(initEstadoSliders, 300);
 window.addEventListener('resize', adjustTopPadding);
 window.addEventListener('orientationchange', function() { setTimeout(adjustTopPadding, 300); });
 if (window.ResizeObserver) {
