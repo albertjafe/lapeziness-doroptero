@@ -26,7 +26,7 @@
   .auth-error { font-size:10px;color:#c96e6e;text-align:center;margin-top:8px;min-height:16px; }
   .auth-status { font-size:9px;color:#7a6f66;text-align:center;margin-top:8px;min-height:14px; }
   /* SYNC INDICATOR */
-  #syncIndicator { position:fixed;bottom:76px;right:10px;font-size:8px;color:var(--text3);letter-spacing:0.05em;opacity:0;transition:opacity 0.4s;pointer-events:none;z-index:100;background:var(--bg2);border:1px solid var(--border2);border-radius:6px;padding:3px 8px; }
+  #syncIndicator { position:fixed;top:calc(env(safe-area-inset-top,0px) + 6px);left:50%;transform:translateX(-50%);font-size:9px;color:var(--text2);letter-spacing:0.05em;opacity:0;transition:opacity 0.4s;pointer-events:none;z-index:9999;background:var(--bg);border:1px solid var(--border);border-radius:20px;padding:4px 12px;white-space:nowrap;box-shadow:0 2px 8px rgba(0,0,0,0.3); }
   #syncIndicator.visible { opacity:1; }
   /* FUENTE CONFIGURABLE */
   :root {
@@ -191,11 +191,12 @@
   .topbar {
     position: fixed; top: 0; left: 0; right: 0; z-index: 100;
     background: var(--bg);
+    padding-top: env(safe-area-inset-top, 0px);
   }
   .header {
     background: var(--bg);
     border-bottom: 1px solid var(--border);
-    padding: 16px 20px;
+    padding: 20px 20px 14px;
     display: flex; align-items: center; justify-content: space-between;
   }
   .header-title {
@@ -212,13 +213,13 @@
   .nav {
     display: flex; gap: 2px;
     background: var(--bg2);
-    padding: 6px;
+    padding: 8px 6px;
     border-bottom: 1px solid var(--border2);
     overflow-x: auto;
   }
   /* Content offset — set via JS after measuring topbar height */
   .app-content {
-    padding-top: 112px; /* fallback; overridden by JS */
+    padding-top: 130px; /* fallback; overridden by JS */
   }
   .nav-btn {
     flex: 1; min-width: 80px;
@@ -237,7 +238,7 @@
   }
 
   /* VIEWS */
-  .view { display: none; padding: 20px; max-width: 700px; margin: 0 auto; }
+  .view { display: none; padding: 22px 20px; max-width: 700px; margin: 0 auto; }
   .view.active { display: block; }
 
   /* CARDS */
@@ -2166,18 +2167,9 @@
     <input type="file" id="forestCsvInput" accept=".csv" style="display:none" onchange="loadForestCSV(this)">
     <div id="forestFeedback" style="font-size:9px;color:var(--green);margin-top:4px;display:none"></div>
 
-    <div class="settings-section" style="margin-top:16px">Copia de seguridad</div>
-    <div style="font-size:9px;color:var(--text3);line-height:1.6;margin-bottom:10px">Exporta todos tus datos (obras, sesiones, pases, eventos) a un archivo JSON. Guárdalo en iCloud o donde quieras. Puedes importarlo si cambias de dispositivo o si algo sale mal.</div>
-    <div style="display:flex;gap:8px;margin-bottom:4px">
-      <button class="modal-btn secondary" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px" onclick="exportarDatos()">
-        <span style="font-size:14px">⬇</span> Exportar datos
-      </button>
-      <button class="modal-btn secondary" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px" onclick="document.getElementById('importarInput').click()">
-        <span style="font-size:14px">⬆</span> Importar datos
-      </button>
-    </div>
-    <input type="file" id="importarInput" accept=".json" style="display:none" onchange="importarDatos(this)">
-    <div id="importarFeedback" style="font-size:9px;color:var(--green);margin-top:6px;display:none"></div>
+    <div class="settings-section" style="margin-top:16px">Cuenta</div>
+    <div id="authUserInfo" style="font-size:9px;color:var(--text3);margin-bottom:8px"></div>
+    <button class="modal-btn secondary" style="width:100%" onclick="doLogout()">Cerrar sesión</button>
 
     <div class="modal-buttons" style="margin-top:20px">
       <button class="modal-btn primary" onclick="closeModal('modalSettings')">Cerrar</button>
@@ -2558,7 +2550,9 @@ function getSB() {
   if (typeof supabase === 'undefined' || typeof supabase.createClient !== 'function') {
     throw new Error('La librería de Supabase no cargó. Comprueba tu conexión a internet.');
   }
-  _sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  _sbClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: { persistSession: true, storageKey: 'piano_auth_v1', autoRefreshToken: true }
+  });
   return _sbClient;
 }
 
@@ -8712,10 +8706,29 @@ async function doAuth() {
   }
 }
 
+async function doLogout() {
+  try {
+    const sb = getSB();
+    await sb.auth.signOut();
+  } catch(e) {}
+  const authEl = document.getElementById('authScreen');
+  if (authEl) authEl.style.display = 'flex';
+  closeModal('modalSettings');
+}
+
 async function onAuthSuccess() {
-  // Hide auth screen immediately
   const authEl = document.getElementById('authScreen');
   if (authEl) authEl.style.display = 'none';
+
+  // Show user email in settings
+  try {
+    const sb = getSB();
+    const { data: { user } } = await sb.auth.getUser();
+    if (user) {
+      const infoEl = document.getElementById('authUserInfo');
+      if (infoEl) infoEl.textContent = '✓ Conectado como ' + user.email;
+    }
+  } catch(e) {}
 
   const reloaded = await loadFromCloud();
   if (reloaded) {
