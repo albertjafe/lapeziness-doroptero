@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -2258,19 +2259,27 @@
 
     <!-- Compases (solo si obra en aprendizaje) -->
     <div id="hechoCompasSection" style="display:none">
-      <div class="hecho-field-label">Compases aprendidos hoy</div>
-      <div id="compasPosMeta" style="display:none;margin-bottom:10px;text-align:center;background:var(--bg3);border-radius:8px;padding:10px 12px"></div>
-      <div class="compas-stepper">
-        <button class="stepper-btn" onclick="stepCompas(-5)">−−</button>
-        <button class="stepper-btn" onclick="stepCompas(-1)">−</button>
-        <div>
-          <div class="stepper-val" id="compasStepVal">0</div>
-          <div style="font-size:7px;color:var(--text3);text-align:center">cc. avanzados</div>
+      <div class="hecho-field-label">¿Por qué compás vas ahora?</div>
+      <!-- Position display -->
+      <div id="compasPosMeta" style="text-align:center;background:var(--bg3);border-radius:8px;padding:12px;margin-bottom:10px;display:none">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:32px;color:var(--accent)" id="compasAbsVal">—</div>
+        <div style="font-size:9px;color:var(--text3);margin-top:2px" id="compasAbsMeta">de — cc.</div>
+        <div style="height:6px;background:var(--bg2);border-radius:3px;margin-top:8px;overflow:hidden">
+          <div id="compasAbsBar" style="height:100%;border-radius:3px;background:var(--accent);transition:width 0.2s;width:0%"></div>
         </div>
-        <button class="stepper-btn" onclick="stepCompas(1)">+</button>
-        <button class="stepper-btn" onclick="stepCompas(5)">++</button>
-        <div class="stepper-meta" id="compasStepMeta"></div>
+        <div id="compasAbsPct" style="font-size:10px;color:var(--accent);margin-top:4px">0%</div>
       </div>
+      <div class="compas-stepper">
+        <button class="stepper-btn" onclick="stepCompas(-5)">−5</button>
+        <button class="stepper-btn" onclick="stepCompas(-1)">−1</button>
+        <div style="text-align:center">
+          <div class="stepper-val" id="compasStepVal" style="font-size:16px;color:var(--text3)">—</div>
+          <div style="font-size:7px;color:var(--text3);text-align:center">compás actual</div>
+        </div>
+        <button class="stepper-btn" onclick="stepCompas(1)">+1</button>
+        <button class="stepper-btn" onclick="stepCompas(5)">+5</button>
+      </div>
+      <div class="stepper-meta" id="compasStepMeta" style="text-align:center;margin-top:4px"></div>
     </div>
 
     <!-- PASES (solo si obra aprendida) -->
@@ -4352,10 +4361,50 @@ function updateSolSlider(val) {
 }
 
 function stepCompas(delta) {
-  _hechoCompasStep = Math.max(0, _hechoCompasStep + delta);
+  const entity = _hechoMovId ? findMovimiento(_hechoObraId, _hechoMovId) : findObra(_hechoObraId);
+  const total = entity?.compasesTotal || 9999;
+  _hechoCompasStep = Math.max(0, Math.min(total, _hechoCompasStep + delta));
   const el = document.getElementById('compasStepVal');
   if (el) el.textContent = _hechoCompasStep;
   updateCompasMeta();
+}
+
+function updateCompasMeta() {
+  const entity = _hechoMovId ? findMovimiento(_hechoObraId, _hechoMovId) : findObra(_hechoObraId);
+  const posMeta = document.getElementById('compasPosMeta');
+  const metaEl  = document.getElementById('compasStepMeta');
+
+  if (!entity || !entity.compasesTotal) {
+    if (posMeta) posMeta.style.display = 'none';
+    if (metaEl) metaEl.textContent = '';
+    return;
+  }
+
+  const total = entity.compasesTotal;
+  const actual = _hechoCompasStep; // now absolute
+  const pct = Math.round((actual / total) * 100);
+  const antes = _hechoCompasAntes;
+  const avanzados = actual - antes;
+
+  if (posMeta) {
+    posMeta.style.display = 'block';
+    const absEl  = document.getElementById('compasAbsVal');
+    const metaS  = document.getElementById('compasAbsMeta');
+    const barEl  = document.getElementById('compasAbsBar');
+    const pctEl  = document.getElementById('compasAbsPct');
+    if (absEl)  absEl.textContent = actual;
+    if (metaS)  metaS.textContent = 'de ' + total + ' cc.';
+    if (barEl)  barEl.style.width = pct + '%';
+    if (pctEl)  pctEl.textContent = pct + '%';
+  }
+
+  if (metaEl) {
+    metaEl.innerHTML = avanzados > 0
+      ? '<span style="color:var(--green)">+' + avanzados + ' cc. de avance hoy</span>'
+      : avanzados < 0
+        ? '<span style="color:var(--orange)">' + avanzados + ' cc. (retroceso)</span>'
+        : '<span style="color:var(--text3)">sin cambio respecto al inicio</span>';
+  }
 }
 
 function updateCompasMeta() {
@@ -4504,8 +4553,9 @@ function openHechoDatos(planId, minPlan) {
     compasSection.style.display = _hechoShowCompas ? 'block' : 'none';
     if (_hechoShowCompas && entity) {
       _hechoCompasAntes = entity.compasActual || 0;
+      _hechoCompasStep = _hechoCompasAntes; // absolute: start at current position
       const stepEl = document.getElementById('compasStepVal');
-      if (stepEl) stepEl.textContent = '0';
+      if (stepEl) stepEl.textContent = _hechoCompasStep;
       updateCompasMeta();
     }
   }
@@ -4658,9 +4708,9 @@ function closeHechoDatos(save) {
   }
 
   // Advance compases
-  if (_hechoShowCompas && entity && _hechoCompasStep > 0) {
-    const nuevo = Math.min(entity.compasesTotal || 9999, (entity.compasActual || 0) + _hechoCompasStep);
-    entity.compasActual = nuevo;
+  // Advance compases — _hechoCompasStep is now absolute new position
+  if (_hechoShowCompas && entity && _hechoCompasStep !== _hechoCompasAntes) {
+    const nuevo = Math.min(entity.compasesTotal || 9999, _hechoCompasStep);
     entity.apr = aprFromCompas(entity);
     if (!entity.compasHistory) entity.compasHistory = [];
     const minAcum = movId
@@ -8543,7 +8593,52 @@ function addRipple(el, e) {
   r.addEventListener('animationend', () => r.remove());
 }
 
-// ─── FLOATING NOTES ──────────────────────────────────────────────────────────
+// ── iOS BACKGROUND PERSISTENCE ───────────────────────────────────────────────
+// iOS Safari kills JS when app goes to background. Save everything on hide.
+document.addEventListener('visibilitychange', function() {
+  if (document.visibilityState === 'hidden') {
+    // Save draft immediately
+    saveDraft();
+    // Save estado sliders
+    try {
+      localStorage.setItem('alberto_estado_v1', JSON.stringify(estadoDiario));
+    } catch(e) {}
+    // Sync to cloud if possible
+    syncToCloud();
+  } else if (document.visibilityState === 'visible') {
+    // App came back to foreground — restore auth if needed
+    _restoreSessionIfNeeded();
+    // Restore estado sliders
+    try {
+      const saved = JSON.parse(localStorage.getItem('alberto_estado_v1') || 'null');
+      if (saved && typeof saved.energia === 'number') {
+        Object.assign(estadoDiario, saved);
+        initEstadoSliders();
+      }
+    } catch(e) {}
+  }
+});
+
+async function _restoreSessionIfNeeded() {
+  const authEl = document.getElementById('authScreen');
+  // If auth screen is showing, try to restore session silently
+  if (authEl && authEl.style.display !== 'none') {
+    try {
+      const sb = getSB();
+      const { data: { session } } = await sb.auth.getSession();
+      if (session) {
+        await onAuthSuccess();
+      }
+    } catch(e) {}
+  }
+}
+
+// Also save estado on every slider change (already debounced)
+const _origUpdateEstadoBase = updateEstado;
+updateEstado = function(dim, val) {
+  _origUpdateEstadoBase(dim, val);
+  try { localStorage.setItem('alberto_estado_v1', JSON.stringify(estadoDiario)); } catch(e) {}
+};
 
 function spawnNotes() {
   const deco = document.getElementById('notesDeco');
@@ -8804,6 +8899,11 @@ async function initApp() {
   // Init UI
   loadTheme();
   loadAppTitle();
+  // Restore estado sliders from last session
+  try {
+    const saved = JSON.parse(localStorage.getItem('alberto_estado_v1') || 'null');
+    if (saved && typeof saved.energia === 'number') Object.assign(estadoDiario, saved);
+  } catch(e) {}
   initEstadoSliders();
   loadDraft();
   updateHeader();
