@@ -52,6 +52,14 @@
     min-height:calc(100dvh - 150px)}
   #viewGraf .chart-card{width:100%;margin:8px 0}
 
+  /* SUMMARY */
+  .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:2px 0 6px}
+  .stat{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:11px 6px 10px;text-align:center;min-width:0}
+  .stat .k{font-size:9px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;white-space:nowrap}
+  .stat .v{font-size:20px;font-weight:800;letter-spacing:-.03em;line-height:1;color:var(--ink);white-space:nowrap}
+  .stat .s{font-size:10px;font-weight:600;color:var(--muted);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  @media(max-width:440px){ .summary{grid-template-columns:repeat(2,1fr)} }
+
   /* TAB BAR */
   .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:50;
     display:flex;max-width:680px;margin:0 auto;
@@ -259,6 +267,7 @@
       </div>
       <div class="chart-scroll" id="chartScroll"></div>
     </section>
+    <div class="summary" id="summary"></div>
   </section>
 
   <section id="viewHist" class="view">
@@ -744,7 +753,48 @@ function renderList(){
   list.querySelectorAll('.entry').forEach(el=>el.addEventListener('click',()=>openSheet(el.dataset.id)));
 }
 
-function render(){ renderChart(); renderList(); }
+/* ════════════════════════════ SUMMARY ════════════════════════════ */
+function computeSummary(){
+  const data=[...entries].sort((a,b)=>new Date(a.at)-new Date(b.at));
+  if(!data.length) return null;
+  const vals=data.map(e=>e.value);
+  const mean=a=>a.reduce((s,x)=>s+x,0)/a.length;
+  const in30=data.filter(e=>new Date(e.at).getTime()>=Date.now()-30*86400000);
+  const media= in30.length? mean(in30.map(e=>e.value)) : mean(vals.slice(-5));
+  const mediaLabel= in30.length? '30 días' : 'reciente';
+  let trend=null;
+  if(vals.length>=2){
+    const k=Math.min(3,Math.floor(vals.length/2));
+    const prevK=vals.slice(-2*k,-k);
+    if(prevK.length) trend=mean(vals.slice(-k))-mean(prevK);
+  }
+  const key=d=>d.getFullYear()+'-'+d.getMonth()+'-'+d.getDate();
+  const days=new Set(data.map(e=>key(new Date(e.at))));
+  let streak=0; const cur=new Date(); cur.setHours(0,0,0,0);
+  if(!days.has(key(cur))) cur.setDate(cur.getDate()-1); // tolerancia: si hoy aún no hay, cuenta desde ayer
+  while(days.has(key(cur))){ streak++; cur.setDate(cur.getDate()-1); }
+  return {last:data[data.length-1], media, mediaLabel, trend, streak};
+}
+function renderSummary(){
+  const el=$('#summary'), s=computeSummary();
+  if(!s){ el.innerHTML=''; el.style.display='none'; return; }
+  el.style.display='';
+  const lc=valColor(s.last.value), lm=moodLabel(s.last.value)[0];
+  const mc=valColor(s.media>0?1:s.media<0?-1:0);
+  let tArrow='→', tWord='estable', tCol='#8a8a9a', tDelta='—';
+  if(s.trend!==null){
+    tDelta=(s.trend>0?'+':'')+s.trend.toFixed(1);
+    if(s.trend>0.3){ tArrow='↑'; tWord='mejorando'; tCol='#2fae7a'; }
+    else if(s.trend<-0.3){ tArrow='↓'; tWord='empeorando'; tCol='#e25a82'; }
+  }
+  el.innerHTML=`
+    <div class="stat"><div class="k">Última</div><div class="v" style="color:${lc}">${s.last.value>0?'+':''}${s.last.value}</div><div class="s">${lm}</div></div>
+    <div class="stat"><div class="k">Media</div><div class="v" style="color:${mc}">${s.media>0?'+':''}${s.media.toFixed(1)}</div><div class="s">${s.mediaLabel}</div></div>
+    <div class="stat"><div class="k">Tendencia</div><div class="v" style="color:${tCol};font-size:17px">${tArrow} ${tDelta}</div><div class="s">${s.trend!==null?tWord:'sin datos'}</div></div>
+    <div class="stat"><div class="k">Racha</div><div class="v">${s.streak}</div><div class="s">día${s.streak===1?'':'s'} seguidos</div></div>`;
+}
+
+function render(){ renderChart(); renderList(); renderSummary(); }
 
 /* ════════════════════════════ SHEET ════════════════════════════ */
 function openSheet(id=null){
