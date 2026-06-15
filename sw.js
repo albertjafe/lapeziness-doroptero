@@ -1,4 +1,4 @@
-const CACHE = 'rocd-v1';
+const CACHE = 'rocd-v2';
 const ASSETS = ['./index.html', './manifest.json'];
 
 self.addEventListener('install', e => {
