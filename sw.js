@@ -1,4 +1,4 @@
-const CACHE = 'estudio-v1';
+const CACHE = 'rocd-v1';
 const ASSETS = ['./index.html', './manifest.json'];
 
 self.addEventListener('install', e => {
@@ -16,11 +16,11 @@ self.addEventListener('activate', e => {
 });
 
 self.addEventListener('fetch', e => {
-  // Network first for Supabase/CDN, cache first for local assets
   const url = new URL(e.request.url);
   const isLocal = url.origin === self.location.origin;
 
   if (isLocal) {
+    // cache-first for local assets, refresh in background
     e.respondWith(
       caches.match(e.request).then(cached => {
         const networkFetch = fetch(e.request).then(res => {
@@ -29,10 +29,10 @@ self.addEventListener('fetch', e => {
             caches.open(CACHE).then(c => c.put(e.request, clone));
           }
           return res;
-        });
+        }).catch(() => cached);
         return cached || networkFetch;
       })
     );
   }
-  // For external requests (Supabase, CDN), let them pass through normally
+  // External requests (Supabase, fonts, CDN) pass through to the network.
 });
