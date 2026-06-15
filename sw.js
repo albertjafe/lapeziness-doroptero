@@ -1,5 +1,5 @@
-const CACHE = 'rocd-v2';
-const ASSETS = ['./index.html', './manifest.json'];
+const CACHE = 'rocd-v3';
+const ASSETS = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', e => {
   e.waitUntil(
@@ -15,24 +15,29 @@ self.addEventListener('activate', e => {
   );
 });
 
+// Network-first para los archivos locales: con conexión siempre sirve la última
+// versión y refresca la caché; sin conexión recurre a la caché (soporte offline).
 self.addEventListener('fetch', e => {
+  if (e.request.method !== 'GET') return;
   const url = new URL(e.request.url);
-  const isLocal = url.origin === self.location.origin;
+  if (url.origin !== self.location.origin) return; // Supabase, fuentes, CDN: a la red
 
-  if (isLocal) {
-    // cache-first for local assets, refresh in background
-    e.respondWith(
-      caches.match(e.request).then(cached => {
-        const networkFetch = fetch(e.request).then(res => {
-          if (res.ok) {
-            const clone = res.clone();
-            caches.open(CACHE).then(c => c.put(e.request, clone));
-          }
-          return res;
-        }).catch(() => cached);
-        return cached || networkFetch;
-      })
-    );
-  }
-  // External requests (Supabase, fonts, CDN) pass through to the network.
+  e.respondWith(
+    fetch(e.request).then(res => {
+      if (res && res.ok) {
+        const clone = res.clone();
+        caches.open(CACHE).then(c => c.put(e.request, clone));
+      }
+      return res;
+    }).catch(() =>
+      caches.match(e.request).then(cached =>
+        cached || caches.match('./index.html')
+      )
+    )
+  );
+});
+
+// Permite forzar la activación inmediata desde la página.
+self.addEventListener('message', e => {
+  if (e.data === 'skipWaiting') self.skipWaiting();
 });

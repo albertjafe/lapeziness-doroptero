@@ -963,8 +963,22 @@ function boot(){
   initSupabase();
   if('serviceWorker' in navigator){
     let refreshing=false;
-    navigator.serviceWorker.addEventListener('controllerchange',()=>{ if(refreshing)return; refreshing=true; location.reload(); });
-    navigator.serviceWorker.register('sw.js').then(reg=>{ reg.update(); }).catch(()=>{});
+    const hadController=!!navigator.serviceWorker.controller;
+    // Cuando un service worker nuevo toma el control, recarga para mostrar la última versión.
+    navigator.serviceWorker.addEventListener('controllerchange',()=>{
+      if(refreshing||!hadController) return;
+      refreshing=true; location.reload();
+    });
+    navigator.serviceWorker.register('sw.js').then(reg=>{
+      reg.update();
+      // Si ya hay una versión nueva esperando, actívala.
+      const promote=w=>{ if(w&&w.state==='installed'&&navigator.serviceWorker.controller) w.postMessage('skipWaiting'); };
+      if(reg.waiting) promote(reg.waiting);
+      reg.addEventListener('updatefound',()=>{ const w=reg.installing; if(w) w.addEventListener('statechange',()=>promote(w)); });
+      // Comprueba si hay actualización al volver a la app y cada media hora.
+      document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==='visible') reg.update(); });
+      setInterval(()=>reg.update(), 30*60*1000);
+    }).catch(()=>{});
   }
 }
 boot();
