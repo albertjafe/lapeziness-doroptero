@@ -347,6 +347,7 @@
 <!-- menu -->
 <div class="menu" id="menu">
   <button id="mTheme"><svg viewBox="0 0 24 24" fill="none"><path d="M21 12.5A8.5 8.5 0 1111.5 3a6.6 6.6 0 109.5 9.5z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Tema · <span id="themeLabel" style="color:var(--indigo);margin-left:2px">Automático</span></button>
+  <button id="mSound"><svg viewBox="0 0 24 24" fill="none"><path d="M4 9v6h4l5 4V5L8 9H4z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M16.5 8.5a5 5 0 010 7M19 6a8 8 0 010 12" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Sonidos · <span id="soundLabel" style="color:var(--indigo);margin-left:2px">Activados</span></button>
   <hr>
   <button id="mTitle"><svg viewBox="0 0 24 24" fill="none"><path d="M4 20h16M14 4l4 4-9 9H5v-4z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Renombrar gráfica</button>
   <button id="mExample"><svg viewBox="0 0 24 24" fill="none"><path d="M3 17l5-6 4 4 5-8 4 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Cargar ejemplo</button>
@@ -849,7 +850,7 @@ function render(){ renderChart(); renderList(); renderSummary(); }
 
 /* ════════════════════════════ SHEET ════════════════════════════ */
 function openSheet(id=null){
-  hideTip(); closeMenu();
+  hideTip(); closeMenu(); sfx('open');
   editingId=id;
   const e=id?entries.find(x=>x.id===id):null;
   $('#sheetTitle').textContent=e?'Editar entrada':'Nueva entrada';
@@ -879,13 +880,14 @@ $('#sSave').addEventListener('click',()=>{
   if(editingId) data.id=editingId;
   upsertEntry(data);
   closeSheet();
+  sfx('success');
   toast(wasEditing?'Entrada actualizada':'Entrada guardada ✓');
 });
 $('#sDelete').addEventListener('click',()=>{
   if(!editingId)return;
   const id=editingId;
   confirmBox('¿Eliminar esta entrada?','Esta acción no se puede deshacer.','Eliminar',()=>{
-    deleteEntry(id); closeSheet(); toast('Entrada eliminada');
+    deleteEntry(id); closeSheet(); sfx('delete'); toast('Entrada eliminada');
   });
 });
 $('#sCancel').addEventListener('click',closeSheet);
@@ -907,7 +909,7 @@ $('#mClear').addEventListener('click',()=>{
   confirmBox('¿Borrar todos los registros?','Se eliminarán todas tus entradas en este dispositivo y en la nube.','Borrar todo',()=>{
     const ids=entries.map(e=>e.id); entries=[]; saveLocal(); render();
     ids.forEach(id=>pushDelete(id));
-    toast('Todo borrado');
+    sfx('delete'); toast('Todo borrado');
   });
 });
 $('#mExport').addEventListener('click',()=>{
@@ -989,6 +991,48 @@ let toastT;
 function toast(msg){ const t=$('#toast'); t.textContent=msg; t.classList.add('show');
   clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),2200); }
 
+/* ════════════════════════════ SONIDO ════════════════════════════ */
+const LS_SOUND='rocd_sound_v1';
+let soundOn=(localStorage.getItem(LS_SOUND)||'on')==='on';
+let _actx=null;
+function audioCtx(){
+  try{
+    if(!_actx) _actx=new (window.AudioContext||window.webkitAudioContext)();
+    if(_actx.state==='suspended') _actx.resume();
+    return _actx;
+  }catch(e){ return null; }
+}
+function tone(freq,t0,dur,{type='sine',vol=0.05,glideTo=null}={}){
+  const ac=_actx; if(!ac) return;
+  const o=ac.createOscillator(), g=ac.createGain();
+  o.type=type; o.frequency.setValueAtTime(freq,t0);
+  if(glideTo) o.frequency.exponentialRampToValueAtTime(glideTo,t0+dur);
+  g.gain.setValueAtTime(0.0001,t0);
+  g.gain.linearRampToValueAtTime(vol,t0+0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001,t0+dur);
+  o.connect(g).connect(ac.destination);
+  o.start(t0); o.stop(t0+dur+0.03);
+}
+function sfx(name){
+  if(!soundOn) return;
+  const ac=audioCtx(); if(!ac) return;
+  const t=ac.currentTime;
+  switch(name){
+    case 'tap':     tone(660,t,0.05,{type:'sine',vol:0.03}); break;
+    case 'open':    tone(523.25,t,0.09,{type:'sine',vol:0.035}); break;
+    case 'success': tone(587.33,t,0.10,{type:'triangle',vol:0.045});
+                    tone(880.00,t+0.075,0.16,{type:'triangle',vol:0.04}); break;
+    case 'delete':  tone(392,t,0.12,{type:'sine',vol:0.04,glideTo:196}); break;
+    case 'toggle':  tone(784,t,0.05,{type:'sine',vol:0.03}); break;
+  }
+}
+function setSoundLabel(){ const el=$('#soundLabel'); if(el) el.textContent=soundOn?'Activados':'Desactivados'; }
+$('#mSound').addEventListener('click',e=>{
+  e.stopPropagation();
+  soundOn=!soundOn; localStorage.setItem(LS_SOUND, soundOn?'on':'off'); setSoundLabel();
+  if(soundOn) sfx('toggle');
+});
+
 /* ════════════════════════════ TEMA ════════════════════════════ */
 const LS_THEME='rocd_theme_v1';
 let themeMode=localStorage.getItem(LS_THEME)||'auto';
@@ -1007,7 +1051,7 @@ function applyTheme(){
 function cycleTheme(){
   themeMode= themeMode==='auto'?'light' : themeMode==='light'?'dark' : 'auto';
   localStorage.setItem(LS_THEME, themeMode);
-  applyTheme();
+  applyTheme(); sfx('toggle');
   toast('Tema: '+(themeMode==='auto'?'Automático':themeMode==='dark'?'Oscuro':'Claro'));
 }
 $('#mTheme').addEventListener('click',e=>{ e.stopPropagation(); cycleTheme(); });
@@ -1020,7 +1064,7 @@ function switchTab(view){
   document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   $('#view'+(view==='graf'?'Graf':'Hist')).classList.add('active');
-  hideTip();
+  hideTip(); sfx('tap');
   window.scrollTo(0,0);
   if(view==='graf') renderChart();   // re-measure now that it is visible
 }
@@ -1034,7 +1078,7 @@ let rt; window.addEventListener('resize',()=>{ clearTimeout(rt); rt=setTimeout(r
 
 /* ════════════════════════════ BOOT ════════════════════════════ */
 function boot(){
-  applyTheme();
+  applyTheme(); setSoundLabel();
   setTitle(title);
   loadLocal(); render();
   setStatus('sync','conectando…');
