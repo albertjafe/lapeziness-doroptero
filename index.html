@@ -89,7 +89,7 @@
     font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
     background:var(--bg);color:var(--ink);
     -webkit-font-smoothing:antialiased;
-    padding-bottom:calc(72px + var(--safe-b));
+    padding-bottom:calc(140px + var(--safe-b));
     overscroll-behavior-y:none;
   }
   .wrap{max-width:680px;margin:0 auto;padding:0 16px}
@@ -98,16 +98,16 @@
   .view{display:none}
   .view.active{display:block}
   #viewGraf.active{display:flex;flex-direction:column;justify-content:center;
-    min-height:calc(100dvh - 150px)}
+    min-height:calc(100dvh - 250px - var(--safe-b))}
   #viewGraf .chart-card{width:100%;margin:8px 0}
 
-  /* SUMMARY */
-  .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:2px 0 6px}
-  .stat{background:var(--card);border-radius:14px;box-shadow:var(--shadow);padding:11px 6px 10px;text-align:center;min-width:0}
-  .stat .k{font-size:9px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--muted);margin-bottom:5px;white-space:nowrap}
-  .stat .v{font-size:20px;font-weight:800;letter-spacing:-.03em;line-height:1;color:var(--ink);white-space:nowrap}
-  .stat .s{font-size:10px;font-weight:600;color:var(--muted);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  @media(max-width:440px){ .summary{grid-template-columns:repeat(2,1fr)} }
+  /* SUMMARY (siempre una fila de 4 tarjetas compactas) */
+  .summary{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin:2px 0 4px}
+  .stat{background:var(--card);border-radius:13px;box-shadow:var(--shadow);padding:10px 4px 9px;text-align:center;min-width:0}
+  .stat .k{font-size:8.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .stat .v{font-size:19px;font-weight:800;letter-spacing:-.03em;line-height:1;color:var(--ink);white-space:nowrap}
+  .stat .s{font-size:9px;font-weight:600;color:var(--muted);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  @media(max-width:360px){ .stat .v{font-size:17px} .stat{padding:9px 3px 8px} }
 
   /* TAB BAR */
   .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:50;
@@ -649,7 +649,7 @@ function renderChart(){
   const needed=data.length*minStep+80;
   const W=Math.round(Math.max(cw, Math.min(needed, cw*2.4)));
   const vh=window.innerHeight||720;
-  const H=Math.round(Math.max(320, Math.min(vh-300, 540)));
+  const H=Math.round(Math.max(290, Math.min(vh-410, 520)));
   const M={l:30,r:18,t:34,b:42};
   const pw=W-M.l-M.r, ph=H-M.t-M.b;
 
