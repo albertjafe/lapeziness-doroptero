@@ -108,6 +108,14 @@
   .stat .v{font-size:19px;font-weight:800;letter-spacing:-.03em;line-height:1;color:var(--ink);white-space:nowrap}
   .stat .s{font-size:9px;font-weight:600;color:var(--muted);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   @media(max-width:360px){ .stat .v{font-size:17px} .stat{padding:9px 3px 8px} }
+  .mini-charts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+  .mini-chart-card{padding:12px 8px 8px;margin:0;overflow:hidden}
+  .mini-chart-head{padding:0 7px 4px}
+  .mini-chart-head h3{font-size:13px;font-weight:800;letter-spacing:-.01em;margin:0;color:var(--ink)}
+  .mini-chart-head p{font-size:10.5px;font-weight:600;color:var(--muted);margin:2px 0 0}
+  .mini-chart-empty{height:124px;display:grid;place-items:center;text-align:center;color:var(--muted);font-size:11.5px;font-weight:600;padding:0 10px;line-height:1.35}
+  .relation{font-size:12px;color:var(--ink-soft);font-weight:600;line-height:1.45;text-align:center;margin:9px 8px 0}
+  @media(max-width:430px){ .mini-charts{grid-template-columns:1fr} }
 
   /* TAB BAR */
   .tabbar{position:fixed;left:0;right:0;bottom:0;z-index:50;
@@ -183,6 +191,8 @@
   .entry .when{font-size:12.5px;font-weight:600;color:var(--ink)}
   .entry .mood{font-size:11px;font-weight:600;margin-top:1px}
   .entry .cmt{font-size:13px;color:var(--ink-soft);margin-top:6px;line-height:1.45;white-space:pre-wrap;word-break:break-word}
+  .entry .tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px}
+  .entry .tag{font-size:10.5px;font-weight:700;border-radius:999px;padding:4px 7px;line-height:1}
   .entry .ago{font-size:10.5px;color:var(--muted);margin-top:6px}
   .entry .chev{align-self:center;color:var(--line);flex:none}
 
@@ -211,6 +221,17 @@
   .field{margin-bottom:18px}
   .field>label{display:block;font-size:11.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;
     color:var(--muted);margin-bottom:9px}
+  .metric-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:18px}
+  .metric-grid .field{margin-bottom:0}
+  .metric-val{display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:8px}
+  .metric-num{font-size:28px;font-weight:800;letter-spacing:-.04em;line-height:1;color:var(--ink)}
+  .metric-mood{font-size:11px;font-weight:700;color:var(--muted);text-align:right}
+  .metric-grid .ticks{font-size:9.5px}
+  input[type=range].toc-range{background:linear-gradient(90deg,#2fae7a,#eceaf0 50%,#e25a82)}
+  input[type=range].sleep-range{background:linear-gradient(90deg,#e25a82,#eceaf0 50%,#2fae7a)}
+  [data-theme="dark"] input[type=range].toc-range{background:linear-gradient(90deg,#2fae7a,#3a3a4c 50%,#e25a82)}
+  [data-theme="dark"] input[type=range].sleep-range{background:linear-gradient(90deg,#e25a82,#3a3a4c 50%,#2fae7a)}
+  @media(max-width:430px){ .metric-grid{grid-template-columns:1fr} }
 
   /* slider */
   .slider-val{text-align:center;margin-bottom:6px}
@@ -317,6 +338,23 @@
       <div class="chart-scroll" id="chartScroll"></div>
     </section>
     <div class="summary" id="summary"></div>
+    <section class="mini-charts" aria-label="TOC y sueño">
+      <section class="card mini-chart-card">
+        <div class="mini-chart-head">
+          <h3>TOC</h3>
+          <p>0 bajo · 10 alto</p>
+        </div>
+        <div class="chart-scroll" id="tocChart"></div>
+      </section>
+      <section class="card mini-chart-card">
+        <div class="mini-chart-head">
+          <h3>Sueño</h3>
+          <p>0 mal · 10 bien</p>
+        </div>
+        <div class="chart-scroll" id="sleepChart"></div>
+      </section>
+    </section>
+    <div class="relation" id="relation"></div>
   </section>
 
   <section id="viewHist" class="view">
@@ -364,10 +402,10 @@
 <div class="sheet" id="sheet">
   <div class="grab"></div>
   <h2 id="sheetTitle">Nueva entrada</h2>
-  <p class="lead">Registra cómo te sientes ahora mismo respecto a tu ROCD.</p>
+  <p class="lead">Registra bienestar, TOC y sueño en un momento concreto.</p>
 
   <div class="field">
-    <label>¿Cómo estás?</label>
+    <label>Bienestar</label>
     <div class="slider-val">
       <div class="slider-num" id="sVal">0</div>
       <div class="slider-mood" id="sMood">Neutral</div>
@@ -378,6 +416,27 @@
       <span class="end">😌</span>
     </div>
     <div class="ticks"><span>−10 peor</span><span>0</span><span>+10 mejor</span></div>
+  </div>
+
+  <div class="metric-grid">
+    <div class="field">
+      <label>TOC</label>
+      <div class="metric-val">
+        <div class="metric-num" id="sTocVal">5</div>
+        <div class="metric-mood" id="sTocMood">Medio</div>
+      </div>
+      <input type="range" id="sTocRange" class="toc-range" min="0" max="10" step="1" value="5">
+      <div class="ticks"><span>bajo</span><span>alto</span></div>
+    </div>
+    <div class="field">
+      <label>Sueño</label>
+      <div class="metric-val">
+        <div class="metric-num" id="sSleepVal">5</div>
+        <div class="metric-mood" id="sSleepMood">Regular</div>
+      </div>
+      <input type="range" id="sSleepRange" class="sleep-range" min="0" max="10" step="1" value="5">
+      <div class="ticks"><span>mal</span><span>bien</span></div>
+    </div>
   </div>
 
   <div class="field">
@@ -420,19 +479,23 @@ const SETUP_SQL =
   id uuid primary key,
   at timestamptz not null,
   value int2 not null,
+  toc int2,
+  sleep int2,
   comment text,
   updated_at timestamptz not null default now()
 );
+alter table public.rocd_entries add column if not exists toc int2;
+alter table public.rocd_entries add column if not exists sleep int2;
 alter table public.rocd_entries enable row level security;
 create policy "anon full access" on public.rocd_entries
   for all to anon using (true) with check (true);`;
 
 /* ════════════════════════════ STATE ════════════════════════════ */
-let entries = [];          // {id, at(ISO), value(int), comment, updated_at}
+let entries = [];          // {id, at(ISO), value(int), toc(int?), sleep(int?), comment, updated_at}
 let title = localStorage.getItem(LS_TITLE) || 'mi recuperación de ROCD';
 let editingId = null;
 let sb = null;
-let online = false, tableMissing = false;
+let online = false, tableMissing = false, schemaMissing = false;
 
 /* ════════════════════════════ UTIL ════════════════════════════ */
 const $ = s => document.querySelector(s);
@@ -454,6 +517,38 @@ function valColor(v){
   if(v>0) return '#2fae7a';
   if(v<0) return '#e25a82';
   return '#8a8a9a';
+}
+function metricValue(v){
+  if(v===null||v===undefined||v==='') return null;
+  const n=Math.round(Number(v));
+  return Number.isFinite(n) ? Math.max(0, Math.min(10, n)) : null;
+}
+function tocLabel(v){
+  if(v<=2)return['Bajo','#2fae7a'];
+  if(v<=5)return['Medio','#d98a64'];
+  if(v<=7)return['Alto','#e25a82'];
+  return['Muy alto','#c93f6a'];
+}
+function sleepLabel(v){
+  if(v>=8)return['Muy bien','#1f8f63'];
+  if(v>=6)return['Bien','#2fae7a'];
+  if(v>=4)return['Regular','#d98a64'];
+  return['Mal','#e25a82'];
+}
+function metricColor(kind,v){
+  if(kind==='toc') return tocLabel(v)[1];
+  return sleepLabel(v)[1];
+}
+function normalizeEntry(e){
+  return {
+    id:e.id||uid(),
+    at:e.at,
+    value:+e.value,
+    toc:metricValue(e.toc),
+    sleep:metricValue(e.sleep),
+    comment:e.comment||'',
+    updated_at:e.updated_at
+  };
 }
 function fmtFull(iso){
   const d=new Date(iso);
@@ -477,7 +572,7 @@ function esc(s){return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>'
 
 /* ════════════════════════════ STORAGE ════════════════════════════ */
 function saveLocal(){ localStorage.setItem(LS_KEY, JSON.stringify(entries)); }
-function loadLocal(){ try{ entries = JSON.parse(localStorage.getItem(LS_KEY))||[]; }catch(e){ entries=[]; } }
+function loadLocal(){ try{ entries = (JSON.parse(localStorage.getItem(LS_KEY))||[]).map(normalizeEntry); }catch(e){ entries=[]; } }
 function getQueue(){ try{ return JSON.parse(localStorage.getItem(LS_QUEUE))||[]; }catch(e){ return []; } }
 function setQueue(q){ localStorage.setItem(LS_QUEUE, JSON.stringify(q)); }
 function enqueue(op){ const q=getQueue().filter(x=>x.id!==op.id); q.push(op); setQueue(q); }
@@ -486,6 +581,16 @@ function enqueue(op){ const q=getQueue().filter(x=>x.id!==op.id); q.push(op); se
 function setStatus(state,txt){
   const dot=$('#syncDot'), t=$('#syncTxt');
   dot.className='dot '+state; t.textContent=txt;
+}
+function schemaError(err){
+  const msg=(err&&(err.message||err.code||err.hint||err.details))||'';
+  return /toc|sleep|column|schema cache|PGRST204|Could not find/i.test(String(msg));
+}
+function syncRow(e){
+  const row={id:e.id,at:e.at,value:e.value,comment:e.comment||null,updated_at:new Date().toISOString()};
+  if(e.toc!==null&&e.toc!==undefined) row.toc=e.toc;
+  if(e.sleep!==null&&e.sleep!==undefined) row.sleep=e.sleep;
+  return row;
 }
 async function initSupabase(){
   if(typeof supabase==='undefined'||!supabase.createClient){
@@ -501,9 +606,9 @@ async function pull(){
   try{
     const {data,error}=await sb.from(TABLE).select('*').order('at',{ascending:true});
     if(error) throw error;
-    online=true; tableMissing=false;
+    online=true; tableMissing=false; schemaMissing=false;
     const queuedIds=new Set(getQueue().map(q=>q.id));
-    const remote=(data||[]).map(r=>({id:r.id,at:r.at,value:r.value,comment:r.comment||'',updated_at:r.updated_at}));
+    const remote=(data||[]).map(normalizeEntry);
     const localExtra=entries.filter(e=>queuedIds.has(e.id) && !remote.some(r=>r.id===e.id));
     entries=[...remote,...localExtra];
     saveLocal(); render();
@@ -532,18 +637,25 @@ async function flushQueue(){
       }else{
         const {error}=await sb.from(TABLE).upsert(op.row); if(error) throw error;
       }
-    }catch(e){ remaining.push(op); online=false; }
+    }catch(e){
+      remaining.push(op); online=false;
+      if(schemaError(e)){ schemaMissing=true; setStatus('err','actualiza Supabase'); }
+    }
   }
   setQueue(remaining);
-  setStatus(online?'ok':'off', online?'sincronizado':'solo en el dispositivo');
+  if(!schemaMissing) setStatus(online?'ok':'off', online?'sincronizado':'solo en el dispositivo');
 }
 async function pushUpsert(e){
-  const row={id:e.id,at:e.at,value:e.value,comment:e.comment||null,updated_at:new Date().toISOString()};
+  const row=syncRow(e);
   enqueue({type:'upsert',id:e.id,row});
   if(sb&&online){
     try{ const {error}=await sb.from(TABLE).upsert(row); if(error)throw error;
-      setQueue(getQueue().filter(q=>q.id!==e.id)); setStatus('ok','sincronizado');
-    }catch(err){ online=false; setStatus('off','solo en el dispositivo'); }
+      setQueue(getQueue().filter(q=>q.id!==e.id)); schemaMissing=false; setStatus('ok','sincronizado');
+    }catch(err){
+      online=false;
+      if(schemaError(err)){ schemaMissing=true; setStatus('err','actualiza Supabase'); }
+      else setStatus('off','solo en el dispositivo');
+    }
   }
 }
 async function pushDelete(id){
@@ -557,6 +669,7 @@ async function pushDelete(id){
 
 /* ════════════════════════════ CRUD ════════════════════════════ */
 function upsertEntry(data){
+  data=normalizeEntry(data);
   let id;
   if(data.id){
     id=data.id;
@@ -760,15 +873,82 @@ function renderChart(){
   });
 }
 
+function renderMetricChart(hostId, kind){
+  const host=$('#'+hostId);
+  if(!host) return;
+  const data=[...entries]
+    .map(e=>({...e, metric:metricValue(e[kind])}))
+    .filter(e=>e.metric!==null)
+    .sort((a,b)=>new Date(a.at)-new Date(b.at));
+  if(!data.length){
+    host.innerHTML=`<div class="mini-chart-empty">Añade registros con ${kind==='toc'?'TOC':'sueño'} para ver la gráfica.</div>`;
+    return;
+  }
+
+  const cw=Math.max(260,(host.clientWidth||300));
+  const minStep=38;
+  const needed=data.length*minStep+58;
+  const W=Math.round(Math.max(cw, Math.min(needed, cw*2.1)));
+  const H=138;
+  const M={l:24,r:12,t:14,b:25};
+  const pw=W-M.l-M.r, ph=H-M.t-M.b;
+  let tmin=new Date(data[0].at).getTime(), tmax=new Date(data[data.length-1].at).getTime();
+  if(tmin===tmax){ tmin-=86400000; tmax+=86400000; }
+  const pad=(tmax-tmin)*0.05; tmin-=pad; tmax+=pad;
+  const X=t=>M.l+((t-tmin)/(tmax-tmin))*pw;
+  const Y=v=>M.t+((10-v)/10)*ph;
+  const pts=data.map(d=>({x:X(new Date(d.at).getTime()), y:Y(d.metric), d}));
+  const line=smoothPath(pts);
+  const area=line+` L${pts[pts.length-1].x.toFixed(2)},${H-M.b} L${pts[0].x.toFixed(2)},${H-M.b} Z`;
+  const stroke=kind==='toc'?'#e25a82':'#2fae7a';
+
+  let grid='';
+  for(const gv of [0,5,10]){
+    const gy=Y(gv);
+    grid+=`<line x1="${M.l}" y1="${gy.toFixed(1)}" x2="${W-M.r}" y2="${gy.toFixed(1)}" stroke="var(--line-soft)" stroke-width="1"/>`;
+    grid+=`<text x="${M.l-6}" y="${(gy+3.5).toFixed(1)}" text-anchor="end" font-size="8.5" fill="var(--c-ylab)" font-weight="600">${gv}</text>`;
+  }
+  let xax='';
+  for(const tk of timeTicks(tmin+pad,tmax-pad)){
+    const tx=X(tk.t); if(tx<M.l-2||tx>W-M.r+2)continue;
+    xax+=`<text x="${tx.toFixed(1)}" y="${(H-8).toFixed(1)}" text-anchor="middle" font-size="8.5" fill="var(--c-axis)" font-weight="600">${tk.day?tk.day+' '+tk.m:tk.m}</text>`;
+  }
+  const dots=pts.map((p,i)=>{
+    const c=metricColor(kind,p.d.metric);
+    return `<circle class="mpt" data-kind="${kind}" data-i="${i}" cx="${p.x.toFixed(2)}" cy="${p.y.toFixed(2)}" r="3.4" fill="var(--card)" stroke="${c}" stroke-width="2" style="cursor:pointer"/>
+      <circle class="mhit" data-kind="${kind}" data-i="${i}" cx="${p.x.toFixed(2)}" cy="${p.y.toFixed(2)}" r="14" fill="transparent" style="cursor:pointer"/>`;
+  }).join('');
+
+  host.innerHTML=`<svg class="chart mini-chart" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMinYMin meet">
+    <defs>
+      <linearGradient id="gm_${kind}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="${stroke}" stop-opacity="0.22"/>
+        <stop offset="1" stop-color="${stroke}" stop-opacity="0.03"/>
+      </linearGradient>
+    </defs>
+    ${grid}${xax}
+    <path d="${area}" fill="url(#gm_${kind})"/>
+    <path d="${line}" fill="none" stroke="${stroke}" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    ${dots}
+  </svg>`;
+  host.querySelectorAll('.mhit,.mpt').forEach(el=>{
+    el.addEventListener('click',ev=>{ ev.stopPropagation(); showMetricTip(pts[+el.dataset.i],kind,host); });
+  });
+}
+
+function renderMetricCharts(){
+  renderMetricChart('tocChart','toc');
+  renderMetricChart('sleepChart','sleep');
+}
+
 /* tooltip */
 function showTip(p){
-  const tip=$('#tip'), card=$('#chartCard');
-  const cardRect=card.getBoundingClientRect();
+  const tip=$('#tip');
   const svgEl=$('#chartScroll svg'); if(!svgEl)return;
   const sr=svgEl.getBoundingClientRect();
   const scale=sr.width/svgEl.viewBox.baseVal.width;
-  const cx=sr.left-cardRect.left+p.x*scale;
-  const cy=sr.top-cardRect.top+p.y*scale;
+  const cx=sr.left+window.scrollX+p.x*scale;
+  const cy=sr.top+window.scrollY+p.y*scale;
   const [ml]=moodLabel(p.d.value);
   tip.innerHTML=`<div class="t-date">${fmtFull(p.d.at)}</div>
     <div class="t-val">${p.d.value>0?'+':''}${p.d.value} · ${ml}</div>
@@ -776,10 +956,29 @@ function showTip(p){
   tip.style.left=cx+'px'; tip.style.top=(cy-12)+'px';
   tip.classList.add('show');
 }
+function showMetricTip(p,kind,host){
+  const tip=$('#tip');
+  const svgEl=host.querySelector('svg'); if(!svgEl)return;
+  const sr=svgEl.getBoundingClientRect();
+  const scale=sr.width/svgEl.viewBox.baseVal.width;
+  const cx=sr.left+window.scrollX+p.x*scale;
+  const cy=sr.top+window.scrollY+p.y*scale;
+  const [ml]=kind==='toc'?tocLabel(p.d.metric):sleepLabel(p.d.metric);
+  tip.innerHTML=`<div class="t-date">${fmtFull(p.d.at)}</div>
+    <div class="t-val">${kind==='toc'?'TOC':'Sueño'} ${p.d.metric} · ${ml}</div>`;
+  tip.style.left=cx+'px'; tip.style.top=(cy-12)+'px';
+  tip.classList.add('show');
+}
 function hideTip(){ $('#tip').classList.remove('show'); }
-document.addEventListener('click',e=>{ if(!e.target.closest('.tip')&&!e.target.closest('.pt')&&!e.target.closest('.hit')) hideTip(); });
+document.addEventListener('click',e=>{ if(!e.target.closest('.tip')&&!e.target.closest('.pt')&&!e.target.closest('.hit')&&!e.target.closest('.mpt')&&!e.target.closest('.mhit')) hideTip(); });
 
 /* ════════════════════════════ LIST ════════════════════════════ */
+function metricTag(label,kind,value){
+  value=metricValue(value);
+  if(value===null) return '';
+  const c=metricColor(kind,value);
+  return `<span class="tag" style="color:${c};background:${c}14">${label} ${value}</span>`;
+}
 function renderList(){
   const list=$('#list'), data=[...entries].sort((a,b)=>new Date(b.at)-new Date(a.at));
   $('#listCount').textContent=data.length?`${data.length} registro${data.length>1?'s':''}`:'';
@@ -797,6 +996,7 @@ function renderList(){
         <div class="when">${fmtFull(e.at)}</div>
         <div class="mood" style="color:${mc}">${ml}</div>
         ${e.comment&&e.comment.trim()?`<div class="cmt">${esc(e.comment)}</div>`:''}
+        <div class="tags">${metricTag('TOC','toc',e.toc)}${metricTag('Sueño','sleep',e.sleep)}</div>
         <div class="ago">${ago(e.at)}</div>
       </div>
       <svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -846,7 +1046,34 @@ function renderSummary(){
     <div class="stat"><div class="k">Racha</div><div class="v">${s.streak}</div><div class="s">día${s.streak===1?'':'s'} seguidos</div></div>`;
 }
 
-function render(){ renderChart(); renderList(); renderSummary(); }
+function corr(pairs,a,b){
+  if(pairs.length<3) return null;
+  const ma=pairs.reduce((s,x)=>s+x[a],0)/pairs.length;
+  const mb=pairs.reduce((s,x)=>s+x[b],0)/pairs.length;
+  let num=0, da=0, db=0;
+  pairs.forEach(x=>{ const xa=x[a]-ma, xb=x[b]-mb; num+=xa*xb; da+=xa*xa; db+=xb*xb; });
+  return da&&db ? num/Math.sqrt(da*db) : 0;
+}
+function relationWord(r,positive,negative){
+  if(r===null) return null;
+  if(r>0.28) return positive;
+  if(r<-0.28) return negative;
+  return 'un patrón todavía suave';
+}
+function renderRelation(){
+  const el=$('#relation');
+  const paired=entries
+    .map(e=>({value:+e.value,toc:metricValue(e.toc),sleep:metricValue(e.sleep)}))
+    .filter(e=>Number.isFinite(e.value)&&e.toc!==null&&e.sleep!==null);
+  if(paired.length<3){
+    el.textContent='Añade algunos registros con TOC y sueño para ver cómo se relacionan con tu bienestar.';
+    return;
+  }
+  const sleepToc=relationWord(corr(paired,'sleep','toc'),'TOC más alto','TOC más bajo');
+  const sleepWell=relationWord(corr(paired,'sleep','value'),'más bienestar','menos bienestar');
+  el.textContent=`Patrón, no causa: con ${paired.length} registros, dormir mejor coincide con ${sleepToc} y ${sleepWell}.`;
+}
+function render(){ renderChart(); renderMetricCharts(); renderList(); renderSummary(); renderRelation(); }
 
 /* ════════════════════════════ SHEET ════════════════════════════ */
 function openSheet(id=null){
@@ -857,6 +1084,10 @@ function openSheet(id=null){
   $('#sDelete').style.display=e?'block':'none';
   const v=e?e.value:0;
   $('#sRange').value=v; updateSlider(v);
+  const toc=e&&metricValue(e.toc)!==null?metricValue(e.toc):5;
+  const sleep=e&&metricValue(e.sleep)!==null?metricValue(e.sleep):5;
+  $('#sTocRange').value=toc; updateMetricSlider('toc',toc);
+  $('#sSleepRange').value=sleep; updateMetricSlider('sleep',sleep);
   $('#sWhen').value=toLocalInput(e?new Date(e.at):new Date());
   $('#sCmt').value=e?(e.comment||''):'';
   $('#scrim').classList.add('show'); $('#sheet').classList.add('show');
@@ -870,13 +1101,30 @@ function updateSlider(v){
   $('#sVal').style.color=v===0?'#7d7d92':valColor(v);
   $('#sMood').textContent=ml; $('#sMood').style.color=mc;
 }
+function updateMetricSlider(kind,v){
+  v=metricValue(v)??5;
+  const label=kind==='toc'?tocLabel(v):sleepLabel(v);
+  const prefix=kind==='toc'?'sToc':'sSleep';
+  $('#'+prefix+'Val').textContent=v;
+  $('#'+prefix+'Val').style.color=metricColor(kind,v);
+  $('#'+prefix+'Mood').textContent=label[0];
+  $('#'+prefix+'Mood').style.color=label[1];
+}
 $('#sRange').addEventListener('input',e=>updateSlider(e.target.value));
+$('#sTocRange').addEventListener('input',e=>updateMetricSlider('toc',e.target.value));
+$('#sSleepRange').addEventListener('input',e=>updateMetricSlider('sleep',e.target.value));
 $('#sNow').addEventListener('click',()=>{ $('#sWhen').value=toLocalInput(new Date()); });
 $('#sSave').addEventListener('click',()=>{
   const whenVal=$('#sWhen').value;
   if(!whenVal){ toast('Elige una fecha'); return; }
   const wasEditing=!!editingId;
-  const data={ value:+$('#sRange').value, at:new Date(whenVal).toISOString(), comment:$('#sCmt').value.trim() };
+  const data={
+    value:+$('#sRange').value,
+    toc:metricValue($('#sTocRange').value),
+    sleep:metricValue($('#sSleepRange').value),
+    at:new Date(whenVal).toISOString(),
+    comment:$('#sCmt').value.trim()
+  };
   if(editingId) data.id=editingId;
   upsertEntry(data);
   closeSheet();
@@ -926,7 +1174,7 @@ $('#mImport').addEventListener('click',()=>{
     r.onload=()=>{ try{ const o=JSON.parse(r.result);
       const arr=Array.isArray(o)?o:o.entries; if(!Array.isArray(arr))throw 0;
       if(o.title) setTitle(o.title);
-      arr.forEach(e=>{ const d={id:e.id||uid(),at:e.at,value:+e.value,comment:e.comment||''};
+      arr.forEach(e=>{ const d=normalizeEntry({id:e.id||uid(),at:e.at,value:+e.value,toc:e.toc,sleep:e.sleep,comment:e.comment||''});
         const i=entries.findIndex(x=>x.id===d.id); if(i>=0)entries[i]=d; else entries.push(d);
         pushUpsert(d); });
       saveLocal(); render(); toast(`${arr.length} entradas importadas`);
@@ -941,19 +1189,20 @@ function loadExample(){
   const base=new Date(); base.setHours(12,0,0,0);
   const D=n=>{const d=new Date(base);d.setDate(d.getDate()-n);return d.toISOString();};
   const ex=[
-    [560,-1,'conocí a mi pareja'],[520,-5,''],[480,-6,'empecé terapia + ERP'],
-    [430,-7,''],[380,-3,''],[330,-8,'vacaciones en Italia'],[270,-6,''],
-    [210,-4,''],[150,-9,'el peor momento'],[120,4,'la medicación hizo efecto'],
-    [95,-2,'hablamos de tener hijos'],[70,7,''],[45,3,'mi pareja se mudó conmigo'],
-    [20,8,''],[5,9,'lo mejor que he estado']
+    [560,-1,6,4,'conocí a mi pareja'],[520,-5,8,3,''],[480,-6,8,4,'empecé terapia + ERP'],
+    [430,-7,9,2,''],[380,-3,6,5,''],[330,-8,9,3,'vacaciones en Italia'],[270,-6,8,4,''],
+    [210,-4,7,5,''],[150,-9,10,2,'el peor momento'],[120,4,4,7,'la medicación hizo efecto'],
+    [95,-2,7,4,'hablamos de tener hijos'],[70,7,3,8,''],[45,3,5,6,'mi pareja se mudó conmigo'],
+    [20,8,2,8,''],[5,9,1,9,'lo mejor que he estado']
   ];
-  ex.forEach(([n,v,c])=>{ const d={id:uid(),at:D(n),value:v,comment:c}; entries.push(d); pushUpsert(d); });
+  ex.forEach(([n,v,toc,sleep,c])=>{ const d={id:uid(),at:D(n),value:v,toc,sleep,comment:c}; entries.push(d); pushUpsert(d); });
   saveLocal(); render(); toast('Ejemplo cargado — puedes borrarlo cuando quieras');
 }
 
 function showSetup(){
   const m=$('#modal');
-  const status = tableMissing ? '<b style="color:var(--bad-ink)">⚠ La tabla aún no existe en tu Supabase.</b><br>'
+  const status = schemaMissing ? '<b style="color:var(--bad-ink)">⚠ Falta actualizar Supabase para guardar TOC y sueño.</b><br>'
+    : tableMissing ? '<b style="color:var(--bad-ink)">⚠ La tabla aún no existe en tu Supabase.</b><br>'
     : online ? '<b style="color:var(--good-ink)">✓ Conectado y sincronizando.</b><br>'
     : '<b style="color:#c98a1a">Sin conexión ahora mismo.</b> Tus datos se guardan en el dispositivo y se subirán cuando vuelvas a estar online.<br>';
   m.innerHTML=`<h3>Sincronización en la nube</h3>
@@ -1066,7 +1315,7 @@ function switchTab(view){
   $('#view'+(view==='graf'?'Graf':'Hist')).classList.add('active');
   hideTip(); sfx('tap');
   window.scrollTo(0,0);
-  if(view==='graf') renderChart();   // re-measure now that it is visible
+  if(view==='graf'){ renderChart(); renderMetricCharts(); }   // re-measure now that it is visible
 }
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.view)));
 
@@ -1074,7 +1323,7 @@ document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>swit
 $('#fab').addEventListener('click',()=>openSheet());
 window.addEventListener('online',()=>{ pull().then(flushQueue); });
 window.addEventListener('scroll',()=>{ document.querySelector('header').classList.toggle('scrolled',scrollY>4); },{passive:true});
-let rt; window.addEventListener('resize',()=>{ clearTimeout(rt); rt=setTimeout(renderChart,150); });
+let rt; window.addEventListener('resize',()=>{ clearTimeout(rt); rt=setTimeout(()=>{ renderChart(); renderMetricCharts(); },150); });
 
 /* ════════════════════════════ BOOT ════════════════════════════ */
 function boot(){

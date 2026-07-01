@@ -1,7 +1,7 @@
 {
   "name": "Seguimiento ROCD",
   "short_name": "ROCD",
-  "description": "Registra cómo te sientes con tu ROCD y observa tu evolución en una gráfica.",
+  "description": "Registra bienestar, TOC y sueño, y observa su evolución en gráficas.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#f3f3f9",
