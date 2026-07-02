@@ -288,12 +288,13 @@
     font-family:inherit;font-size:12.5px;font-weight:700;color:var(--indigo);cursor:pointer}
   .now-btn:active{transform:scale(.95)}
 
-  .sheet-actions{display:flex;gap:10px;margin-top:6px}
+  .sheet-actions{display:flex;gap:12px;margin-top:8px;align-items:stretch}
   .btn{flex:1;height:52px;border-radius:15px;border:none;font-family:inherit;font-size:15px;font-weight:700;
     cursor:pointer;transition:transform .12s}
   .btn:active{transform:scale(.97)}
   .btn-primary{background:linear-gradient(135deg,var(--indigo),#7d80e8);color:#fff;box-shadow:0 8px 22px rgba(91,95,214,.4)}
-  .btn-ghost{flex:none;width:52px;background:var(--line-soft);color:var(--ink-soft);font-size:20px}
+  .btn-ghost{flex:1;width:auto;background:var(--line-soft);color:var(--ink-soft);font-size:15px;padding:0 14px}
+  #sDelete{flex:0 0 52px;width:52px;padding:0;font-size:20px}
   .btn-danger{background:#fdeef2;color:var(--bad-ink)}
   .link-row{text-align:center;margin-top:14px}
   .link-row button{background:none;border:none;color:var(--muted);font-family:inherit;font-size:12.5px;
@@ -379,7 +380,7 @@
   .completion-card.show{display:block}
   .completion-card h3{margin:0 0 5px;font-size:16px}
   .completion-card p{margin:0 0 12px;color:var(--ink-soft);font-size:13px;line-height:1.45}
-  .completion-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+  .completion-actions{display:grid;grid-template-columns:1fr;gap:8px}
   .habit-tools{margin:16px 0 22px;border:1px solid var(--line);border-radius:18px;background:var(--card);box-shadow:var(--shadow);overflow:hidden}
   .habit-tools summary{cursor:pointer;list-style:none;padding:15px 16px;font-size:13px;font-weight:800;color:var(--ink);display:flex;justify-content:space-between;align-items:center}
   .habit-tools summary::-webkit-details-marker{display:none}
@@ -785,62 +786,25 @@
     color:#b5b5b5;
     border:1px solid #d3d0c8;
   }
-  .relapse-button{
-    align-self:start;
-    margin-top:2px;
+  .relapse-check{
+    width:31px;
+    height:31px;
+    margin-top:1px;
+    border-radius:999px;
     border:1px solid var(--red);
-    border-radius:8px;
     background:transparent;
-    color:var(--red-2);
-    min-width:88px;
-    height:39px;
-    padding:0 14px;
-    font:600 14px/1 inherit;
+    color:var(--red);
+    display:grid;
+    place-items:center;
+    padding:0;
     cursor:pointer;
   }
-  .relapse-button.clean{
-    border-color:var(--green);
-    color:var(--green-2);
+  .relapse-check svg{width:18px;height:18px}
+  .relapse-check.on{
+    background:var(--red);
+    color:#fff;
+    border-color:var(--red);
   }
-  .habit-week{
-    grid-column:1/-1;
-    display:grid;
-    grid-template-columns:repeat(7,1fr) auto;
-    align-items:end;
-    column-gap:12px;
-    margin-top:7px;
-  }
-  .habit-day{
-    display:grid;
-    justify-items:center;
-    gap:7px;
-    min-width:0;
-  }
-  .habit-week-dot{
-    width:18px;
-    height:18px;
-    border-radius:999px;
-    border:1px solid #d7d3cc;
-    background:transparent;
-  }
-  .habit-week-dot.done,
-  .habit-week-dot.clean{background:var(--green);border-color:var(--green);box-shadow:inset 0 -2px 4px rgba(0,0,0,.08)}
-  .habit-week-dot.relapse{background:var(--red);border-color:var(--red)}
-  .habit-day span{
-    font-size:14px;
-    line-height:1;
-    color:#5f5f5f;
-  }
-  .habit-week-score{
-    justify-self:end;
-    align-self:center;
-    min-width:48px;
-    text-align:right;
-    font-size:20px;
-    font-weight:650;
-    color:var(--green-2);
-  }
-  .habit-week-score.bad{color:var(--red-2)}
   .today-card .habit-meta,
   .today-card .habit-dots,
   .today-card .habit-actions{display:none}
@@ -851,58 +815,6 @@
     text-align:left;
     font:inherit;
     cursor:pointer;
-  }
-  .weekly-card{
-    margin:14px 0 18px;
-    padding:15px 19px 16px;
-    border:1px solid var(--line);
-    border-radius:13px;
-    background:rgba(255,253,248,.83);
-    box-shadow:var(--shadow);
-  }
-  .weekly-head{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:12px;
-  }
-  .weekly-title{
-    font-size:16px;
-    font-weight:600;
-    color:#1b1b1b;
-  }
-  .weekly-score{
-    font-size:19px;
-    font-weight:650;
-    color:var(--green-2);
-  }
-  .weekly-bars{
-    display:grid;
-    grid-template-columns:repeat(7,1fr);
-    gap:21px;
-  }
-  .weekly-bar-item{
-    display:grid;
-    justify-items:center;
-    gap:8px;
-    color:#4f4f4f;
-    font-size:14px;
-  }
-  .weekly-bar-track{
-    width:18px;
-    height:63px;
-    border-radius:6px;
-    background:#f1efea;
-    border:1px solid #e2ded6;
-    display:flex;
-    align-items:flex-end;
-    overflow:hidden;
-  }
-  .weekly-bar-fill{
-    width:100%;
-    height:var(--h,0%);
-    background:linear-gradient(180deg,#44a77c,#287d5d);
-    border-radius:5px;
   }
   .completion-card.show{margin-bottom:14px}
   .tabbar{
@@ -971,8 +883,6 @@
     .wrap{padding:0 17px}
     .mode-card:not(.active){flex:0 0 104px}
     .habit-card{grid-template-columns:58px minmax(0,1fr) auto}
-    .habit-week{column-gap:8px}
-    .weekly-bars{gap:12px}
   }
 </style>
 </head>
@@ -1091,7 +1001,6 @@
       <span id="quitCount">0</span>
     </div>
     <div class="habit-stack" id="quitList"></div>
-    <section class="weekly-card" id="habitWeeklyCard"></section>
 
     <details class="habit-tools">
       <summary><span>Progreso y archivo</span><span id="habitActiveCount">0 activos</span></summary>
@@ -1390,7 +1299,8 @@ function svgIcon(name){
     walk:`<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="25" cy="9" r="4" fill="currentColor"/><path d="M24 16l-4 8 7 3 6-5M22 24l-3 15M27 27l7 12M21 18l-8 6" ${common} stroke-width="4"/></svg>`,
     book:`<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 12c5 0 9 1 13 5v23c-4-4-8-5-13-5V12zM40 12c-5 0-9 1-13 5v23c4-4 8-5 13-5V12z" fill="currentColor"/><path d="M24 17v23" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>`,
     block:`<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="19" ${common} stroke-width="4"/><path d="M11 11l26 26" ${common} stroke-width="4"/></svg>`,
-    check:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.4l4 4L19 7" ${common} stroke-width="2.6"/></svg>`
+    check:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.4l4 4L19 7" ${common} stroke-width="2.6"/></svg>`,
+    relapse:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 7l10 10M17 7L7 17" ${common} stroke-width="2.4"/></svg>`
   };
   return icons[name]||'';
 }
@@ -1832,15 +1742,6 @@ function habitWeeklyAverage(){
   const scores=recentKeys(7).map(habitDayScore);
   return Math.round(scores.reduce((sum,value)=>sum+value,0)/scores.length);
 }
-function currentWeekDays(){
-  const today=parseKey(dateKey());
-  const offset=(today.getDay()+6)%7;
-  const start=new Date(today); start.setDate(today.getDate()-offset);
-  return WEEK_DAYS.map((day,i)=>{
-    const d=new Date(start); d.setDate(start.getDate()+i);
-    return {key:dateKey(d),label:day.label};
-  });
-}
 function habitDisplayParts(habit){
   const raw=habit.name||'Hábito';
   const duration=raw.match(/^(.*?)(?:\s+)(\d+\s*(?:min|m|h|hora|horas))$/i);
@@ -1857,36 +1758,6 @@ function habitIconSvg(habit){
   if(/leer|libro|read|estudi/i.test(name)) return svgIcon('book');
   return svgIcon('walk');
 }
-function renderHabitWeek(habit){
-  const days=currentWeekDays();
-  let count=0;
-  const items=days.map(day=>{
-    let cls='';
-    if(!createdBeforeOrOn(habit,day.key)||(habit.type==='do'&&!isDueOn(habit,day.key))){
-      cls='off';
-    }else if(habit.type==='quit'){
-      if(hasRelapse(habit.id,day.key)){ cls='relapse'; count++; }
-    }else if(isDone(habit.id,day.key)){
-      cls='done'; count++;
-    }
-    return `<div class="habit-day"><span class="habit-week-dot ${cls}"></span><span>${day.label}</span></div>`;
-  }).join('');
-  return `<div class="habit-week">${items}<div class="habit-week-score ${habit.type==='quit'?'bad':''}">${count}/7</div></div>`;
-}
-function renderHabitWeeklyCard(){
-  const card=$('#habitWeeklyCard'); if(!card) return;
-  const habits=activeHabits();
-  const days=currentWeekDays();
-  let totalOk=0, totalSlots=0;
-  const bars=days.map(day=>{
-    const due=habits.filter(h=>createdBeforeOrOn(h,day.key)&&isDueOn(h,day.key));
-    const ok=due.filter(h=>h.type==='quit'?!hasRelapse(h.id,day.key):isDone(h.id,day.key)).length;
-    totalOk+=ok; totalSlots+=due.length;
-    const h=due.length?Math.round(ok/due.length*100):0;
-    return `<div class="weekly-bar-item"><span>${day.label}</span><span class="weekly-bar-track"><span class="weekly-bar-fill" style="--h:${h}%"></span></span></div>`;
-  }).join('');
-  card.innerHTML=`<div class="weekly-head"><span class="weekly-title">Resumen semanal</span><span class="weekly-score">${totalOk}/${totalSlots}</span></div><div class="weekly-bars">${bars}</div>`;
-}
 function renderHabits(){
   if(!$('#viewHabits')) return;
   refreshHabitCompletions();
@@ -1899,7 +1770,6 @@ function renderHabits(){
   $('#quitCount').textContent=stats.quitHabits.length;
   $('#doList').innerHTML=stats.doHabits.length?stats.doHabits.map(renderDoHabit).join(''):`<div class="habit-empty"><b>No hay nada que marcar hoy.</b><br>Añade un hábito o deja este día como descanso.</div>`;
   $('#quitList').innerHTML=stats.quitHabits.length?stats.quitHabits.map(renderQuitHabit).join(''):`<div class="habit-empty"><b>No hay hábitos de dejar.</b><br>Úsalos para registrar solo los días de recaída.</div>`;
-  renderHabitWeeklyCard();
   renderHabitCompletion();
   renderHabitProgress();
   renderHabitArchive();
@@ -1916,7 +1786,6 @@ function renderDoHabit(habit){
     <button class="habit-check ${done?'on':''}" data-toggle-done="${habit.id}" aria-label="Marcar ${esc(habit.name)}">
       ${svgIcon('check')}
     </button>
-    ${renderHabitWeek(habit)}
   </article>`;
 }
 function renderQuitHabit(habit){
@@ -1926,10 +1795,9 @@ function renderQuitHabit(habit){
     <div class="habit-icon quit">${habitIconSvg(habit)}</div>
     <div>
       <button class="habit-title habit-title-btn" data-edit-habit="${habit.id}" type="button">${esc(display.name)}</button>
-      <div class="habit-subtitle">${esc(display.subtitle)}</div>
+      <div class="habit-subtitle">${relapse?'Recaída marcada hoy':esc(display.subtitle)}</div>
     </div>
-    <button class="relapse-button ${relapse?'clean':''}" data-relapse-habit="${habit.id}" type="button">${relapse?'Quitar':'Recaída'}</button>
-    ${renderHabitWeek(habit)}
+    <button class="relapse-check ${relapse?'on':''}" data-toggle-relapse="${habit.id}" type="button" aria-label="${relapse?'Quitar recaída':'Marcar recaída'}">${svgIcon('relapse')}</button>
   </article>`;
 }
 function renderDoDots(habit){
@@ -2737,6 +2605,20 @@ function toggleDone(habitId){
   }
   saveHabits(); render(); sfx('success');
 }
+function toggleRelapse(habitId){
+  const today=dateKey();
+  const existing=habitState.relapses.find(log=>log.habitId===habitId&&log.date===today);
+  if(existing){
+    habitState.relapses=habitState.relapses.filter(log=>log!==existing);
+    pushHabit('relapse','delete',existing.id);
+    saveHabits(); render(); sfx('tap'); toast('Recaída quitada');
+    return;
+  }
+  const relapse={id:uid(),habitId,date:today,note:'',createdAt:new Date().toISOString()};
+  habitState.relapses.push(relapse);
+  pushHabit('relapse','upsert',relapse);
+  saveHabits(); render(); sfx('delete'); toast('Recaída marcada');
+}
 function openRelapseSheet(habitId){
   relapseHabitId=habitId;
   const habit=habitById(habitId); if(!habit) return;
@@ -3086,7 +2968,7 @@ function applyHabitSection(section){
   document.querySelectorAll('[data-habit-section]').forEach(b=>b.classList.toggle('active',b.dataset.habitSection===section));
   $('#habitModeSub').textContent=HABIT_SECTIONS[section]||'Hoy';
   const heads=$$('#viewHabits > .habit-section-head');
-  const todayEls=[$('#viewHabits > .habit-hero'),$('#habitCompletionCard'),heads[0],$('#doList'),heads[1],$('#quitList'),$('#habitWeeklyCard')].filter(Boolean);
+  const todayEls=[$('#viewHabits > .habit-hero'),$('#habitCompletionCard'),heads[0],$('#doList'),heads[1],$('#quitList')].filter(Boolean);
   const tools=$('.habit-tools');
   todayEls.forEach(el=>el.style.display=section==='today'?'':'none');
   if(tools){
@@ -3114,6 +2996,7 @@ document.addEventListener('click',event=>{
   if(!target) return;
   if(target.dataset.openEntry){ openSheet(); return; }
   if(target.dataset.toggleDone) toggleDone(target.dataset.toggleDone);
+  if(target.dataset.toggleRelapse) toggleRelapse(target.dataset.toggleRelapse);
   if(target.dataset.editHabit) openHabitSheet(target.dataset.editHabit);
   if(target.dataset.relapseHabit){
     hasRelapse(target.dataset.relapseHabit) ? removeTodayRelapse(target.dataset.relapseHabit) : openRelapseSheet(target.dataset.relapseHabit);

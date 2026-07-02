@@ -1,4 +1,4 @@
-const CACHE = 'ritmo-unificado-v3';
+const CACHE = 'ritmo-unificado-v4';
 const ASSETS = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', e => {
