@@ -401,6 +401,579 @@
     .habit-actions{grid-column:1/-1;justify-content:flex-start;margin-left:45px}
     .completion-actions,.habit-stat-grid{grid-template-columns:1fr}
   }
+
+  /* captura Ritmo */
+  :root{
+    --bg:#fbfaf6;
+    --card:#fffdf8;
+    --ink:#151515;
+    --ink-soft:#484848;
+    --muted:#707070;
+    --line:#ded9d0;
+    --line-soft:#eee9df;
+    --navy:#10234a;
+    --navy-2:#1d4a8c;
+    --green:#2f8d69;
+    --green-2:#257556;
+    --red:#d26767;
+    --red-2:#c34f51;
+    --indigo:var(--navy-2);
+    --indigo-deep:var(--navy);
+    --good:var(--green);
+    --good-ink:#17724e;
+    --bad:var(--red);
+    --bad-ink:#c64f51;
+    --shadow:0 2px 5px rgba(34,31,24,.05),0 12px 30px rgba(34,31,24,.08);
+    --shadow-lg:0 18px 54px rgba(34,31,24,.18);
+    --r:14px;
+  }
+  body{
+    background:
+      radial-gradient(circle at 50% 0%, rgba(255,255,255,.92), rgba(251,250,246,0) 42%),
+      var(--bg);
+    color:var(--ink);
+    padding-bottom:calc(98px + var(--safe-b));
+  }
+  .wrap{max-width:493px;padding:0 19px}
+  header{
+    background:transparent;
+    backdrop-filter:none;
+    border-bottom:0;
+    padding-top:calc(18px + var(--safe-t));
+  }
+  .head-row{padding:0 0 14px}
+  .logo,.sync{display:none}
+  .brand h1{
+    font-size:31px;
+    line-height:1;
+    letter-spacing:-.055em;
+    font-weight:800;
+    color:var(--navy);
+  }
+  .icon-btn{
+    width:42px;
+    height:42px;
+    border:0;
+    background:transparent;
+    color:#1a1a1a;
+    box-shadow:none;
+  }
+  .icon-btn svg{width:27px;height:27px}
+  .mode-shell{margin:4px 0 16px}
+  .mode-switch{gap:8px}
+  .mode-card{
+    min-width:0;
+    min-height:51px;
+    border:1px solid var(--line);
+    border-radius:18px;
+    background:rgba(255,253,248,.72);
+    box-shadow:0 2px 9px rgba(34,31,24,.04);
+    padding:0 16px;
+    color:#3f3f3f;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+  }
+  .mode-card.active{
+    flex:1 1 74%;
+    justify-content:space-between;
+    color:#fff;
+    border-color:transparent;
+    box-shadow:0 12px 24px rgba(16,35,74,.22);
+  }
+  .mode-card[data-mode="state"].active{background:linear-gradient(135deg,#122b5b,#204a8d)}
+  .mode-card[data-mode="habits"].active{background:linear-gradient(135deg,#318765,#2f936e)}
+  .mode-card:not(.active){
+    flex:0 0 107px;
+    color:#3f3f3f;
+    display:flex;
+    place-items:initial;
+  }
+  .mode-title{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:15.5px;
+    font-weight:750;
+    letter-spacing:-.02em;
+  }
+  .mode-card.active .mode-title{font-size:18px}
+  .mode-icon,.mode-chevron{display:none;flex:none}
+  .mode-icon svg{width:25px;height:25px}
+  .mode-chevron svg{width:20px;height:20px}
+  .mode-card.active .mode-icon,
+  .mode-card.active .mode-chevron{display:grid;place-items:center}
+  .mode-sub{display:none!important}
+  .mode-subnav{
+    margin-top:19px;
+    padding:0 11px;
+    min-height:47px;
+    gap:0;
+    background:rgba(255,253,248,.74);
+    border:1px solid var(--line);
+    border-radius:14px;
+    box-shadow:0 2px 8px rgba(34,31,24,.035);
+    overflow:hidden;
+  }
+  .mode-subnav.active{display:flex}
+  .subtab{
+    flex:1;
+    position:relative;
+    background:transparent;
+    border:0;
+    border-radius:0;
+    box-shadow:none;
+    padding:14px 4px 13px;
+    color:#424242;
+    font-size:14px;
+    font-weight:500;
+  }
+  .subtab.active{background:transparent;color:#1f1f1f}
+  .subtab.active:after{
+    content:"";
+    position:absolute;
+    left:8px;
+    right:8px;
+    bottom:5px;
+    height:2.5px;
+    border-radius:999px;
+    background:var(--navy-2);
+  }
+  #habitSubnav .subtab.active:after{background:var(--green)}
+  .card{
+    border:1px solid var(--line);
+    border-radius:13px;
+    background:rgba(255,253,248,.83);
+    box-shadow:var(--shadow);
+  }
+  .chart-card{
+    padding:14px 18px 0;
+    margin:0 0 12px;
+    overflow:hidden;
+  }
+  .chart-head{
+    padding:0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .chart-title{
+    font-size:20px;
+    font-weight:650;
+    letter-spacing:-.035em;
+    color:#171717;
+  }
+  .chart-title .pencil{display:none}
+  .chart-info{
+    display:grid;
+    place-items:center;
+    width:20px;
+    height:20px;
+    border:1.5px solid #5f6568;
+    border-radius:999px;
+    color:#5f6568;
+    font-size:13px;
+    font-weight:700;
+  }
+  .chart-cap{display:none}
+  .chart-scroll{margin-top:4px}
+  .summary{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:0;
+    margin:3px 0 0;
+    padding:11px 0 12px;
+    border-top:1px solid var(--line);
+  }
+  .stat{
+    background:transparent;
+    box-shadow:none;
+    border-radius:0;
+    padding:0 6px;
+    text-align:center;
+    border-left:1px solid var(--line);
+  }
+  .stat:first-child{border-left:0}
+  .stat .k{
+    font-size:14px;
+    line-height:1.1;
+    font-weight:450;
+    color:#565656;
+    text-transform:none;
+    letter-spacing:0;
+    margin-bottom:7px;
+  }
+  .stat .v{
+    font-size:14px;
+    font-weight:650;
+    letter-spacing:0;
+    color:var(--navy-2);
+  }
+  .stat .s{display:none}
+  .mini-charts{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:12px;
+    margin-top:0;
+  }
+  .mini-chart-card{
+    position:relative;
+    padding:15px 19px 16px;
+    margin:0;
+    overflow:hidden;
+  }
+  .mini-chart-head{
+    padding:0;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .mini-chart-head h3{
+    margin:0;
+    font-size:20px;
+    line-height:1;
+    font-weight:620;
+    color:#141414;
+    letter-spacing:-.035em;
+  }
+  .mini-chart-head p{display:none}
+  .metric-info{
+    display:grid;
+    place-items:center;
+    width:20px;
+    height:20px;
+    border:1.5px solid #5f6568;
+    border-radius:999px;
+    color:#5f6568;
+    font-size:13px;
+    font-weight:700;
+  }
+  .metric-picker{
+    margin-top:17px;
+    display:grid;
+    gap:12px;
+  }
+  .metric-icon-row,.metric-dot-row{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    align-items:center;
+    justify-items:center;
+  }
+  .metric-icon-btn{
+    border:0;
+    background:transparent;
+    padding:0;
+    color:#5e6265;
+    cursor:pointer;
+    width:48px;
+    height:48px;
+    border-radius:999px;
+    display:grid;
+    place-items:center;
+  }
+  .metric-icon-btn svg{width:46px;height:46px}
+  .metric-icon-btn.active{
+    color:var(--navy-2);
+    background:#eaf1fb;
+    box-shadow:inset 0 0 0 2px var(--navy-2),0 8px 18px rgba(32,74,141,.14);
+  }
+  .metric-dot-row{
+    position:relative;
+    margin:0 1px;
+  }
+  .metric-dot-row:before{
+    content:"";
+    position:absolute;
+    left:28px;
+    right:28px;
+    top:50%;
+    height:1px;
+    background:var(--line);
+    transform:translateY(-50%);
+  }
+  .metric-dot{
+    position:relative;
+    z-index:1;
+    width:9px;
+    height:9px;
+    border-radius:999px;
+    background:#a8aaab;
+  }
+  .metric-dot.active{
+    width:16px;
+    height:16px;
+    background:var(--navy-2);
+  }
+  .choice-grid{gap:8px}
+  .choice{
+    border-radius:14px;
+    padding:10px 3px 9px;
+    box-shadow:none;
+  }
+  .choice .face{
+    display:grid;
+    place-items:center;
+    height:39px;
+    margin:0 0 6px;
+    color:#5e6265;
+  }
+  .choice .face svg{width:38px;height:38px}
+  .choice .word{font-size:9px}
+  .choice.active{
+    background:var(--navy-2);
+    color:#fff;
+    border-color:transparent;
+  }
+  .choice.active .face{color:#fff}
+  #viewHabits > .habit-hero,
+  #viewHabits > .habit-section-head{display:none!important}
+  .habit-stack{gap:14px}
+  .habit-card{
+    display:grid;
+    grid-template-columns:58px minmax(0,1fr) auto;
+    align-items:start;
+    gap:12px;
+    border:1px solid var(--line);
+    border-radius:13px;
+    padding:17px 15px;
+    background:rgba(255,253,248,.83);
+    box-shadow:var(--shadow);
+  }
+  .habit-card.done{border-color:var(--line)}
+  .habit-card.relapsed{border-color:var(--line)}
+  .habit-icon{
+    width:51px;
+    height:51px;
+    border-radius:999px;
+    display:grid;
+    place-items:center;
+    color:#fff;
+    background:radial-gradient(circle at 35% 25%,#4aa782,#257556);
+  }
+  .habit-icon svg{width:35px;height:35px}
+  .habit-icon.quit{
+    background:transparent;
+    color:var(--red);
+  }
+  .habit-icon.quit svg{width:53px;height:53px}
+  .habit-title{
+    margin:5px 0 3px;
+    font-size:21px;
+    line-height:1;
+    font-weight:600;
+    letter-spacing:-.035em;
+    color:#151515;
+  }
+  .habit-subtitle{
+    font-size:14px;
+    color:#5f5f5f;
+    line-height:1.2;
+  }
+  .habit-check{
+    width:31px;
+    height:31px;
+    margin-top:1px;
+    border-radius:999px;
+    border:0;
+    background:var(--green);
+    color:#fff;
+  }
+  .habit-check svg{width:21px;height:21px}
+  .habit-check:not(.on){
+    background:transparent;
+    color:#b5b5b5;
+    border:1px solid #d3d0c8;
+  }
+  .relapse-button{
+    align-self:start;
+    margin-top:2px;
+    border:1px solid var(--red);
+    border-radius:8px;
+    background:transparent;
+    color:var(--red-2);
+    min-width:88px;
+    height:39px;
+    padding:0 14px;
+    font:600 14px/1 inherit;
+    cursor:pointer;
+  }
+  .relapse-button.clean{
+    border-color:var(--green);
+    color:var(--green-2);
+  }
+  .habit-week{
+    grid-column:1/-1;
+    display:grid;
+    grid-template-columns:repeat(7,1fr) auto;
+    align-items:end;
+    column-gap:12px;
+    margin-top:7px;
+  }
+  .habit-day{
+    display:grid;
+    justify-items:center;
+    gap:7px;
+    min-width:0;
+  }
+  .habit-week-dot{
+    width:18px;
+    height:18px;
+    border-radius:999px;
+    border:1px solid #d7d3cc;
+    background:transparent;
+  }
+  .habit-week-dot.done,
+  .habit-week-dot.clean{background:var(--green);border-color:var(--green);box-shadow:inset 0 -2px 4px rgba(0,0,0,.08)}
+  .habit-week-dot.relapse{background:var(--red);border-color:var(--red)}
+  .habit-day span{
+    font-size:14px;
+    line-height:1;
+    color:#5f5f5f;
+  }
+  .habit-week-score{
+    justify-self:end;
+    align-self:center;
+    min-width:48px;
+    text-align:right;
+    font-size:20px;
+    font-weight:650;
+    color:var(--green-2);
+  }
+  .habit-week-score.bad{color:var(--red-2)}
+  .today-card .habit-meta,
+  .today-card .habit-dots,
+  .today-card .habit-actions{display:none}
+  .habit-title-btn{
+    border:0;
+    background:transparent;
+    padding:0;
+    text-align:left;
+    font:inherit;
+    cursor:pointer;
+  }
+  .weekly-card{
+    margin:14px 0 18px;
+    padding:15px 19px 16px;
+    border:1px solid var(--line);
+    border-radius:13px;
+    background:rgba(255,253,248,.83);
+    box-shadow:var(--shadow);
+  }
+  .weekly-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:12px;
+  }
+  .weekly-title{
+    font-size:16px;
+    font-weight:600;
+    color:#1b1b1b;
+  }
+  .weekly-score{
+    font-size:19px;
+    font-weight:650;
+    color:var(--green-2);
+  }
+  .weekly-bars{
+    display:grid;
+    grid-template-columns:repeat(7,1fr);
+    gap:21px;
+  }
+  .weekly-bar-item{
+    display:grid;
+    justify-items:center;
+    gap:8px;
+    color:#4f4f4f;
+    font-size:14px;
+  }
+  .weekly-bar-track{
+    width:18px;
+    height:63px;
+    border-radius:6px;
+    background:#f1efea;
+    border:1px solid #e2ded6;
+    display:flex;
+    align-items:flex-end;
+    overflow:hidden;
+  }
+  .weekly-bar-fill{
+    width:100%;
+    height:var(--h,0%);
+    background:linear-gradient(180deg,#44a77c,#287d5d);
+    border-radius:5px;
+  }
+  .completion-card.show{margin-bottom:14px}
+  .tabbar{
+    display:flex;
+    max-width:493px;
+    min-height:88px;
+    border:1px solid var(--line);
+    border-bottom:0;
+    border-radius:21px 21px 0 0;
+    background:rgba(255,253,248,.88);
+    backdrop-filter:saturate(150%) blur(18px);
+    box-shadow:0 -10px 28px rgba(34,31,24,.08);
+    padding:8px 11px calc(9px + var(--safe-b));
+  }
+  body.mode-switch-ui .tabbar{display:flex}
+  .tab{
+    color:#606060;
+    font-size:12px;
+    font-weight:500;
+    gap:5px;
+    padding:4px 0 0;
+  }
+  .tab svg{width:28px;height:28px}
+  .tab.active{color:var(--navy)}
+  .fab{display:none}
+  .state-drawer,.habit-tools{
+    border-color:var(--line);
+    border-radius:13px;
+    background:rgba(255,253,248,.83);
+  }
+  @media(min-width:720px){
+    body{
+      padding-top:20px;
+      padding-bottom:20px;
+    }
+    body:before{
+      content:"";
+      position:fixed;
+      z-index:0;
+      top:20px;
+      bottom:20px;
+      left:50%;
+      width:493px;
+      max-width:calc(100vw - 34px);
+      transform:translateX(-50%);
+      background:var(--bg);
+      border:1px solid rgba(204,198,188,.84);
+      border-radius:25px;
+      box-shadow:0 17px 42px rgba(38,34,28,.18);
+      pointer-events:none;
+    }
+    header,main.wrap,.tabbar{position:relative;z-index:1}
+    header{
+      top:20px;
+      max-width:493px;
+      margin:0 auto;
+      border-radius:25px 25px 0 0;
+    }
+    .tabbar{
+      bottom:20px;
+      border-radius:21px 21px 25px 25px;
+      border-bottom:1px solid var(--line);
+    }
+  }
+  @media(max-width:430px){
+    .wrap{padding:0 17px}
+    .mode-card:not(.active){flex:0 0 104px}
+    .habit-card{grid-template-columns:58px minmax(0,1fr) auto}
+    .habit-week{column-gap:8px}
+    .weekly-bars{gap:12px}
+  }
 </style>
 </head>
 <body class="mode-switch-ui">
@@ -418,7 +991,7 @@
         </div>
       </div>
       <button class="icon-btn" id="menuBtn" aria-label="Menú">
-        <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="5" r="1.6" fill="currentColor"/><circle cx="12" cy="12" r="1.6" fill="currentColor"/><circle cx="12" cy="19" r="1.6" fill="currentColor"/></svg>
+        <svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
       </button>
     </div>
   </div>
@@ -428,12 +1001,14 @@
   <section class="mode-shell" aria-label="Modo">
     <div class="mode-switch">
       <button class="mode-card active" data-mode="state" type="button">
-        <span class="mode-title">Estado</span>
+        <span class="mode-title"><span class="mode-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M3.5 15.5l5.1-5.1 4.1 4.1 7.8-8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Estado</span>
         <span class="mode-sub" id="stateModeSub">Tendencia</span>
+        <span class="mode-chevron"><svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </button>
       <button class="mode-card" data-mode="habits" type="button">
-        <span class="mode-title">Hábitos</span>
+        <span class="mode-title"><span class="mode-icon"><svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="8.4" stroke="currentColor" stroke-width="2"/><path d="M8.3 12.2l2.3 2.3 5-5.4" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Hábitos</span>
         <span class="mode-sub" id="habitModeSub">Hoy</span>
+        <span class="mode-chevron"><svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       </button>
     </div>
     <nav class="mode-subnav active" id="stateSubnav" aria-label="Secciones de Estado">
@@ -455,15 +1030,17 @@
     <section class="card chart-card" id="chartCard">
       <div class="chart-head">
         <h2 class="chart-title" id="chartTitle"><span id="chartTitleTxt">tendencia general</span><span class="pencil">✎</span></h2>
+        <span class="chart-info" aria-hidden="true">i</span>
         <div class="chart-cap" id="chartCap"><span>curva suavizada</span><span>·</span><span class="neu">bienestar + sueño</span></div>
       </div>
       <div class="chart-scroll" id="chartScroll"></div>
+      <div class="summary" id="summary"></div>
     </section>
-    <div class="summary" id="summary"></div>
     <section class="mini-charts" aria-label="Bienestar y sueño">
       <section class="card mini-chart-card">
         <div class="mini-chart-head">
           <h3>Bienestar</h3>
+          <span class="metric-info" aria-hidden="true">i</span>
           <p>caritas · tendencia</p>
         </div>
         <div class="chart-scroll" id="wellbeingChart"></div>
@@ -471,6 +1048,7 @@
       <section class="card mini-chart-card">
         <div class="mini-chart-head">
           <h3>Sueño</h3>
+          <span class="metric-info" aria-hidden="true">i</span>
           <p>0 mal · 10 bien</p>
         </div>
         <div class="chart-scroll" id="sleepChart"></div>
@@ -513,6 +1091,7 @@
       <span id="quitCount">0</span>
     </div>
     <div class="habit-stack" id="quitList"></div>
+    <section class="weekly-card" id="habitWeeklyCard"></section>
 
     <details class="habit-tools">
       <summary><span>Progreso y archivo</span><span id="habitActiveCount">0 activos</span></summary>
@@ -534,13 +1113,21 @@
 </main>
 
 <nav class="tabbar">
-  <button class="tab active" data-view="state">
+  <button class="tab active" data-view="state" type="button">
     <svg viewBox="0 0 24 24" fill="none"><path d="M4 17l5-6 4 4 7-9" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    <span>Gráfica</span>
+    <span>Resumen</span>
   </button>
-  <button class="tab" data-view="habits">
-    <svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    <span>Historial</span>
+  <button class="tab" data-action="quick-add" type="button">
+    <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9.1" stroke="currentColor" stroke-width="1.8"/><path d="M12 7.5v9M7.5 12h9" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+    <span>Registro</span>
+  </button>
+  <button class="tab" data-action="records" type="button">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M8 5.5h9.5a1.5 1.5 0 011.5 1.5v12H8a3 3 0 010-6h11" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/><path d="M8 5.5a3 3 0 000 6.5h11M11 9h4.5" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/></svg>
+    <span>Reflexión</span>
+  </button>
+  <button class="tab" data-action="profile" type="button">
+    <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.2" stroke="currentColor" stroke-width="1.8"/><path d="M5.5 20a6.5 6.5 0 0113 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+    <span>Perfil</span>
   </button>
 </nav>
 
@@ -773,19 +1360,56 @@ const WEEK_DAYS = [
 const STATE_SECTIONS = { trend:'Tendencia', day:'Día', month:'Mes', year:'Año', records:'Registros' };
 const HABIT_SECTIONS = { today:'Hoy', progress:'Progreso', archive:'Archivo' };
 const WELLBEING_CHOICES = [
-  { value:-8, face:'😣', word:'Muy mal' },
-  { value:-4, face:'🙁', word:'Mal' },
-  { value:0, face:'😐', word:'Neutral' },
-  { value:4, face:'🙂', word:'Bien' },
-  { value:8, face:'😌', word:'Muy bien' }
+  { value:-8, word:'Muy mal' },
+  { value:-4, word:'Mal' },
+  { value:0, word:'Neutral' },
+  { value:4, word:'Bien' },
+  { value:8, word:'Muy bien' }
 ];
 const SLEEP_CHOICES = [
-  { value:1, face:'🌑', word:'Muy mal' },
-  { value:3, face:'🌘', word:'Mal' },
-  { value:5, face:'🌗', word:'Regular' },
-  { value:7, face:'🌖', word:'Bien' },
-  { value:9, face:'🌕', word:'Muy bien' }
+  { value:1, word:'Muy mal' },
+  { value:3, word:'Mal' },
+  { value:5, word:'Regular' },
+  { value:7, word:'Bien' },
+  { value:9, word:'Muy bien' }
 ];
+
+function svgIcon(name){
+  const common='fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"';
+  const icons={
+    faceVeryBad:`<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="19" ${common} stroke-width="1.7"/><path d="M16 19h.1M32 19h.1" ${common} stroke-width="3.2"/><path d="M16.5 34c3.3-5.1 11.8-5.1 15 0" ${common} stroke-width="1.8"/></svg>`,
+    faceBad:`<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="19" ${common} stroke-width="1.7"/><path d="M17 19h.1M31 19h.1" ${common} stroke-width="3"/><path d="M17.5 32c3.9-3.1 9.1-3.1 13 0" ${common} stroke-width="1.8"/></svg>`,
+    faceNeutral:`<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="19" ${common} stroke-width="1.7"/><path d="M17 19h.1M31 19h.1" ${common} stroke-width="3"/><path d="M17 31h14" ${common} stroke-width="1.8"/></svg>`,
+    faceGood:`<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="19" ${common} stroke-width="1.7"/><path d="M17 19h.1M31 19h.1" ${common} stroke-width="3"/><path d="M16.5 29.5c3.2 5 11.8 5 15 0" ${common} stroke-width="1.8"/></svg>`,
+    faceVeryGood:`<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="19" ${common} stroke-width="1.7"/><path d="M16 18c1.4 1.3 3 1.3 4.4 0M27.6 18c1.4 1.3 3 1.3 4.4 0" ${common} stroke-width="1.8"/><path d="M16.5 29.5c3.2 5 11.8 5 15 0" ${common} stroke-width="1.8"/></svg>`,
+    moonBad:`<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M32 39A18 18 0 1129 7c-3.8 6.4-2.3 14.5 3.6 19.3 3.1 2.5 7 3.5 10.5 2.9A18 18 0 0132 39z" ${common} stroke-width="1.7"/><path d="M17 18h.1M28 20h.1M18 31c2.6-2.5 6.4-2.5 9 0" ${common} stroke-width="1.7"/></svg>`,
+    moonLow:`<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M32 39A18 18 0 1129 7c-3.8 6.4-2.3 14.5 3.6 19.3 3.1 2.5 7 3.5 10.5 2.9A18 18 0 0132 39z" ${common} stroke-width="1.7"/><path d="M18 19h.1M29 21h.1M19 31h9" ${common} stroke-width="1.7"/></svg>`,
+    moonMid:`<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M32 39A18 18 0 1129 7c-3.8 6.4-2.3 14.5 3.6 19.3 3.1 2.5 7 3.5 10.5 2.9A18 18 0 0132 39z" ${common} stroke-width="1.7"/><path d="M18 20h.1M29 21h.1" ${common} stroke-width="1.7"/></svg>`,
+    moonGood:`<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M32 39A18 18 0 1129 7c-3.8 6.4-2.3 14.5 3.6 19.3 3.1 2.5 7 3.5 10.5 2.9A18 18 0 0132 39z" ${common} stroke-width="1.7"/><path d="M17.5 29c2.9 3.3 7 3.4 10.2.2" ${common} stroke-width="1.7"/></svg>`,
+    moonBest:`<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M32 39A18 18 0 1129 7c-3.8 6.4-2.3 14.5 3.6 19.3 3.1 2.5 7 3.5 10.5 2.9A18 18 0 0132 39z" ${common} stroke-width="1.7"/><path d="M18 20c1.1 1 2.4 1 3.5 0M28 20c1.1 1 2.4 1 3.5 0M18 29.5c3.3 4.4 9.4 4.4 12.8 0" ${common} stroke-width="1.7"/><path d="M35 14h2.8M36.4 12.6v2.8" ${common} stroke-width="1.5"/></svg>`,
+    walk:`<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="25" cy="9" r="4" fill="currentColor"/><path d="M24 16l-4 8 7 3 6-5M22 24l-3 15M27 27l7 12M21 18l-8 6" ${common} stroke-width="4"/></svg>`,
+    book:`<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M8 12c5 0 9 1 13 5v23c-4-4-8-5-13-5V12zM40 12c-5 0-9 1-13 5v23c4-4 8-5 13-5V12z" fill="currentColor"/><path d="M24 17v23" stroke="#fff" stroke-width="2" stroke-linecap="round"/></svg>`,
+    block:`<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="19" ${common} stroke-width="4"/><path d="M11 11l26 26" ${common} stroke-width="4"/></svg>`,
+    check:`<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.4l4 4L19 7" ${common} stroke-width="2.6"/></svg>`
+  };
+  return icons[name]||'';
+}
+function wellbeingSvg(value){
+  const choice=nearestChoice(WELLBEING_CHOICES,value).value;
+  if(choice<=-8) return svgIcon('faceVeryBad');
+  if(choice<=-4) return svgIcon('faceBad');
+  if(choice<=0) return svgIcon('faceNeutral');
+  if(choice<=4) return svgIcon('faceGood');
+  return svgIcon('faceVeryGood');
+}
+function sleepSvg(value){
+  const choice=nearestChoice(SLEEP_CHOICES,value).value;
+  if(choice<=1) return svgIcon('moonBad');
+  if(choice<=3) return svgIcon('moonLow');
+  if(choice<=5) return svgIcon('moonMid');
+  if(choice<=7) return svgIcon('moonGood');
+  return svgIcon('moonBest');
+}
 
 function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
 function dateKey(d=new Date()){
@@ -1208,6 +1832,61 @@ function habitWeeklyAverage(){
   const scores=recentKeys(7).map(habitDayScore);
   return Math.round(scores.reduce((sum,value)=>sum+value,0)/scores.length);
 }
+function currentWeekDays(){
+  const today=parseKey(dateKey());
+  const offset=(today.getDay()+6)%7;
+  const start=new Date(today); start.setDate(today.getDate()-offset);
+  return WEEK_DAYS.map((day,i)=>{
+    const d=new Date(start); d.setDate(start.getDate()+i);
+    return {key:dateKey(d),label:day.label};
+  });
+}
+function habitDisplayParts(habit){
+  const raw=habit.name||'Hábito';
+  const duration=raw.match(/^(.*?)(?:\s+)(\d+\s*(?:min|m|h|hora|horas))$/i);
+  const name=duration&&duration[1].trim()?duration[1].trim():raw;
+  let subtitle=duration?duration[2].trim():`${Number(habit.targetDays)||30} días`;
+  if(habit.type==='quit'){
+    subtitle=/red|social/i.test(raw)?'Evitar redes sociales':'Registrar recaídas';
+  }
+  return {name,subtitle};
+}
+function habitIconSvg(habit){
+  if(habit.type==='quit') return svgIcon('block');
+  const name=(habit.name||'').toLowerCase();
+  if(/leer|libro|read|estudi/i.test(name)) return svgIcon('book');
+  return svgIcon('walk');
+}
+function renderHabitWeek(habit){
+  const days=currentWeekDays();
+  let count=0;
+  const items=days.map(day=>{
+    let cls='';
+    if(!createdBeforeOrOn(habit,day.key)||(habit.type==='do'&&!isDueOn(habit,day.key))){
+      cls='off';
+    }else if(habit.type==='quit'){
+      if(hasRelapse(habit.id,day.key)){ cls='relapse'; count++; }
+    }else if(isDone(habit.id,day.key)){
+      cls='done'; count++;
+    }
+    return `<div class="habit-day"><span class="habit-week-dot ${cls}"></span><span>${day.label}</span></div>`;
+  }).join('');
+  return `<div class="habit-week">${items}<div class="habit-week-score ${habit.type==='quit'?'bad':''}">${count}/7</div></div>`;
+}
+function renderHabitWeeklyCard(){
+  const card=$('#habitWeeklyCard'); if(!card) return;
+  const habits=activeHabits();
+  const days=currentWeekDays();
+  let totalOk=0, totalSlots=0;
+  const bars=days.map(day=>{
+    const due=habits.filter(h=>createdBeforeOrOn(h,day.key)&&isDueOn(h,day.key));
+    const ok=due.filter(h=>h.type==='quit'?!hasRelapse(h.id,day.key):isDone(h.id,day.key)).length;
+    totalOk+=ok; totalSlots+=due.length;
+    const h=due.length?Math.round(ok/due.length*100):0;
+    return `<div class="weekly-bar-item"><span>${day.label}</span><span class="weekly-bar-track"><span class="weekly-bar-fill" style="--h:${h}%"></span></span></div>`;
+  }).join('');
+  card.innerHTML=`<div class="weekly-head"><span class="weekly-title">Resumen semanal</span><span class="weekly-score">${totalOk}/${totalSlots}</span></div><div class="weekly-bars">${bars}</div>`;
+}
 function renderHabits(){
   if(!$('#viewHabits')) return;
   refreshHabitCompletions();
@@ -1220,49 +1899,37 @@ function renderHabits(){
   $('#quitCount').textContent=stats.quitHabits.length;
   $('#doList').innerHTML=stats.doHabits.length?stats.doHabits.map(renderDoHabit).join(''):`<div class="habit-empty"><b>No hay nada que marcar hoy.</b><br>Añade un hábito o deja este día como descanso.</div>`;
   $('#quitList').innerHTML=stats.quitHabits.length?stats.quitHabits.map(renderQuitHabit).join(''):`<div class="habit-empty"><b>No hay hábitos de dejar.</b><br>Úsalos para registrar solo los días de recaída.</div>`;
+  renderHabitWeeklyCard();
   renderHabitCompletion();
   renderHabitProgress();
   renderHabitArchive();
 }
 function renderDoHabit(habit){
   const done=isDone(habit.id);
-  const progress=doProgress(habit);
-  const label=habit.mode==='maintenance'?'mantenimiento':`${progress.count}/${progress.target}`;
-  return `<article class="habit-card ${done?'done':''}">
-    <button class="habit-check ${done?'on':''}" data-toggle-done="${habit.id}" aria-label="Marcar ${esc(habit.name)}">
-      <svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4 4L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
+  const display=habitDisplayParts(habit);
+  return `<article class="habit-card today-card ${done?'done':''}">
+    <div class="habit-icon">${habitIconSvg(habit)}</div>
     <div>
-      <div class="habit-title">${esc(habit.name)}</div>
-      <div class="habit-meta">
-        <span class="habit-pill ${progress.complete?'good':''}">${label}</span>
-        ${habit.completedAt&&habit.mode!=='maintenance'?'<span class="habit-pill good">cumplido</span>':''}
-      </div>
-      ${renderDoDots(habit)}
+      <button class="habit-title habit-title-btn" data-edit-habit="${habit.id}" type="button">${esc(display.name)}</button>
+      <div class="habit-subtitle">${esc(display.subtitle)}</div>
     </div>
-    <div class="habit-actions"><button class="mini-btn" data-edit-habit="${habit.id}">Editar</button></div>
+    <button class="habit-check ${done?'on':''}" data-toggle-done="${habit.id}" aria-label="Marcar ${esc(habit.name)}">
+      ${svgIcon('check')}
+    </button>
+    ${renderHabitWeek(habit)}
   </article>`;
 }
 function renderQuitHabit(habit){
   const relapse=hasRelapse(habit.id);
-  const progress=quitProgress(habit);
-  const label=habit.mode==='maintenance'?`día ${progress.count}`:`día ${progress.count}/${progress.target}`;
-  return `<article class="habit-card ${relapse?'relapsed':''}">
-    <div class="habit-check ${relapse?'':'on'}" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4 4L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </div>
+  const display=habitDisplayParts(habit);
+  return `<article class="habit-card today-card ${relapse?'relapsed':''}">
+    <div class="habit-icon quit">${habitIconSvg(habit)}</div>
     <div>
-      <div class="habit-title">${esc(habit.name)}</div>
-      <div class="habit-meta">
-        <span class="habit-pill ${relapse?'bad':'good'}">${relapse?'recaída hoy':label}</span>
-        ${habit.completedAt&&habit.mode!=='maintenance'?'<span class="habit-pill good">cumplido</span>':''}
-      </div>
-      ${renderQuitDots(habit)}
+      <button class="habit-title habit-title-btn" data-edit-habit="${habit.id}" type="button">${esc(display.name)}</button>
+      <div class="habit-subtitle">${esc(display.subtitle)}</div>
     </div>
-    <div class="habit-actions">
-      <button class="mini-btn ${relapse?'green':'coral'}" data-relapse-habit="${habit.id}">${relapse?'Quitar':'Recaída'}</button>
-      <button class="mini-btn" data-edit-habit="${habit.id}">Editar</button>
-    </div>
+    <button class="relapse-button ${relapse?'clean':''}" data-relapse-habit="${habit.id}" type="button">${relapse?'Quitar':'Recaída'}</button>
+    ${renderHabitWeek(habit)}
   </article>`;
 }
 function renderDoDots(habit){
@@ -1774,64 +2441,98 @@ function stateChartData(){
 }
 function renderChart(){
   const host=$('#chartScroll');
-  const data=stateChartData();
-  const label=STATE_SECTIONS[stateSection]||'Tendencia';
-  $('#chartTitleTxt').textContent=stateSection==='day'?'hoy':stateSection==='month'?'últimos 30 días':stateSection==='year'?'último año':'tendencia general';
-  $('#chartCap').innerHTML=`<span>curva suavizada</span><span>·</span><span class="neu">${label.toLowerCase()}</span>`;
+  const raw=stateChartData();
+  const now=new Date();
+  const today=new Date(); today.setHours(0,0,0,0);
+  let rangeStart=null, rangeEnd=now.getTime();
+  if(stateSection==='day'){ rangeStart=today.getTime(); rangeEnd=rangeStart+86400000; }
+  if(stateSection==='month'||stateSection==='trend'){ rangeStart=rangeEnd-30*86400000; }
+  if(stateSection==='year'){ rangeStart=rangeEnd-365*86400000; }
+  let data=raw;
+  if(rangeStart!==null){
+    const inRange=raw.filter(d=>d.time>=rangeStart&&d.time<=rangeEnd);
+    data=inRange.length?inRange:raw.slice(-12);
+  }
+  $('#chartTitleTxt').textContent=stateSection==='day'?'Hoy':stateSection==='month'?'Mes':stateSection==='year'?'Año':'Tendencia';
+  $('#chartCap').innerHTML='';
   if(!data.length){
     host.innerHTML=`<div class="chart-empty">
       <svg class="ill" viewBox="0 0 300 130" fill="none">
-        <line x1="20" y1="65" x2="285" y2="65" stroke="var(--line)" stroke-width="1.5" stroke-dasharray="4 5"/>
-        <path d="M22 86 C60 80 70 40 110 44 S150 95 185 72 230 30 283 34" stroke="var(--c-zero)" stroke-width="3" stroke-linecap="round" fill="none"/>
+        <line x1="20" y1="35" x2="285" y2="35" stroke="var(--line)" stroke-width="1" stroke-dasharray="4 5"/>
+        <line x1="20" y1="65" x2="285" y2="65" stroke="var(--line)" stroke-width="1" stroke-dasharray="4 5"/>
+        <line x1="20" y1="95" x2="285" y2="95" stroke="var(--line)" stroke-width="1" stroke-dasharray="4 5"/>
+        <path d="M22 86 C60 80 70 40 110 44 S150 95 185 72 230 30 283 34" stroke="var(--navy-2)" stroke-width="3" stroke-linecap="round" fill="none"/>
       </svg>
       <h3>Aún no hay registros</h3>
       <p>Añade bienestar y sueño para empezar a ver la tendencia.</p>
-      <button class="btn btn-primary" style="max-width:240px;margin:0 auto;height:48px" onclick="openSheet()">＋ Añadir primera entrada</button>
+      <button class="btn btn-primary" style="max-width:240px;margin:0 auto;height:48px" onclick="openSheet()">Añadir primera entrada</button>
     </div>`;
     return;
   }
 
-  const cw=Math.max(320,(host.clientWidth|| (document.querySelector('.wrap').clientWidth-16)));
-  const W=Math.round(Math.max(cw, Math.min(data.length*52+90, cw*2.4)));
-  const H=Math.round(Math.max(280, Math.min((window.innerHeight||720)-390, 500)));
-  const M={l:30,r:18,t:34,b:42};
+  const cw=Math.max(310,(host.clientWidth|| (document.querySelector('.wrap').clientWidth-38)));
+  const W=Math.round(cw);
+  const H=236;
+  const M={l:59,r:5,t:12,b:35};
   const pw=W-M.l-M.r, ph=H-M.t-M.b;
-  let tmin=data[0].time, tmax=data[data.length-1].time;
-  if(tmin===tmax){ tmin-=86400000; tmax+=86400000; }
-  const pad=(tmax-tmin)*0.04||86400000; tmin-=pad; tmax+=pad;
+  let tmin=rangeStart!==null?rangeStart:data[0].time, tmax=rangeEnd||data[data.length-1].time;
+  if(!Number.isFinite(tmin)||!Number.isFinite(tmax)||tmin===tmax){ tmin=data[0].time-86400000; tmax=data[data.length-1].time+86400000; }
   const X=t=>M.l+((t-tmin)/(tmax-tmin))*pw;
   const Y=v=>M.t+((10-v)/20)*ph;
-  const y0=Y(0);
-  const pts=data.map(d=>({x:X(d.time),y:Y(clamp(d.value,-10,10)),d}));
+  const pts=data.map(d=>({x:clamp(X(d.time),M.l,W-M.r),y:Y(clamp(d.value,-10,10)),d}));
   const line=smoothPath(pts);
-  const area=line+` L${pts[pts.length-1].x.toFixed(2)},${y0.toFixed(2)} L${pts[0].x.toFixed(2)},${y0.toFixed(2)} Z`;
-
-  let grid='';
-  for(const gv of [10,5,0,-5,-10]){
-    const gy=Y(gv);
-    grid+=`<line x1="${M.l}" y1="${gy.toFixed(1)}" x2="${W-M.r}" y2="${gy.toFixed(1)}" stroke="${gv===0?'var(--c-zero)':'var(--line-soft)'}" stroke-width="${gv===0?'1.3':'1'}"/>`;
-    if(gv!==0) grid+=`<text x="${M.l-7}" y="${(gy+3.5).toFixed(1)}" text-anchor="end" font-size="9.5" fill="var(--c-ylab)" font-weight="600">${gv>0?'+'+gv:gv}</text>`;
-  }
-  let xax='';
-  for(const tk of timeTicks(tmin+pad,tmax-pad)){
-    const tx=X(tk.t); if(tx<M.l-2||tx>W-M.r+2)continue;
-    xax+=`<line x1="${tx.toFixed(1)}" y1="${M.t}" x2="${tx.toFixed(1)}" y2="${(H-M.b).toFixed(1)}" stroke="var(--line-soft)" stroke-width="1"/>`;
-    xax+=tk.day
-      ? `<text x="${tx.toFixed(1)}" y="${(H-M.b+16).toFixed(1)}" text-anchor="middle" font-size="9.5" fill="var(--c-axis)" font-weight="600">${tk.day} ${tk.m}</text>`
-      : `<text x="${tx.toFixed(1)}" y="${(H-M.b+15).toFixed(1)}" text-anchor="middle" font-size="9.5" fill="var(--c-axis)" font-weight="600">${tk.m}</text>`;
-  }
-  const dots=pts.map((p,i)=>`<circle class="pt" data-i="${i}" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3.4" fill="var(--card)" stroke="${valColor(p.d.value)}" stroke-width="2"/>`).join('');
+  const bottom=H-M.b;
+  const area=line+` L${pts[pts.length-1].x.toFixed(2)},${bottom.toFixed(2)} L${pts[0].x.toFixed(2)},${bottom.toFixed(2)} Z`;
+  const yLabels=[
+    {v:9,label:'Muy bien'},
+    {v:5,label:'Bien'},
+    {v:1,label:'Regular'},
+    {v:-4,label:'Mal'},
+    {v:-9,label:'Muy mal'}
+  ];
+  const grid=yLabels.map(item=>{
+    const y=Y(item.v);
+    return `<line x1="${M.l}" y1="${y.toFixed(1)}" x2="${W-M.r}" y2="${y.toFixed(1)}" stroke="#ddd9d0" stroke-width="1" stroke-dasharray="3 4"/>
+      <text x="${M.l-10}" y="${(y+4).toFixed(1)}" text-anchor="end" font-size="11" fill="#676767" font-weight="450">${item.label}</text>`;
+  }).join('');
+  const xTicks=stateSection==='day'
+    ? [
+        {t:rangeStart,label:'00'},
+        {t:rangeStart+6*3600000,label:'06'},
+        {t:rangeStart+12*3600000,label:'12'},
+        {t:rangeStart+18*3600000,label:'18'},
+        {t:rangeEnd,label:'Hoy'}
+      ]
+    : stateSection==='year'
+      ? [
+          {t:rangeEnd-365*86400000,label:'-12 meses'},
+          {t:rangeEnd-180*86400000,label:'-6 meses'},
+          {t:rangeEnd,label:'Hoy'}
+        ]
+      : [
+          {t:rangeEnd-30*86400000,label:'-30 días'},
+          {t:rangeEnd-20*86400000,label:'-20 días'},
+          {t:rangeEnd-10*86400000,label:'-10 días'},
+          {t:rangeEnd,label:'Hoy'}
+        ];
+  const xax=xTicks.map(tick=>{
+    const x=clamp(X(tick.t),M.l,W-M.r);
+    return `<text x="${x.toFixed(1)}" y="${(H-9).toFixed(1)}" text-anchor="${tick.label==='Hoy'?'end':'middle'}" font-size="11" fill="#777" font-weight="450">${tick.label}</text>`;
+  }).join('');
+  const last=pts[pts.length-1];
   host.innerHTML=`<svg class="chart" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMinYMin meet">
     <defs>
       <linearGradient id="trendFill" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0" stop-color="#5b5fd6" stop-opacity="0.24"/>
-        <stop offset="1" stop-color="#5b5fd6" stop-opacity="0.03"/>
+        <stop offset="0" stop-color="#204a8d" stop-opacity="0.20"/>
+        <stop offset="1" stop-color="#204a8d" stop-opacity="0.02"/>
       </linearGradient>
     </defs>
-    ${grid}${xax}
+    ${grid}
     <path d="${area}" fill="url(#trendFill)"/>
-    <path d="${line}" fill="none" stroke="var(--indigo)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-    ${dots}
+    <path d="${line}" fill="none" stroke="#204a8d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="${last.x.toFixed(1)}" cy="${last.y.toFixed(1)}" r="9" fill="#eaf1fb" stroke="#204a8d" stroke-width="2"/>
+    <circle cx="${last.x.toFixed(1)}" cy="${last.y.toFixed(1)}" r="5" fill="#5b83cf"/>
+    ${xax}
   </svg>`;
 }
 function metricSeries(kind){
@@ -1866,9 +2567,28 @@ function renderMetricChart(hostId, kind){
     ${pts.map((p,i)=>`<circle class="mpt" data-i="${i}" cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3" fill="var(--card)" stroke="${stroke}" stroke-width="1.8"/>`).join('')}
   </svg>`;
 }
+function latestMetricChoice(kind){
+  const last=[...entries].sort((a,b)=>new Date(b.at)-new Date(a.at))[0];
+  if(kind==='sleep') return last&&metricValue(last.sleep)!==null?metricValue(last.sleep):9;
+  return last&&Number.isFinite(+last.value)?+last.value:8;
+}
+function renderMetricPicker(hostId,kind){
+  const host=$('#'+hostId); if(!host) return;
+  const list=kind==='sleep'?SLEEP_CHOICES:WELLBEING_CHOICES;
+  const selected=nearestChoice(list,latestMetricChoice(kind)).value;
+  const icon=value=>kind==='sleep'?sleepSvg(value):wellbeingSvg(value);
+  host.innerHTML=`<div class="metric-picker" data-open-entry="true">
+    <div class="metric-icon-row">
+      ${list.map(item=>`<button class="metric-icon-btn ${item.value===selected?'active':''}" data-open-entry="true" type="button" aria-label="${item.word}">${icon(item.value)}</button>`).join('')}
+    </div>
+    <div class="metric-dot-row">
+      ${list.map(item=>`<span class="metric-dot ${item.value===selected?'active':''}"></span>`).join('')}
+    </div>
+  </div>`;
+}
 function renderMetricCharts(){
-  renderMetricChart('wellbeingChart','wellbeing');
-  renderMetricChart('sleepChart','sleep');
+  renderMetricPicker('wellbeingChart','wellbeing');
+  renderMetricPicker('sleepChart','sleep');
 }
 function renderRelation(){
   const el=$('#relation');
@@ -1883,7 +2603,7 @@ function renderRelation(){
   el.textContent=`Patrón, no causa: con ${paired.length} registros, dormir mejor coincide con ${sleepWell}.`;
 }
 function faceForValue(value,list){
-  return nearestChoice(list,value).face;
+  return list===SLEEP_CHOICES?sleepSvg(value):wellbeingSvg(value);
 }
 function renderList(){
   const list=$('#list'), data=[...entries].sort((a,b)=>new Date(b.at)-new Date(a.at));
@@ -1917,17 +2637,14 @@ function renderSummary(){
   el.style.display='';
   const since=days=>data.filter(e=>new Date(e.at).getTime()>=Date.now()-days*86400000);
   const avg=arr=>arr.length?arr.reduce((s,e)=>s+entryStateScore(e),0)/arr.length:null;
-  const last=data[data.length-1];
   const avg7=avg(since(7));
   const avg30=avg(since(30));
-  const sleepVals=since(30).map(e=>metricValue(e.sleep)).filter(v=>v!==null);
-  const sleepAvg=sleepVals.length?sleepVals.reduce((s,v)=>s+v,0)/sleepVals.length:null;
-  const renderAvg=v=>v===null?'—':faceForValue(v,WELLBEING_CHOICES);
+  const word=v=>v===null?'—':moodLabel(v)[0].replace('Algo mejor','Bien').replace('Algo peor','Mal');
+  const score=v=>v===null?'—':`${((clamp(v,-10,10)+10)/2).toFixed(1).replace('.',',')}/10`;
   el.innerHTML=`
-    <div class="stat"><div class="k">Última</div><div class="v">${faceForValue(last.value,WELLBEING_CHOICES)}</div><div class="s">${moodLabel(last.value)[0]}</div></div>
-    <div class="stat"><div class="k">7 días</div><div class="v">${renderAvg(avg7)}</div><div class="s">tendencia</div></div>
-    <div class="stat"><div class="k">30 días</div><div class="v">${renderAvg(avg30)}</div><div class="s">media</div></div>
-    <div class="stat"><div class="k">Sueño</div><div class="v">${sleepAvg===null?'—':faceForValue(sleepAvg,SLEEP_CHOICES)}</div><div class="s">30 días</div></div>`;
+    <div class="stat"><div class="k">7 días</div><div class="v">${word(avg7)}</div><div class="s">tendencia</div></div>
+    <div class="stat"><div class="k">30 días</div><div class="v">${word(avg30)}</div><div class="s">media</div></div>
+    <div class="stat"><div class="k">media</div><div class="v">${score(avg30)}</div><div class="s">30 días</div></div>`;
 }
 
 function openHabitPanel(selector){
@@ -2094,7 +2811,7 @@ function renderChoiceGrid(kind){
   const list=kind==='wellbeing'?WELLBEING_CHOICES:SLEEP_CHOICES;
   const host=$('#'+(kind==='wellbeing'?'wellbeingChoices':'sleepChoices'));
   host.innerHTML=list.map(item=>`<button class="choice" data-choice-kind="${kind}" data-choice-value="${item.value}" type="button">
-    <span class="face">${item.face}</span><span class="word">${item.word}</span>
+    <span class="face">${kind==='sleep'?sleepSvg(item.value):wellbeingSvg(item.value)}</span><span class="word">${item.word}</span>
   </button>`).join('');
 }
 function setChoice(kind,value){
@@ -2344,7 +3061,17 @@ function switchTab(view){
   if(view==='state'){ applyStateSection(stateSection); renderChart(); renderMetricCharts(); }
   if(view==='habits'){ applyHabitSection(habitSection); renderHabits(); }
 }
-document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.view)));
+document.querySelectorAll('.tab[data-view]').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.view)));
+document.querySelector('[data-action="quick-add"]').addEventListener('click',()=>currentView==='habits'?openHabitSheet():openSheet());
+document.querySelector('[data-action="records"]').addEventListener('click',()=>{
+  switchTab('state');
+  applyStateSection('records');
+  renderList();
+});
+document.querySelector('[data-action="profile"]').addEventListener('click',e=>{
+  e.stopPropagation();
+  $('#menu').classList.toggle('show');
+});
 document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.mode)));
 function applyStateSection(section){
   stateSection=section;
@@ -2359,7 +3086,7 @@ function applyHabitSection(section){
   document.querySelectorAll('[data-habit-section]').forEach(b=>b.classList.toggle('active',b.dataset.habitSection===section));
   $('#habitModeSub').textContent=HABIT_SECTIONS[section]||'Hoy';
   const heads=$$('#viewHabits > .habit-section-head');
-  const todayEls=[$('#viewHabits > .habit-hero'),$('#habitCompletionCard'),heads[0],$('#doList'),heads[1],$('#quitList')].filter(Boolean);
+  const todayEls=[$('#viewHabits > .habit-hero'),$('#habitCompletionCard'),heads[0],$('#doList'),heads[1],$('#quitList'),$('#habitWeeklyCard')].filter(Boolean);
   const tools=$('.habit-tools');
   todayEls.forEach(el=>el.style.display=section==='today'?'':'none');
   if(tools){
@@ -2385,6 +3112,7 @@ document.querySelectorAll('[data-habit-section]').forEach(b=>b.addEventListener(
 document.addEventListener('click',event=>{
   const target=event.target.closest('button');
   if(!target) return;
+  if(target.dataset.openEntry){ openSheet(); return; }
   if(target.dataset.toggleDone) toggleDone(target.dataset.toggleDone);
   if(target.dataset.editHabit) openHabitSheet(target.dataset.editHabit);
   if(target.dataset.relapseHabit){
@@ -2423,10 +3151,6 @@ let rt; window.addEventListener('resize',()=>{ clearTimeout(rt); rt=setTimeout((
 function boot(){
   applyTheme(); setSoundLabel();
   setTitle(title);
-  const stateTab=document.querySelector('[data-view="state"] span');
-  const habitsTab=document.querySelector('[data-view="habits"] span');
-  if(stateTab) stateTab.textContent='Estado';
-  if(habitsTab) habitsTab.textContent='Hábitos';
   loadLocal(); loadHabits(); render();
   switchTab('state');
   setStatus('sync','conectando…');
