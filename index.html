@@ -6,8 +6,8 @@
 <meta name="theme-color" content="#f6f6fb">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="ROCD">
-<title>ROCD · seguimiento</title>
+<meta name="apple-mobile-web-app-title" content="Ritmo">
+<title>Ritmo · estado y hábitos</title>
 <script>
   // Aplica el tema antes de pintar para evitar parpadeo.
   (function(){
@@ -305,6 +305,71 @@
   .modal-box p{margin:0 0 18px;font-size:13.5px;color:var(--ink-soft);line-height:1.5}
   .modal-box pre{background:var(--line-soft);border-radius:12px;padding:12px;font-size:11px;line-height:1.5;
     overflow-x:auto;color:var(--ink);margin:0 0 16px;white-space:pre-wrap;font-family:ui-monospace,monospace}
+  .state-drawer{margin:13px 0 22px;border:1px solid var(--line);border-radius:18px;background:var(--card);box-shadow:var(--shadow);overflow:hidden}
+  .state-drawer summary{cursor:pointer;list-style:none;padding:15px 16px;font-size:13px;font-weight:800;color:var(--ink);display:flex;justify-content:space-between;align-items:center}
+  .state-drawer summary::-webkit-details-marker{display:none}
+  .state-drawer .list{padding:0 12px 12px}
+  .habit-hero{padding:18px 16px;margin:10px 0 14px;background:var(--card);border-radius:20px;box-shadow:var(--shadow)}
+  .habit-hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+  .habit-eyebrow{margin:0 0 3px;color:var(--muted);font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.08em}
+  .habit-hero h2{margin:0;font-size:28px;letter-spacing:-.04em;line-height:1}
+  .habit-score{text-align:right;min-width:74px}
+  .habit-score b{display:block;font-size:24px;letter-spacing:-.04em}
+  .habit-score span{display:block;font-size:10.5px;color:var(--muted);font-weight:700}
+  .habit-bar{height:9px;background:var(--line-soft);border-radius:999px;overflow:hidden;margin-top:15px}
+  .habit-bar i{display:block;height:100%;width:var(--w,0%);border-radius:999px;background:linear-gradient(90deg,var(--indigo),var(--good));transition:width .32s ease}
+  .habit-section-head{display:flex;align-items:center;justify-content:space-between;margin:17px 2px 8px}
+  .habit-section-head h3{margin:0;font-size:14px;font-weight:800}
+  .habit-section-head span{font-size:12px;font-weight:800;color:var(--muted)}
+  .habit-stack{display:grid;gap:9px}
+  .habit-card{display:grid;grid-template-columns:auto 1fr auto;gap:11px;align-items:center;background:var(--card);border:1px solid var(--line-soft);border-radius:17px;padding:12px;box-shadow:var(--shadow)}
+  .habit-card.done{border-color:rgba(47,174,122,.26)}
+  .habit-card.relapsed{border-color:rgba(226,90,130,.28)}
+  .habit-check{width:34px;height:34px;border-radius:12px;border:1px solid var(--line);background:var(--line-soft);color:transparent;display:grid;place-items:center;padding:0;cursor:pointer;transition:.16s}
+  .habit-check svg{width:20px;height:20px}
+  .habit-check.on{background:var(--good);border-color:var(--good);color:#fff}
+  .habit-title{font-size:14px;font-weight:800;line-height:1.2;margin-bottom:6px}
+  .habit-meta{display:flex;gap:5px;flex-wrap:wrap}
+  .habit-pill{border-radius:999px;background:var(--line-soft);color:var(--ink-soft);font-size:10.5px;font-weight:800;padding:4px 7px}
+  .habit-pill.good{background:rgba(47,174,122,.12);color:var(--good-ink)}
+  .habit-pill.bad{background:rgba(226,90,130,.12);color:var(--bad-ink)}
+  .habit-dots{display:flex;gap:4px;margin-top:8px}
+  .habit-dot{width:8px;height:8px;border-radius:999px;background:var(--line)}
+  .habit-dot.done,.habit-dot.clean{background:var(--good)}
+  .habit-dot.miss{background:var(--line)}
+  .habit-dot.relapse{background:var(--bad)}
+  .habit-dot.off{background:transparent;border:1px solid var(--line)}
+  .habit-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+  .mini-btn{border:none;border-radius:999px;background:var(--line-soft);color:var(--ink-soft);font-size:11px;font-weight:800;padding:8px 10px;cursor:pointer}
+  .mini-btn.coral{background:rgba(226,90,130,.12);color:var(--bad-ink)}
+  .mini-btn.green{background:rgba(47,174,122,.12);color:var(--good-ink)}
+  .habit-empty{background:var(--card);border:1px dashed var(--line);border-radius:16px;padding:16px;color:var(--muted);font-size:13px;line-height:1.45}
+  .completion-card{display:none;background:linear-gradient(135deg,rgba(47,174,122,.13),rgba(91,95,214,.12));border:1px solid rgba(47,174,122,.18);border-radius:18px;padding:15px;margin:0 0 14px}
+  .completion-card.show{display:block}
+  .completion-card h3{margin:0 0 5px;font-size:16px}
+  .completion-card p{margin:0 0 12px;color:var(--ink-soft);font-size:13px;line-height:1.45}
+  .completion-actions{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+  .habit-tools{margin:16px 0 22px;border:1px solid var(--line);border-radius:18px;background:var(--card);box-shadow:var(--shadow);overflow:hidden}
+  .habit-tools summary{cursor:pointer;list-style:none;padding:15px 16px;font-size:13px;font-weight:800;color:var(--ink);display:flex;justify-content:space-between;align-items:center}
+  .habit-tools summary::-webkit-details-marker{display:none}
+  .habit-tools-inner{padding:0 12px 14px}
+  .habit-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:4px 0 12px}
+  .habit-stat{background:var(--line-soft);border-radius:13px;padding:10px;text-align:center}
+  .habit-stat b{display:block;font-size:20px;letter-spacing:-.04em}
+  .habit-stat span{font-size:10.5px;color:var(--muted);font-weight:800}
+  .seg{display:grid;grid-template-columns:1fr 1fr;gap:7px;background:var(--line-soft);border-radius:14px;padding:4px}
+  .seg button{border:none;background:transparent;border-radius:11px;padding:11px 8px;font-size:13px;font-weight:800;color:var(--ink-soft);cursor:pointer}
+  .seg button.active{background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
+  .chips,.week-grid{display:flex;gap:7px;flex-wrap:wrap}
+  .chip{border:none;border-radius:999px;background:var(--line-soft);color:var(--ink-soft);font-size:12px;font-weight:800;padding:9px 11px;cursor:pointer}
+  .chip.active{background:var(--indigo);color:#fff}
+  .hidden{display:none!important}
+  #habitSheet input[type=text],#habitSheet input[type=number],#relapseSheet input[type=date]{width:100%;border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:13px;padding:13px 12px;outline:none}
+  @media(max-width:430px){
+    .habit-card{grid-template-columns:auto 1fr}
+    .habit-actions{grid-column:1/-1;justify-content:flex-start;margin-left:45px}
+    .completion-actions,.habit-stat-grid{grid-template-columns:1fr}
+  }
 </style>
 </head>
 <body>
@@ -317,7 +382,7 @@
           <svg viewBox="0 0 24 24" fill="none"><path d="M3 17l5-6 4 4 5-8 4 5" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
         <div style="min-width:0">
-          <h1>Seguimiento ROCD</h1>
+          <h1>Ritmo</h1>
           <div class="sync"><span class="dot" id="syncDot"></span><span id="syncTxt">cargando…</span></div>
         </div>
       </div>
@@ -332,7 +397,7 @@
   <section id="viewGraf" class="view active">
     <section class="card chart-card" id="chartCard">
       <div class="chart-head">
-        <h2 class="chart-title" id="chartTitle"><span id="chartTitleTxt">mi recuperación de ROCD</span><span class="pencil">✎</span></h2>
+        <h2 class="chart-title" id="chartTitle"><span id="chartTitleTxt">mi estado y sueño</span><span class="pencil">✎</span></h2>
         <div class="chart-cap"><span>↑ <b>mejor</b></span><span>·</span><span class="neu">0 = neutral</span><span>·</span><span style="color:var(--bad-ink);font-weight:600">↓ peor</span></div>
       </div>
       <div class="chart-scroll" id="chartScroll"></div>
@@ -355,31 +420,75 @@
       </section>
     </section>
     <div class="relation" id="relation"></div>
+
+    <details class="state-drawer">
+      <summary><span>Registros</span><span class="count" id="listCount"></span></summary>
+      <div class="list" id="list"></div>
+    </details>
   </section>
 
-  <section id="viewHist" class="view">
-    <div class="section-h">
-      <h2>Historial</h2>
-      <span class="count" id="listCount"></span>
+  <section id="viewHabits" class="view">
+    <section class="habit-hero">
+      <div class="habit-hero-top">
+        <div>
+          <p class="habit-eyebrow">Hoy</p>
+          <h2 id="habitTodayTitle">A tu ritmo</h2>
+        </div>
+        <div class="habit-score">
+          <b id="habitTodayScore">0/0</b>
+          <span id="habitTodayLabel">sin hábitos</span>
+        </div>
+      </div>
+      <div class="habit-bar" aria-hidden="true"><i id="habitTodayBar"></i></div>
+    </section>
+
+    <section class="completion-card" id="habitCompletionCard"></section>
+
+    <div class="habit-section-head">
+      <h3>Hacer</h3>
+      <span id="doCount">0</span>
     </div>
-    <div class="list" id="list"></div>
+    <div class="habit-stack" id="doList"></div>
+
+    <div class="habit-section-head">
+      <h3>Dejar</h3>
+      <span id="quitCount">0</span>
+    </div>
+    <div class="habit-stack" id="quitList"></div>
+
+    <details class="habit-tools">
+      <summary><span>Progreso y archivo</span><span id="habitActiveCount">0 activos</span></summary>
+      <div class="habit-tools-inner">
+        <div class="habit-stat-grid" id="habitStats"></div>
+        <div class="habit-section-head">
+          <h3>Activos</h3>
+          <span id="habitWeekLabel">semana</span>
+        </div>
+        <div class="habit-stack" id="habitProgressList"></div>
+        <div class="habit-section-head">
+          <h3>Archivados</h3>
+          <span id="habitArchiveCount">0</span>
+        </div>
+        <div class="habit-stack" id="habitArchiveList"></div>
+      </div>
+    </details>
   </section>
 </main>
 
 <nav class="tabbar">
-  <button class="tab active" data-view="graf">
+  <button class="tab active" data-view="state">
     <svg viewBox="0 0 24 24" fill="none"><path d="M4 17l5-6 4 4 7-9" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
     <span>Gráfica</span>
   </button>
-  <button class="tab" data-view="hist">
-    <svg viewBox="0 0 24 24" fill="none"><path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  <button class="tab" data-view="habits">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
     <span>Historial</span>
   </button>
 </nav>
 
 <button class="fab" id="fab">
   <svg viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/></svg>
-  Nueva entrada
+  <span id="fabText">Nueva entrada</span>
 </button>
 
 <!-- menu -->
@@ -459,6 +568,64 @@
   <div class="link-row"><button id="sCancel" type="button">Cancelar</button></div>
 </div>
 
+<!-- habit sheets -->
+<div class="sheet" id="habitSheet">
+  <div class="grab"></div>
+  <h2 id="habitSheetTitle">Nuevo hábito</h2>
+  <p class="lead">Elige si quieres hacerlo o dejarlo. El objetivo por defecto es 30 días.</p>
+
+  <div class="field">
+    <label>Nombre</label>
+    <input id="habitName" type="text" placeholder="Leer 10 min">
+  </div>
+
+  <div class="field">
+    <label>Tipo</label>
+    <div class="seg">
+      <button id="typeDo" type="button">Quiero hacerlo</button>
+      <button id="typeQuit" type="button">Quiero dejarlo</button>
+    </div>
+  </div>
+
+  <div class="field">
+    <label>Objetivo</label>
+    <div class="chips" id="targetChips"></div>
+    <input id="targetInput" type="number" min="1" max="999" inputmode="numeric" style="margin-top:9px">
+  </div>
+
+  <div class="field" id="weekdayField">
+    <label>Días</label>
+    <div class="week-grid" id="weekdayChips"></div>
+  </div>
+
+  <div class="sheet-actions">
+    <button class="btn btn-ghost" id="cancelHabit" type="button">Cancelar</button>
+    <button class="btn btn-primary" id="saveHabit" type="button">Guardar</button>
+  </div>
+  <button class="btn btn-danger hidden" id="deleteHabit" type="button" style="width:100%;margin-top:9px">Eliminar hábito</button>
+</div>
+
+<div class="sheet" id="relapseSheet">
+  <div class="grab"></div>
+  <h2>Registrar recaída</h2>
+  <p class="lead" id="relapseLead">Se guarda como dato, no como sentencia. La racha limpia volverá a empezar.</p>
+
+  <div class="field">
+    <label>Día</label>
+    <input id="relapseDate" type="date">
+  </div>
+
+  <div class="field">
+    <label>Nota opcional</label>
+    <textarea id="relapseNote" placeholder="Qué lo disparó o qué quieres recordar."></textarea>
+  </div>
+
+  <div class="sheet-actions">
+    <button class="btn btn-ghost" id="cancelRelapse" type="button">Cancelar</button>
+    <button class="btn btn-danger" id="saveRelapse" type="button">Guardar recaída</button>
+  </div>
+</div>
+
 <!-- generic modal -->
 <div class="modal-box" id="modal"></div>
 
@@ -473,6 +640,11 @@ const TABLE = 'rocd_entries';
 const LS_KEY = 'rocd_entries_v1';
 const LS_TITLE = 'rocd_title_v1';
 const LS_QUEUE = 'rocd_queue_v1';
+const HABIT_LS_KEY = 'ritmo_state_v1';
+const HABIT_LS_QUEUE = 'ritmo_sync_queue_v1';
+const TABLE_HABITS = 'ritmo_habits';
+const TABLE_LOGS = 'ritmo_logs';
+const TABLE_RELAPSES = 'ritmo_relapses';
 
 const SETUP_SQL =
 `create table if not exists public.rocd_entries (
@@ -487,22 +659,94 @@ const SETUP_SQL =
 alter table public.rocd_entries add column if not exists toc int2;
 alter table public.rocd_entries add column if not exists sleep int2;
 alter table public.rocd_entries enable row level security;
+drop policy if exists "anon full access" on public.rocd_entries;
 create policy "anon full access" on public.rocd_entries
+  for all to anon using (true) with check (true);
+
+create table if not exists public.ritmo_habits (
+  id text primary key,
+  name text not null,
+  type text not null check (type in ('do', 'quit')),
+  target_days int not null default 30 check (target_days > 0),
+  weekdays int[] not null default '{0,1,2,3,4,5,6}',
+  created_at date not null,
+  cycle_start date not null,
+  mode text not null default 'challenge' check (mode in ('challenge', 'maintenance')),
+  completed_at date,
+  archived_at date,
+  updated_at timestamptz not null default now()
+);
+
+create table if not exists public.ritmo_logs (
+  id text primary key,
+  habit_id text not null references public.ritmo_habits(id) on delete cascade,
+  date date not null,
+  created_at timestamptz not null default now(),
+  unique (habit_id, date)
+);
+
+create table if not exists public.ritmo_relapses (
+  id text primary key,
+  habit_id text not null references public.ritmo_habits(id) on delete cascade,
+  date date not null,
+  note text,
+  created_at timestamptz not null default now(),
+  unique (habit_id, date)
+);
+
+alter table public.ritmo_habits enable row level security;
+alter table public.ritmo_logs enable row level security;
+alter table public.ritmo_relapses enable row level security;
+
+drop policy if exists "anon full access ritmo habits" on public.ritmo_habits;
+drop policy if exists "anon full access ritmo logs" on public.ritmo_logs;
+drop policy if exists "anon full access ritmo relapses" on public.ritmo_relapses;
+
+create policy "anon full access ritmo habits" on public.ritmo_habits
+  for all to anon using (true) with check (true);
+create policy "anon full access ritmo logs" on public.ritmo_logs
+  for all to anon using (true) with check (true);
+create policy "anon full access ritmo relapses" on public.ritmo_relapses
   for all to anon using (true) with check (true);`;
 
 /* ════════════════════════════ STATE ════════════════════════════ */
 let entries = [];          // {id, at(ISO), value(int), toc(int?), sleep(int?), comment, updated_at}
-let title = localStorage.getItem(LS_TITLE) || 'mi recuperación de ROCD';
+let title = localStorage.getItem(LS_TITLE) || 'mi estado y sueño';
 let editingId = null;
+let currentView = 'state';
+let habitState = { habits: [], logs: [], relapses: [] };
+let editingHabitId = null;
+let relapseHabitId = null;
+let habitDraft = { name: '', type: 'do', targetDays: 30, weekdays: [1,2,3,4,5,6,0] };
 let sb = null;
 let online = false, tableMissing = false, schemaMissing = false;
 
 /* ════════════════════════════ UTIL ════════════════════════════ */
 const $ = s => document.querySelector(s);
+const $$ = s => Array.from(document.querySelectorAll(s));
 const uid = () => (crypto.randomUUID ? crypto.randomUUID() :
   'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return (c=='x'?r:(r&0x3|0x8)).toString(16)}));
 const MONTHS = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
 const MONTHS_LONG = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+const TARGET_OPTIONS = [7, 14, 30, 60, 90];
+const WEEK_DAYS = [
+  { id: 1, label: 'L' }, { id: 2, label: 'M' }, { id: 3, label: 'X' },
+  { id: 4, label: 'J' }, { id: 5, label: 'V' }, { id: 6, label: 'S' }, { id: 0, label: 'D' }
+];
+
+function clamp(n,min,max){ return Math.max(min, Math.min(max, n)); }
+function dateKey(d=new Date()){
+  const p=n=>String(n).padStart(2,'0');
+  return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())}`;
+}
+function parseKey(key){ const [y,m,d]=String(key).split('-').map(Number); return new Date(y,m-1,d); }
+function addDays(key,amount){ const d=parseKey(key); d.setDate(d.getDate()+amount); return dateKey(d); }
+function daysBetween(a,b){ return Math.round((parseKey(b)-parseKey(a))/86400000); }
+function isSameOrAfter(a,b){ return parseKey(a)>=parseKey(b); }
+function shortDate(key){
+  const d=parseKey(key);
+  return `${d.getDate()} ${MONTHS[d.getMonth()]}`;
+}
 
 function moodLabel(v){
   if(v>=8)return['Muy bien','#1f8f63'];
@@ -576,6 +820,61 @@ function loadLocal(){ try{ entries = (JSON.parse(localStorage.getItem(LS_KEY))||
 function getQueue(){ try{ return JSON.parse(localStorage.getItem(LS_QUEUE))||[]; }catch(e){ return []; } }
 function setQueue(q){ localStorage.setItem(LS_QUEUE, JSON.stringify(q)); }
 function enqueue(op){ const q=getQueue().filter(x=>x.id!==op.id); q.push(op); setQueue(q); }
+function normalizeHabit(h){
+  const today=dateKey();
+  return {
+    id:h.id||uid(),
+    name:String(h.name||'Hábito').trim()||'Hábito',
+    type:h.type==='quit'?'quit':'do',
+    targetDays:clamp(parseInt(h.targetDays||h.target_days||30,10)||30,1,999),
+    weekdays:Array.isArray(h.weekdays)&&h.weekdays.length?h.weekdays.map(Number):[1,2,3,4,5,6,0],
+    createdAt:h.createdAt||h.created_at||today,
+    cycleStart:h.cycleStart||h.cycle_start||h.createdAt||h.created_at||today,
+    mode:h.mode==='maintenance'?'maintenance':'challenge',
+    completedAt:h.completedAt||h.completed_at||null,
+    archivedAt:h.archivedAt||h.archived_at||null,
+    updatedAt:h.updatedAt||h.updated_at||new Date().toISOString()
+  };
+}
+function normalizeHabitLog(log){
+  return {
+    id:log.id||uid(),
+    habitId:log.habitId||log.habit_id,
+    date:log.date||dateKey(),
+    createdAt:log.createdAt||log.created_at||new Date().toISOString()
+  };
+}
+function normalizeRelapse(log){
+  return {
+    id:log.id||uid(),
+    habitId:log.habitId||log.habit_id,
+    date:log.date||dateKey(),
+    note:log.note||'',
+    createdAt:log.createdAt||log.created_at||new Date().toISOString()
+  };
+}
+function saveHabits(){ localStorage.setItem(HABIT_LS_KEY, JSON.stringify(habitState)); }
+function loadHabits(){
+  try{
+    const raw=JSON.parse(localStorage.getItem(HABIT_LS_KEY))||{};
+    habitState={
+      habits:Array.isArray(raw.habits)?raw.habits.map(normalizeHabit):[],
+      logs:Array.isArray(raw.logs)?raw.logs.map(normalizeHabitLog).filter(l=>l.habitId):[],
+      relapses:Array.isArray(raw.relapses)?raw.relapses.map(normalizeRelapse).filter(l=>l.habitId):[]
+    };
+  }catch(e){
+    habitState={habits:[],logs:[],relapses:[]};
+  }
+  saveHabits();
+}
+function getHabitQueue(){ try{ return JSON.parse(localStorage.getItem(HABIT_LS_QUEUE))||[]; }catch(e){ return []; } }
+function setHabitQueue(q){ localStorage.setItem(HABIT_LS_QUEUE, JSON.stringify(q)); }
+function queueHabitSync(kind,type,item){
+  const id=typeof item==='string'?item:item.id;
+  const q=getHabitQueue().filter(x=>!(x.kind===kind&&x.id===id));
+  q.push({kind,type,id,item:typeof item==='string'?null:item});
+  setHabitQueue(q);
+}
 
 /* ════════════════════════════ SYNC ════════════════════════════ */
 function setStatus(state,txt){
@@ -598,7 +897,9 @@ async function initSupabase(){
   }
   sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY,{auth:{persistSession:false}});
   await pull();
+  await pullHabits();
   flushQueue();
+  flushHabitQueue();
 }
 async function pull(){
   if(!sb) return;
@@ -668,6 +969,108 @@ async function pushDelete(id){
 }
 
 /* ════════════════════════════ CRUD ════════════════════════════ */
+function habitTable(kind){
+  return kind==='habit'?TABLE_HABITS:kind==='log'?TABLE_LOGS:TABLE_RELAPSES;
+}
+function habitMissingTable(err){
+  const msg=(err&&(err.message||err.code||err.hint||err.details))||'';
+  return /relation|does not exist|42P01|schema cache|find the table|Could not find the/i.test(String(msg));
+}
+function habitToRow(h){
+  return {
+    id:h.id,
+    name:h.name,
+    type:h.type,
+    target_days:Number(h.targetDays)||30,
+    weekdays:h.weekdays||[1,2,3,4,5,6,0],
+    created_at:h.createdAt,
+    cycle_start:h.cycleStart||h.createdAt,
+    mode:h.mode||'challenge',
+    completed_at:h.completedAt||null,
+    archived_at:h.archivedAt||null,
+    updated_at:new Date().toISOString()
+  };
+}
+function logToRow(log){
+  return {id:log.id,habit_id:log.habitId,date:log.date,created_at:log.createdAt||new Date().toISOString()};
+}
+function relapseToRow(log){
+  return {id:log.id,habit_id:log.habitId,date:log.date,note:log.note||null,created_at:log.createdAt||new Date().toISOString()};
+}
+function syncHabitItem(kind,item){
+  return kind==='habit'?habitToRow(item):kind==='log'?logToRow(item):relapseToRow(item);
+}
+function mergeRemoteHabits(habits,logs,relapses){
+  const byHabit=new Map(habitState.habits.map(h=>[h.id,h]));
+  habits.map(normalizeHabit).forEach(remote=>{
+    const local=byHabit.get(remote.id);
+    const rt=new Date(remote.updatedAt||0).getTime();
+    const lt=new Date((local&&local.updatedAt)||0).getTime();
+    if(!local||rt>=lt) byHabit.set(remote.id,{...local,...remote});
+  });
+  habitState.habits=Array.from(byHabit.values());
+
+  const byLog=new Map(habitState.logs.map(l=>[l.id,l]));
+  logs.map(normalizeHabitLog).filter(l=>l.habitId).forEach(log=>byLog.set(log.id,{...byLog.get(log.id),...log}));
+  habitState.logs=Array.from(byLog.values());
+
+  const byRelapse=new Map(habitState.relapses.map(l=>[l.id,l]));
+  relapses.map(normalizeRelapse).filter(l=>l.habitId).forEach(log=>byRelapse.set(log.id,{...byRelapse.get(log.id),...log}));
+  habitState.relapses=Array.from(byRelapse.values());
+}
+async function pullHabits(){
+  if(!sb) return;
+  try{
+    const habits=await sb.from(TABLE_HABITS).select('*');
+    if(habits.error) throw habits.error;
+    const logs=await sb.from(TABLE_LOGS).select('*');
+    if(logs.error) throw logs.error;
+    const relapses=await sb.from(TABLE_RELAPSES).select('*');
+    if(relapses.error) throw relapses.error;
+    mergeRemoteHabits(habits.data||[],logs.data||[],relapses.data||[]);
+    saveHabits(); renderHabits();
+  }catch(err){
+    if(habitMissingTable(err)){ tableMissing=true; setStatus('err','falta configurar'); }
+    console.warn('habit pull failed:',err);
+  }
+}
+async function flushHabitQueue(){
+  if(!sb||!online) return;
+  const q=getHabitQueue();
+  if(!q.length) return;
+  const remaining=[];
+  for(const op of q){
+    try{
+      if(op.type==='delete'){
+        const {error}=await sb.from(habitTable(op.kind)).delete().eq('id',op.id);
+        if(error) throw error;
+      }else{
+        const {error}=await sb.from(habitTable(op.kind)).upsert(syncHabitItem(op.kind,op.item));
+        if(error) throw error;
+      }
+    }catch(err){
+      remaining.push(op);
+      if(habitMissingTable(err)){ tableMissing=true; setStatus('err','falta configurar'); }
+    }
+  }
+  setHabitQueue(remaining);
+}
+async function pushHabit(kind,type,item){
+  queueHabitSync(kind,type,item);
+  if(!sb||!online) return;
+  try{
+    const table=habitTable(kind);
+    const id=typeof item==='string'?item:item.id;
+    const res=type==='delete'
+      ? await sb.from(table).delete().eq('id',id)
+      : await sb.from(table).upsert(syncHabitItem(kind,item));
+    if(res.error) throw res.error;
+    setHabitQueue(getHabitQueue().filter(q=>!(q.kind===kind&&q.id===id)));
+  }catch(err){
+    if(habitMissingTable(err)){ tableMissing=true; setStatus('err','falta configurar'); }
+  }
+}
+
 function upsertEntry(data){
   data=normalizeEntry(data);
   let id;
@@ -683,6 +1086,193 @@ function upsertEntry(data){
 function deleteEntry(id){
   entries=entries.filter(e=>e.id!==id);
   saveLocal(); render(); pushDelete(id);
+}
+
+function activeHabits(){ return habitState.habits.filter(h=>!h.archivedAt); }
+function archivedHabits(){ return habitState.habits.filter(h=>h.archivedAt); }
+function habitById(id){ return habitState.habits.find(h=>h.id===id); }
+function createdBeforeOrOn(habit,key){ return parseKey(habit.cycleStart||habit.createdAt||key)<=parseKey(key); }
+function isDueOn(habit,key){
+  if(habit.type!=='do') return true;
+  return (habit.weekdays||[]).includes(parseKey(key).getDay());
+}
+function isDone(habitId,key=dateKey()){ return habitState.logs.some(log=>log.habitId===habitId&&log.date===key); }
+function hasRelapse(habitId,key=dateKey()){ return habitState.relapses.some(log=>log.habitId===habitId&&log.date===key); }
+function recentKeys(amount,end=dateKey()){ return Array.from({length:amount},(_,i)=>addDays(end,i-amount+1)); }
+function doProgress(habit){
+  const start=habit.cycleStart||habit.createdAt||dateKey();
+  const unique=new Set(habitState.logs.filter(log=>log.habitId===habit.id&&isSameOrAfter(log.date,start)).map(log=>log.date));
+  const count=unique.size;
+  const target=Number(habit.targetDays)||30;
+  return {count,target,ratio:clamp(Math.round(count/target*100),0,100),complete:count>=target};
+}
+function lastRelapseDate(habit){
+  const start=habit.cycleStart||habit.createdAt||dateKey();
+  const dates=habitState.relapses.filter(log=>log.habitId===habit.id&&isSameOrAfter(log.date,start)).map(log=>log.date).sort();
+  return dates.length?dates[dates.length-1]:null;
+}
+function quitProgress(habit){
+  const today=dateKey();
+  const start=habit.cycleStart||habit.createdAt||today;
+  const last=lastRelapseDate(habit);
+  const cleanStart=last?addDays(last,1):start;
+  const count=hasRelapse(habit.id,today)?0:Math.max(0,daysBetween(cleanStart,today)+1);
+  const target=Number(habit.targetDays)||30;
+  return {count,target,ratio:clamp(Math.round(count/target*100),0,100),complete:count>=target,lastRelapse:last};
+}
+function progressFor(habit){ return habit.type==='quit'?quitProgress(habit):doProgress(habit); }
+function refreshHabitCompletions(){
+  let changed=false;
+  activeHabits().forEach(habit=>{
+    if(habit.mode==='maintenance') return;
+    const progress=progressFor(habit);
+    if(progress.complete&&!habit.completedAt){
+      habit.completedAt=dateKey(); habit.updatedAt=new Date().toISOString(); changed=true; pushHabit('habit','upsert',habit);
+    }
+    if(!progress.complete&&habit.completedAt){
+      habit.completedAt=null; habit.updatedAt=new Date().toISOString(); changed=true; pushHabit('habit','upsert',habit);
+    }
+  });
+  if(changed) saveHabits();
+}
+function habitTodayStats(){
+  const today=dateKey();
+  const doHabits=activeHabits().filter(h=>h.type==='do'&&createdBeforeOrOn(h,today)&&isDueOn(h,today));
+  const quitHabits=activeHabits().filter(h=>h.type==='quit'&&createdBeforeOrOn(h,today));
+  const done=doHabits.filter(h=>isDone(h.id,today)).length;
+  const clean=quitHabits.filter(h=>!hasRelapse(h.id,today)).length;
+  const total=doHabits.length+quitHabits.length;
+  return {count:done+clean,total,pct:total?Math.round((done+clean)/total*100):0,doHabits,quitHabits};
+}
+function habitDayScore(key){
+  const habits=activeHabits().filter(h=>createdBeforeOrOn(h,key)&&isDueOn(h,key));
+  if(!habits.length) return 100;
+  const done=habits.filter(h=>h.type==='quit'?!hasRelapse(h.id,key):isDone(h.id,key)).length;
+  return Math.round(done/habits.length*100);
+}
+function habitWeeklyAverage(){
+  if(!activeHabits().length) return 0;
+  const scores=recentKeys(7).map(habitDayScore);
+  return Math.round(scores.reduce((sum,value)=>sum+value,0)/scores.length);
+}
+function renderHabits(){
+  if(!$('#viewHabits')) return;
+  refreshHabitCompletions();
+  const stats=habitTodayStats();
+  $('#habitTodayScore').textContent=`${stats.count}/${stats.total}`;
+  $('#habitTodayLabel').textContent=stats.total?'del día':'sin hábitos';
+  $('#habitTodayTitle').textContent=stats.total?(stats.pct===100?'Día limpio':'A tu ritmo'):'Empieza pequeño';
+  $('#habitTodayBar').style.setProperty('--w',`${stats.pct}%`);
+  $('#doCount').textContent=stats.doHabits.length;
+  $('#quitCount').textContent=stats.quitHabits.length;
+  $('#doList').innerHTML=stats.doHabits.length?stats.doHabits.map(renderDoHabit).join(''):`<div class="habit-empty"><b>No hay nada que marcar hoy.</b><br>Añade un hábito o deja este día como descanso.</div>`;
+  $('#quitList').innerHTML=stats.quitHabits.length?stats.quitHabits.map(renderQuitHabit).join(''):`<div class="habit-empty"><b>No hay hábitos de dejar.</b><br>Úsalos para registrar solo los días de recaída.</div>`;
+  renderHabitCompletion();
+  renderHabitProgress();
+  renderHabitArchive();
+}
+function renderDoHabit(habit){
+  const done=isDone(habit.id);
+  const progress=doProgress(habit);
+  const label=habit.mode==='maintenance'?'mantenimiento':`${progress.count}/${progress.target}`;
+  return `<article class="habit-card ${done?'done':''}">
+    <button class="habit-check ${done?'on':''}" data-toggle-done="${habit.id}" aria-label="Marcar ${esc(habit.name)}">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4 4L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    <div>
+      <div class="habit-title">${esc(habit.name)}</div>
+      <div class="habit-meta">
+        <span class="habit-pill ${progress.complete?'good':''}">${label}</span>
+        ${habit.completedAt&&habit.mode!=='maintenance'?'<span class="habit-pill good">cumplido</span>':''}
+      </div>
+      ${renderDoDots(habit)}
+    </div>
+    <div class="habit-actions"><button class="mini-btn" data-edit-habit="${habit.id}">Editar</button></div>
+  </article>`;
+}
+function renderQuitHabit(habit){
+  const relapse=hasRelapse(habit.id);
+  const progress=quitProgress(habit);
+  const label=habit.mode==='maintenance'?`día ${progress.count}`:`día ${progress.count}/${progress.target}`;
+  return `<article class="habit-card ${relapse?'relapsed':''}">
+    <div class="habit-check ${relapse?'':'on'}" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4 4L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div>
+      <div class="habit-title">${esc(habit.name)}</div>
+      <div class="habit-meta">
+        <span class="habit-pill ${relapse?'bad':'good'}">${relapse?'recaída hoy':label}</span>
+        ${habit.completedAt&&habit.mode!=='maintenance'?'<span class="habit-pill good">cumplido</span>':''}
+      </div>
+      ${renderQuitDots(habit)}
+    </div>
+    <div class="habit-actions">
+      <button class="mini-btn ${relapse?'green':'coral'}" data-relapse-habit="${habit.id}">${relapse?'Quitar':'Recaída'}</button>
+      <button class="mini-btn" data-edit-habit="${habit.id}">Editar</button>
+    </div>
+  </article>`;
+}
+function renderDoDots(habit){
+  return `<div class="habit-dots">${recentKeys(7).map(key=>{
+    if(!createdBeforeOrOn(habit,key)||!isDueOn(habit,key)) return '<span class="habit-dot off"></span>';
+    return `<span class="habit-dot ${isDone(habit.id,key)?'done':'miss'}"></span>`;
+  }).join('')}</div>`;
+}
+function renderQuitDots(habit){
+  return `<div class="habit-dots">${recentKeys(14).map(key=>{
+    if(!createdBeforeOrOn(habit,key)) return '<span class="habit-dot off"></span>';
+    return `<span class="habit-dot ${hasRelapse(habit.id,key)?'relapse':'clean'}"></span>`;
+  }).join('')}</div>`;
+}
+function renderHabitCompletion(){
+  const card=$('#habitCompletionCard');
+  const habit=activeHabits().find(h=>h.completedAt&&h.mode!=='maintenance');
+  if(!habit){ card.classList.remove('show'); card.innerHTML=''; return; }
+  const progress=progressFor(habit);
+  card.classList.add('show');
+  card.innerHTML=`<h3>${esc(habit.name)} completado</h3>
+    <p>Has llegado a ${progress.target} días. Puedes mantenerlo, empezar otro ciclo o archivarlo.</p>
+    <div class="completion-actions">
+      <button class="btn btn-primary" data-complete-action="maintain" data-habit-id="${habit.id}">Mantener</button>
+      <button class="btn btn-ghost" data-complete-action="cycle" data-habit-id="${habit.id}">Nuevo ciclo</button>
+      <button class="btn btn-ghost" data-complete-action="archive" data-habit-id="${habit.id}">Archivar</button>
+    </div>`;
+}
+function renderHabitProgress(){
+  const active=activeHabits();
+  const avg=habitWeeklyAverage();
+  const completed=habitState.habits.filter(h=>h.completedAt||h.archivedAt).length;
+  $('#habitActiveCount').textContent=`${active.length} activos`;
+  $('#habitWeekLabel').textContent=`${avg}% semana`;
+  $('#habitStats').innerHTML=`<div class="habit-stat"><b>${avg}%</b><span>semana</span></div>
+    <div class="habit-stat"><b>${active.length}</b><span>activos</span></div>
+    <div class="habit-stat"><b>${completed}</b><span>cumplidos</span></div>`;
+  $('#habitProgressList').innerHTML=active.length?active.map(renderHabitProgressCard).join(''):`<div class="habit-empty"><b>Sin hábitos activos.</b><br>Crea uno desde el botón +.</div>`;
+}
+function renderHabitProgressCard(habit){
+  const progress=progressFor(habit);
+  const text=habit.type==='quit'?`${progress.count} días limpios de ${progress.target}`:`${progress.count} días marcados de ${progress.target}`;
+  return `<article class="habit-card">
+    <div class="habit-check on" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4 4L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    <div>
+      <div class="habit-title">${esc(habit.name)}</div>
+      <div class="habit-meta"><span class="habit-pill">${habit.type==='quit'?'Dejar':'Hacer'}</span><span class="habit-pill ${progress.complete?'good':''}">${habit.mode==='maintenance'?'mantenimiento':text}</span></div>
+      <div class="habit-bar" style="margin-top:9px"><i style="--w:${habit.mode==='maintenance'?100:progress.ratio}%"></i></div>
+    </div>
+    <div class="habit-actions"><button class="mini-btn" data-edit-habit="${habit.id}">Editar</button></div>
+  </article>`;
+}
+function renderHabitArchive(){
+  const archived=archivedHabits();
+  $('#habitArchiveCount').textContent=archived.length;
+  $('#habitArchiveList').innerHTML=archived.length?archived.map(habit=>{
+    const progress=progressFor(habit);
+    return `<article class="habit-card">
+      <div class="habit-check on" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4 4L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <div><div class="habit-title">${esc(habit.name)}</div><div class="habit-meta"><span class="habit-pill">${habit.type==='quit'?'Dejar':'Hacer'}</span><span class="habit-pill">${progress.count}/${progress.target}</span><span class="habit-pill">archivado ${shortDate(habit.archivedAt)}</span></div></div>
+      <div class="habit-actions"><button class="mini-btn" data-restore-habit="${habit.id}">Reactivar</button><button class="mini-btn green" data-repeat-habit="${habit.id}">Nuevo ciclo</button></div>
+    </article>`;
+  }).join(''):`<div class="habit-empty"><b>Aún no hay hábitos archivados.</b><br>Cuando cumplas un objetivo, puedes guardarlo aquí.</div>`;
 }
 
 /* ════════════════════════════ CHART ════════════════════════════ */
@@ -1073,7 +1663,146 @@ function renderRelation(){
   const sleepWell=relationWord(corr(paired,'sleep','value'),'más bienestar','menos bienestar');
   el.textContent=`Patrón, no causa: con ${paired.length} registros, dormir mejor coincide con ${sleepToc} y ${sleepWell}.`;
 }
-function render(){ renderChart(); renderMetricCharts(); renderList(); renderSummary(); renderRelation(); }
+function render(){ renderChart(); renderMetricCharts(); renderList(); renderSummary(); renderRelation(); renderHabits(); }
+
+function openHabitPanel(selector){
+  hideTip(); closeMenu(); sfx('open');
+  $$('#habitSheet,#relapseSheet').forEach(sheet=>sheet.classList.remove('show'));
+  $('#scrim').classList.add('show');
+  $(selector).classList.add('show');
+  $('#scrim').onclick=closeHabitPanels;
+}
+function closeHabitPanels(){
+  $$('#habitSheet,#relapseSheet').forEach(sheet=>sheet.classList.remove('show'));
+  if(!$('#sheet').classList.contains('show')&&!$('#modal').classList.contains('show')) $('#scrim').classList.remove('show');
+  $('#scrim').onclick=closeSheet;
+  editingHabitId=null; relapseHabitId=null;
+}
+function openHabitSheet(id=null){
+  editingHabitId=id;
+  const habit=id?habitById(id):null;
+  habitDraft=habit?{
+    name:habit.name,
+    type:habit.type,
+    targetDays:Number(habit.targetDays)||30,
+    weekdays:[...(habit.weekdays||[1,2,3,4,5,6,0])]
+  }:{
+    name:'',
+    type:'do',
+    targetDays:30,
+    weekdays:[1,2,3,4,5,6,0]
+  };
+  $('#habitSheetTitle').textContent=habit?'Editar hábito':'Nuevo hábito';
+  $('#habitName').value=habitDraft.name;
+  $('#targetInput').value=habitDraft.targetDays;
+  $('#deleteHabit').classList.toggle('hidden',!habit);
+  renderHabitDraft();
+  openHabitPanel('#habitSheet');
+  setTimeout(()=>$('#habitName').focus(),180);
+}
+function renderHabitDraft(){
+  $('#typeDo').classList.toggle('active',habitDraft.type==='do');
+  $('#typeQuit').classList.toggle('active',habitDraft.type==='quit');
+  $('#weekdayField').classList.toggle('hidden',habitDraft.type!=='do');
+  $('#targetChips').innerHTML=TARGET_OPTIONS.map(days=>`<button class="chip ${habitDraft.targetDays===days?'active':''}" data-target="${days}" type="button">${days} días</button>`).join('');
+  $('#weekdayChips').innerHTML=WEEK_DAYS.map(day=>`<button class="chip ${habitDraft.weekdays.includes(day.id)?'active':''}" data-weekday="${day.id}" type="button">${day.label}</button>`).join('');
+}
+function saveHabitFromSheet(){
+  const name=$('#habitName').value.trim();
+  const targetDays=clamp(parseInt($('#targetInput').value,10)||habitDraft.targetDays||30,1,999);
+  if(!name){ toast('Ponle un nombre al hábito'); return; }
+  if(habitDraft.type==='do'&&!habitDraft.weekdays.length){ toast('Elige al menos un dia'); return; }
+  let saved;
+  if(editingHabitId){
+    const habit=habitById(editingHabitId); if(!habit) return;
+    habit.name=name; habit.type=habitDraft.type; habit.targetDays=targetDays;
+    habit.weekdays=habitDraft.type==='do'?[...habitDraft.weekdays]:[1,2,3,4,5,6,0];
+    habit.updatedAt=new Date().toISOString();
+    if(progressFor(habit).count<targetDays) habit.completedAt=null;
+    saved=habit; toast('Hábito actualizado');
+  }else{
+    saved={id:uid(),name,type:habitDraft.type,targetDays,weekdays:habitDraft.type==='do'?[...habitDraft.weekdays]:[1,2,3,4,5,6,0],createdAt:dateKey(),cycleStart:dateKey(),mode:'challenge',completedAt:null,archivedAt:null,updatedAt:new Date().toISOString()};
+    habitState.habits.push(saved); toast('Hábito añadido');
+  }
+  saveHabits(); pushHabit('habit','upsert',saved); closeHabitPanels(); render();
+}
+function deleteCurrentHabit(){
+  if(!editingHabitId) return;
+  const habit=habitById(editingHabitId); if(!habit) return;
+  confirmBox('Eliminar hábito',`Se borrará "${habit.name}" y sus marcas.`,'Eliminar',()=>{
+    const removedLogs=habitState.logs.filter(log=>log.habitId===editingHabitId);
+    const removedRelapses=habitState.relapses.filter(log=>log.habitId===editingHabitId);
+    habitState.habits=habitState.habits.filter(h=>h.id!==editingHabitId);
+    habitState.logs=habitState.logs.filter(log=>log.habitId!==editingHabitId);
+    habitState.relapses=habitState.relapses.filter(log=>log.habitId!==editingHabitId);
+    saveHabits();
+    removedLogs.forEach(log=>pushHabit('log','delete',log.id));
+    removedRelapses.forEach(log=>pushHabit('relapse','delete',log.id));
+    pushHabit('habit','delete',editingHabitId);
+    closeHabitPanels(); render(); toast('Hábito eliminado');
+  });
+}
+function toggleDone(habitId){
+  const today=dateKey();
+  const existing=habitState.logs.find(log=>log.habitId===habitId&&log.date===today);
+  if(existing){
+    habitState.logs=habitState.logs.filter(log=>log!==existing);
+    pushHabit('log','delete',existing.id);
+  }else{
+    const log={id:uid(),habitId,date:today,createdAt:new Date().toISOString()};
+    habitState.logs.push(log);
+    pushHabit('log','upsert',log);
+  }
+  saveHabits(); render(); sfx('success');
+}
+function openRelapseSheet(habitId){
+  relapseHabitId=habitId;
+  const habit=habitById(habitId); if(!habit) return;
+  $('#relapseLead').textContent=`${habit.name}: se guarda como dato, no como sentencia.`;
+  $('#relapseDate').value=dateKey();
+  $('#relapseNote').value='';
+  openHabitPanel('#relapseSheet');
+}
+function saveRelapseFromSheet(){
+  const date=$('#relapseDate').value||dateKey();
+  const note=$('#relapseNote').value.trim();
+  const existing=habitState.relapses.find(log=>log.habitId===relapseHabitId&&log.date===date);
+  if(existing){
+    existing.note=note;
+    pushHabit('relapse','upsert',existing);
+  }else{
+    const relapse={id:uid(),habitId:relapseHabitId,date,note,createdAt:new Date().toISOString()};
+    habitState.relapses.push(relapse);
+    pushHabit('relapse','upsert',relapse);
+  }
+  saveHabits(); closeHabitPanels(); render(); toast('Recaida registrada');
+}
+function removeTodayRelapse(habitId){
+  const today=dateKey();
+  const removed=habitState.relapses.filter(log=>log.habitId===habitId&&log.date===today);
+  habitState.relapses=habitState.relapses.filter(log=>!(log.habitId===habitId&&log.date===today));
+  saveHabits(); removed.forEach(log=>pushHabit('relapse','delete',log.id)); render(); toast('Recaida quitada');
+}
+function completeHabitAction(id,action){
+  const habit=habitById(id); if(!habit) return;
+  if(action==='maintain'){ habit.mode='maintenance'; habit.completedAt=habit.completedAt||dateKey(); toast('Pasa a mantenimiento'); }
+  if(action==='cycle'){ habit.mode='challenge'; habit.cycleStart=addDays(dateKey(),1); habit.completedAt=null; toast('Nuevo ciclo desde mañana'); }
+  if(action==='archive'){ habit.archivedAt=dateKey(); toast('Guardado en archivo'); }
+  habit.updatedAt=new Date().toISOString();
+  saveHabits(); pushHabit('habit','upsert',habit); render();
+}
+function restoreHabit(id,repeat=false){
+  const habit=habitById(id); if(!habit) return;
+  habit.archivedAt=null;
+  if(repeat){ habit.mode='challenge'; habit.cycleStart=addDays(dateKey(),1); habit.completedAt=null; }
+  habit.updatedAt=new Date().toISOString();
+  saveHabits(); pushHabit('habit','upsert',habit); render(); toast(repeat?'Nuevo ciclo desde mañana':'Hábito reactivado');
+}
+function queueHabitSnapshot(){
+  habitState.habits.forEach(h=>pushHabit('habit','upsert',h));
+  habitState.logs.forEach(log=>pushHabit('log','upsert',log));
+  habitState.relapses.forEach(log=>pushHabit('relapse','upsert',log));
+}
 
 /* ════════════════════════════ SHEET ════════════════════════════ */
 function openSheet(id=null){
@@ -1154,17 +1883,24 @@ function renameTitle(){
 }
 $('#mClear').addEventListener('click',()=>{
   closeMenu();
-  confirmBox('¿Borrar todos los registros?','Se eliminarán todas tus entradas en este dispositivo y en la nube.','Borrar todo',()=>{
-    const ids=entries.map(e=>e.id); entries=[]; saveLocal(); render();
-    ids.forEach(id=>pushDelete(id));
+  confirmBox('¿Borrar todo?','Se eliminarán entradas de Estado, hábitos, marcas y recaídas en este dispositivo y en la nube.','Borrar todo',()=>{
+    const entryIds=entries.map(e=>e.id);
+    const habits=[...habitState.habits], logs=[...habitState.logs], relapses=[...habitState.relapses];
+    entries=[]; habitState={habits:[],logs:[],relapses:[]};
+    saveLocal(); saveHabits(); render();
+    entryIds.forEach(id=>pushDelete(id));
+    relapses.forEach(log=>pushHabit('relapse','delete',log.id));
+    logs.forEach(log=>pushHabit('log','delete',log.id));
+    habits.forEach(habit=>pushHabit('habit','delete',habit.id));
     sfx('delete'); toast('Todo borrado');
   });
 });
 $('#mExport').addEventListener('click',()=>{
   closeMenu();
-  const blob=new Blob([JSON.stringify({title,entries},null,2)],{type:'application/json'});
+  const payload={version:2,app:'ritmo',title,entries,habits:habitState.habits,logs:habitState.logs,relapses:habitState.relapses};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
-  a.download=`rocd-export-${new Date().toISOString().slice(0,10)}.json`; a.click();
+  a.download=`ritmo-export-${dateKey()}.json`; a.click();
   toast('Datos exportados');
 });
 $('#mImport').addEventListener('click',()=>{
@@ -1172,12 +1908,24 @@ $('#mImport').addEventListener('click',()=>{
   const inp=document.createElement('input'); inp.type='file'; inp.accept='application/json,.json';
   inp.onchange=()=>{ const f=inp.files[0]; if(!f)return; const r=new FileReader();
     r.onload=()=>{ try{ const o=JSON.parse(r.result);
-      const arr=Array.isArray(o)?o:o.entries; if(!Array.isArray(arr))throw 0;
+      const arr=Array.isArray(o)?o:o.entries||[]; if(!Array.isArray(arr))throw 0;
       if(o.title) setTitle(o.title);
       arr.forEach(e=>{ const d=normalizeEntry({id:e.id||uid(),at:e.at,value:+e.value,toc:e.toc,sleep:e.sleep,comment:e.comment||''});
         const i=entries.findIndex(x=>x.id===d.id); if(i>=0)entries[i]=d; else entries.push(d);
         pushUpsert(d); });
-      saveLocal(); render(); toast(`${arr.length} entradas importadas`);
+      if(Array.isArray(o.habits)){
+        const byHabit=new Map(habitState.habits.map(h=>[h.id,h]));
+        o.habits.map(normalizeHabit).forEach(h=>byHabit.set(h.id,{...byHabit.get(h.id),...h}));
+        habitState.habits=Array.from(byHabit.values());
+        const byLog=new Map(habitState.logs.map(log=>[log.id,log]));
+        (o.logs||[]).map(normalizeHabitLog).filter(log=>log.habitId).forEach(log=>byLog.set(log.id,{...byLog.get(log.id),...log}));
+        habitState.logs=Array.from(byLog.values());
+        const byRelapse=new Map(habitState.relapses.map(log=>[log.id,log]));
+        (o.relapses||[]).map(normalizeRelapse).filter(log=>log.habitId).forEach(log=>byRelapse.set(log.id,{...byRelapse.get(log.id),...log}));
+        habitState.relapses=Array.from(byRelapse.values());
+        saveHabits(); queueHabitSnapshot();
+      }
+      saveLocal(); render(); toast('Datos importados');
     }catch(err){ toast('Archivo no válido'); } };
     r.readAsText(f); };
   inp.click();
@@ -1206,8 +1954,8 @@ function showSetup(){
     : online ? '<b style="color:var(--good-ink)">✓ Conectado y sincronizando.</b><br>'
     : '<b style="color:#c98a1a">Sin conexión ahora mismo.</b> Tus datos se guardan en el dispositivo y se subirán cuando vuelvas a estar online.<br>';
   m.innerHTML=`<h3>Sincronización en la nube</h3>
-    <p>${status}Tus entradas se guardan en tu proyecto de Supabase, sin login, para acceder desde cualquier dispositivo.</p>
-    <p style="margin-bottom:8px">Para activarla, ejecuta una sola vez este SQL en el editor SQL de Supabase:</p>
+    <p>${status}Tus entradas y hábitos se guardan en tu proyecto de Supabase, sin login, para acceder desde cualquier dispositivo.</p>
+    <p style="margin-bottom:8px">Para activarla, ejecuta una sola vez este SQL combinado en el editor SQL de Supabase:</p>
     <pre>${esc(SETUP_SQL)}</pre>
     <div class="sheet-actions">
       <button class="btn btn-ghost" style="flex:none;width:auto;padding:0 16px;font-size:14px" onclick="copySQL()">Copiar SQL</button>
@@ -1219,7 +1967,7 @@ function showSetup(){
 window.copySQL=()=>{ if(navigator.clipboard) navigator.clipboard.writeText(SETUP_SQL); toast('SQL copiado'); };
 window.closeModal=()=>{ $('#modal').classList.remove('show'); $('#scrim').classList.remove('show'); $('#scrim').onclick=closeSheet; };
 window.openSheet=openSheet;
-window.pull=pull;
+window.pull=()=>pull().then(()=>pullHabits()).then(()=>{ flushQueue(); flushHabitQueue(); });
 
 /* generic confirm */
 function confirmBox(t,msg,okLabel,onOk){
@@ -1310,18 +2058,53 @@ document.addEventListener('visibilitychange',()=>{ if(document.visibilityState==
 
 /* ════════════════════════════ TABS ════════════════════════════ */
 function switchTab(view){
+  currentView=view;
   document.querySelectorAll('.tab').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-  $('#view'+(view==='graf'?'Graf':'Hist')).classList.add('active');
+  (view==='habits'?$('#viewHabits'):$('#viewGraf')).classList.add('active');
+  $('#fabText').textContent=view==='habits'?'Nuevo hábito':'Nueva entrada';
   hideTip(); sfx('tap');
   window.scrollTo(0,0);
-  if(view==='graf'){ renderChart(); renderMetricCharts(); }   // re-measure now that it is visible
+  if(view==='state'){ renderChart(); renderMetricCharts(); }
+  if(view==='habits'){ renderHabits(); }
 }
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>switchTab(b.dataset.view)));
 
 /* ════════════════════════════ MISC ════════════════════════════ */
-$('#fab').addEventListener('click',()=>openSheet());
-window.addEventListener('online',()=>{ pull().then(flushQueue); });
+document.addEventListener('click',event=>{
+  const target=event.target.closest('button');
+  if(!target) return;
+  if(target.dataset.toggleDone) toggleDone(target.dataset.toggleDone);
+  if(target.dataset.editHabit) openHabitSheet(target.dataset.editHabit);
+  if(target.dataset.relapseHabit){
+    hasRelapse(target.dataset.relapseHabit) ? removeTodayRelapse(target.dataset.relapseHabit) : openRelapseSheet(target.dataset.relapseHabit);
+  }
+  if(target.dataset.completeAction) completeHabitAction(target.dataset.habitId,target.dataset.completeAction);
+  if(target.dataset.restoreHabit) restoreHabit(target.dataset.restoreHabit,false);
+  if(target.dataset.repeatHabit) restoreHabit(target.dataset.repeatHabit,true);
+  if(target.dataset.target){
+    habitDraft.targetDays=Number(target.dataset.target);
+    $('#targetInput').value=habitDraft.targetDays;
+    renderHabitDraft();
+  }
+  if(target.dataset.weekday!==undefined){
+    const day=Number(target.dataset.weekday);
+    habitDraft.weekdays=habitDraft.weekdays.includes(day)
+      ? habitDraft.weekdays.filter(item=>item!==day)
+      : [...habitDraft.weekdays,day];
+    renderHabitDraft();
+  }
+});
+$('#fab').addEventListener('click',()=>currentView==='habits'?openHabitSheet():openSheet());
+$('#cancelHabit').addEventListener('click',closeHabitPanels);
+$('#cancelRelapse').addEventListener('click',closeHabitPanels);
+$('#saveHabit').addEventListener('click',saveHabitFromSheet);
+$('#saveRelapse').addEventListener('click',saveRelapseFromSheet);
+$('#deleteHabit').addEventListener('click',deleteCurrentHabit);
+$('#typeDo').addEventListener('click',()=>{ habitDraft.type='do'; renderHabitDraft(); });
+$('#typeQuit').addEventListener('click',()=>{ habitDraft.type='quit'; renderHabitDraft(); });
+$('#targetInput').addEventListener('input',e=>{ habitDraft.targetDays=clamp(parseInt(e.target.value,10)||30,1,999); renderHabitDraft(); });
+window.addEventListener('online',()=>{ pull().then(()=>{ flushQueue(); pullHabits().then(flushHabitQueue); }); });
 window.addEventListener('scroll',()=>{ document.querySelector('header').classList.toggle('scrolled',scrollY>4); },{passive:true});
 let rt; window.addEventListener('resize',()=>{ clearTimeout(rt); rt=setTimeout(()=>{ renderChart(); renderMetricCharts(); },150); });
 
@@ -1329,7 +2112,12 @@ let rt; window.addEventListener('resize',()=>{ clearTimeout(rt); rt=setTimeout((
 function boot(){
   applyTheme(); setSoundLabel();
   setTitle(title);
-  loadLocal(); render();
+  const stateTab=document.querySelector('[data-view="state"] span');
+  const habitsTab=document.querySelector('[data-view="habits"] span');
+  if(stateTab) stateTab.textContent='Estado';
+  if(habitsTab) habitsTab.textContent='Hábitos';
+  loadLocal(); loadHabits(); render();
+  switchTab('state');
   setStatus('sync','conectando…');
   initSupabase();
   if('serviceWorker' in navigator){

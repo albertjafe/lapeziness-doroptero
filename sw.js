@@ -1,4 +1,4 @@
-const CACHE = 'rocd-v7';
+const CACHE = 'ritmo-unificado-v1';
 const ASSETS = ['./', './index.html', './manifest.json'];
 
 self.addEventListener('install', e => {

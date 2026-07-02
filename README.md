@@ -1,47 +1,30 @@
-# Seguimiento ROCD
+# Ritmo
 
-App web (PWA) para llevar un registro de bienestar, TOC de relación y sueño,
-y ver la evolución en gráficas minimalistas.
+App minimalista de mejora personal que une dos capas:
 
-## Qué hace
+- **Estado**: bienestar, TOC, sueño, comentario, gráficas e historial.
+- **Hábitos**: hábitos que quieres hacer, hábitos que quieres dejar, marcas diarias, recaídas, objetivos y archivo.
 
-- **Entradas arbitrarias**: añade un registro cuando quieras con el botón *Nueva entrada*.
-- Cada entrada tiene **bienestar** de −10 a +10, **TOC** de 0 a 10, **sueño** de 0 a 10, una **fecha/hora** y un **comentario opcional**.
-- **Gráficas** separadas para bienestar, TOC y sueño, más una lectura simple de cómo sueño se relaciona con TOC y bienestar.
-- **Lista de registros** para revisar, editar o borrar cualquier entrada.
-- Funciona **offline** y se instala como app en el móvil (PWA).
+## Migración de datos
 
-## Almacenamiento
+La app conserva las claves locales existentes:
 
-Es **offline-first**: todo se guarda al instante en el dispositivo (`localStorage`)
-y se sincroniza con tu proyecto de Supabase para acceder desde cualquier
-dispositivo, **sin pantalla de login**.
+- `rocd_entries_v1` para las entradas de Estado.
+- `ritmo_state_v1` para hábitos, marcas y recaídas.
 
-### Activar la sincronización (una sola vez)
+Si antes usabas Ritmo en el mismo origen del navegador, los hábitos aparecen automáticamente al abrir esta app. También puedes exportar/importar un JSON combinado desde el menú.
 
-En el **SQL Editor** de tu proyecto de Supabase, ejecuta:
+## Supabase
 
-```sql
-create table if not exists public.rocd_entries (
-  id uuid primary key,
-  at timestamptz not null,
-  value int2 not null,
-  toc int2,
-  sleep int2,
-  comment text,
-  updated_at timestamptz not null default now()
-);
-alter table public.rocd_entries add column if not exists toc int2;
-alter table public.rocd_entries add column if not exists sleep int2;
-alter table public.rocd_entries enable row level security;
-create policy "anon full access" on public.rocd_entries
-  for all to anon using (true) with check (true);
-```
+La sincronización usa el mismo proyecto de Supabase y añade las tablas de hábitos junto a `rocd_entries`:
 
-Si la tabla aún no existe, la app sigue funcionando solo en el dispositivo y te
-avisa en el menú → *Configurar sincronización* (donde también puedes copiar este SQL).
+- `rocd_entries`
+- `ritmo_habits`
+- `ritmo_logs`
+- `ritmo_relapses`
+
+Para activarlo, abre el menú de la app, entra en **Configurar sincronización**, copia el SQL combinado y ejecútalo una vez en el SQL Editor de Supabase.
 
 ## Uso
 
-Abre `index.html` (o sírvelo desde cualquier hosting estático / GitHub Pages).
-No requiere build ni dependencias.
+Abre `index.html` o publícalo como sitio estático/GitHub Pages. No requiere build ni dependencias locales.

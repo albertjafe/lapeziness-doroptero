@@ -1,7 +1,7 @@
 {
-  "name": "Seguimiento ROCD",
-  "short_name": "ROCD",
-  "description": "Registra bienestar, TOC y sueño, y observa su evolución en gráficas.",
+  "name": "Ritmo",
+  "short_name": "Ritmo",
+  "description": "Registra estado, sueño, TOC y hábitos en una app minimalista.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#f3f3f9",
