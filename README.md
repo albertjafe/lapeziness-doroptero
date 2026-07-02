@@ -2,7 +2,7 @@
 
 App minimalista de mejora personal que une dos capas:
 
-- **Estado**: bienestar, TOC, sueño, comentario, gráficas e historial.
+- **Estado**: bienestar, sueño, tendencia suavizada, comentario, gráficas e historial.
 - **Hábitos**: hábitos que quieres hacer, hábitos que quieres dejar, marcas diarias, recaídas, objetivos y archivo.
 
 ## Migración de datos

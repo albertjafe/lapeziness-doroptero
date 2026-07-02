@@ -1,11 +1,11 @@
 {
   "name": "Ritmo",
   "short_name": "Ritmo",
-  "description": "Registra estado, sueño, TOC y hábitos en una app minimalista.",
+  "description": "Registra bienestar, sueño y hábitos en una app minimalista.",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#f3f3f9",
-  "theme_color": "#f3f3f9",
+  "background_color": "#f7f4ee",
+  "theme_color": "#f7f4ee",
   "orientation": "portrait",
   "icons": [
     {
