@@ -1659,14 +1659,16 @@ async function pushHabit(kind,type,item){
 }
 
 function upsertEntry(data){
+  const hadId=!!data.id;
   data=normalizeEntry(data);
   let id;
-  if(data.id){
+  if(hadId){
     id=data.id;
     const i=entries.findIndex(e=>e.id===data.id);
     if(i>=0) entries[i]={...entries[i],...data};
+    else entries.push(data);
   }else{
-    id=data.id=uid(); entries.push(data);
+    id=data.id; entries.push(data);
   }
   saveLocal(); render(); pushUpsert(entries.find(e=>e.id===id));
 }
@@ -2436,7 +2438,8 @@ function renderMetricChart(hostId, kind){
   </svg>`;
 }
 function latestMetricChoice(kind){
-  const last=[...entries].sort((a,b)=>new Date(b.at)-new Date(a.at))[0];
+  const today=latestTodayEntry();
+  const last=today||[...entries].sort((a,b)=>new Date(b.at)-new Date(a.at))[0];
   if(kind==='sleep') return last&&metricValue(last.sleep)!==null?metricValue(last.sleep):9;
   return last&&Number.isFinite(+last.value)?+last.value:8;
 }
@@ -2445,14 +2448,43 @@ function renderMetricPicker(hostId,kind){
   const list=kind==='sleep'?SLEEP_CHOICES:WELLBEING_CHOICES;
   const selected=nearestChoice(list,latestMetricChoice(kind)).value;
   const icon=value=>kind==='sleep'?sleepSvg(value):wellbeingSvg(value);
-  host.innerHTML=`<div class="metric-picker" data-open-entry="true">
+  host.innerHTML=`<div class="metric-picker">
     <div class="metric-icon-row">
-      ${list.map(item=>`<button class="metric-icon-btn ${item.value===selected?'active':''}" data-open-entry="true" type="button" aria-label="${item.word}">${icon(item.value)}</button>`).join('')}
+      ${list.map(item=>`<button class="metric-icon-btn ${item.value===selected?'active':''}" data-quick-metric="${kind}" data-quick-value="${item.value}" type="button" aria-label="${item.word}">${icon(item.value)}</button>`).join('')}
     </div>
     <div class="metric-dot-row">
       ${list.map(item=>`<span class="metric-dot ${item.value===selected?'active':''}"></span>`).join('')}
     </div>
   </div>`;
+}
+function latestTodayEntry(){
+  const today=dateKey();
+  return entries
+    .filter(e=>dateKey(new Date(e.at))===today)
+    .sort((a,b)=>new Date(b.at)-new Date(a.at))[0]||null;
+}
+function latestEntry(){
+  return [...entries].sort((a,b)=>new Date(b.at)-new Date(a.at))[0]||null;
+}
+function quickSaveMetric(kind,value){
+  const current=latestTodayEntry();
+  const previous=current||latestEntry();
+  const now=new Date().toISOString();
+  const data={
+    id:current&&current.id,
+    at:now,
+    value:kind==='wellbeing'
+      ? Number(value)
+      : (current&&Number.isFinite(+current.value)?+current.value:previous&&Number.isFinite(+previous.value)?+previous.value:0),
+    toc:null,
+    sleep:kind==='sleep'
+      ? metricValue(value)
+      : (current&&metricValue(current.sleep)!==null?metricValue(current.sleep):previous&&metricValue(previous.sleep)!==null?metricValue(previous.sleep):5),
+    comment:current&&current.comment?current.comment:''
+  };
+  upsertEntry(data);
+  sfx('success');
+  toast(kind==='sleep'?'Sueño guardado':'Ánimo guardado');
 }
 function renderMetricCharts(){
   renderMetricPicker('wellbeingChart','wellbeing');
@@ -2995,6 +3027,7 @@ document.addEventListener('click',event=>{
   const target=event.target.closest('button');
   if(!target) return;
   if(target.dataset.openEntry){ openSheet(); return; }
+  if(target.dataset.quickMetric){ quickSaveMetric(target.dataset.quickMetric,target.dataset.quickValue); return; }
   if(target.dataset.toggleDone) toggleDone(target.dataset.toggleDone);
   if(target.dataset.toggleRelapse) toggleRelapse(target.dataset.toggleRelapse);
   if(target.dataset.editHabit) openHabitSheet(target.dataset.editHabit);
